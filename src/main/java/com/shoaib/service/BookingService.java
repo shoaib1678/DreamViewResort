@@ -50,8 +50,9 @@ public class BookingService {
                 LocalDate checkIn = checkInDate.toInstant()
                                              .atZone(ZoneId.systemDefault())
                                              .toLocalDate();
-                if(booking.getNo_of_rooms() > 1) {
-                	for(int k=0; k <booking.getNo_of_rooms() -1; k++ ) {
+                System.out.println("bdate="+booking.getNight());
+                if(booking.getNight() > 1) {
+                	for(int k=0; k <booking.getNight(); k++ ) {
                 		LocalDate nextDate = checkIn.plusDays(k);
                 		b.setRoom_id(booking.getRoom_id());
                 		Date bookingDate = Date.from(nextDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
@@ -68,7 +69,7 @@ public class BookingService {
                 Map<String, Object> map1 = new HashMap<String, Object>();
                 map1.put("sno", booking.getRoom_id());
                 List<Rooms> room = (List<Rooms>) commonDao.getDataByMap(map1, new Rooms(), null, null, 0, -1);
-                String email = "shoaibjamal21797@gmail.com";
+                String email = "info.dreamviewheritage@gmail.com";
                 String subject = "New Resort Booked for " + room.get(0).getTitle() + "";
                 String message =
                 	    "<!DOCTYPE html>" +

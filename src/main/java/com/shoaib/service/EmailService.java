@@ -86,8 +86,8 @@ public class EmailService {
 	public Map<String, Object> sendEmailMessage(String to, String subject, String htmlContent) {
 	    Map<String, Object> response = new HashMap<>();
 	    try {
-	        final String username = "shoaibjamal21797@gmail.com";
-	        final String password = "pmvy syjc kdnx gbly";
+	        final String username = "info.dreamviewheritage@gmail.com";
+	        final String password = "dwtw fywk dkfw bsls";
 
 	        Properties prop = new Properties();
 	        prop.put("mail.smtp.host", "smtp.gmail.com");

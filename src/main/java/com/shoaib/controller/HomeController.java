@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import com.shoaib.modal.Amenities;
 import com.shoaib.modal.Blogs;
 import com.shoaib.modal.Category;
 import com.shoaib.modal.Gallery;
+import com.shoaib.modal.LoginCredentials;
 import com.shoaib.modal.Rooms;
 import com.shoaib.modal.SliderImage;
 import com.shoaib.modal.Testimonial;
@@ -203,6 +205,13 @@ public class HomeController {
 		mv.addObject("booking_id", booking_id);
 		return mv;
 	}
+	@RequestMapping(value="/reciept")
+	public ModelAndView reciept(HttpServletRequest request) throws IOException{
+		ModelAndView mv = new ModelAndView("Pdf/reciept");
+//		String booking_id = request.getParameter("booking_id");
+//		mv.addObject("booking_id", booking_id);
+		return mv;
+	}
 	/********************************* Website Panel Urls End ************************************************/
 	@RequestMapping(value = "/displayimage", method = RequestMethod.GET)
 	public ResponseEntity<byte[]> displayAssociateImage(HttpServletRequest request) throws IOException {
@@ -227,13 +236,34 @@ public class HomeController {
 		return mv;
 	}
 	@RequestMapping(value="/dashboard")
-	public ModelAndView dashboard(HttpServletRequest request) throws IOException{
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("status", "Active");
-		List<Rooms> rooms = (List<Rooms>)commonDao.getDataByMap(map, new Rooms(), null, null, 0, -1);
-		ModelAndView mv = new ModelAndView("AdminPanel/dashboard");
-		mv.addObject("rooms", rooms);
-		return mv;
+	public ModelAndView dashboard(HttpServletRequest request,HttpSession session) throws IOException{
+		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
+		if(lg !=null) {
+			Map<String, Object> map1 = new HashMap<String, Object>();
+			map1.put("status", "Active");
+			List<Rooms> rooms = (List<Rooms>)commonDao.getDataByMap(map1, new Rooms(), null, null, 0, -1);
+			ModelAndView mv = new ModelAndView("AdminPanel/dashboard");
+			mv.addObject("rooms", rooms);
+			return mv;
+		}else {
+			String email = request.getParameter("email");
+			Map<String,Object> map = new HashMap<String, Object>();
+			map.put("email", email);
+			map.put("status", "Active");
+			map.put("user_type", "Admin");
+			List<LoginCredentials> login = (List<LoginCredentials>)commonDao.getDataByMap(map, new LoginCredentials(), null, null, 0, -1);
+			if(login.size() > 0) {
+				Map<String, Object> map1 = new HashMap<String, Object>();
+				map1.put("status", "Active");
+				List<Rooms> rooms = (List<Rooms>)commonDao.getDataByMap(map1, new Rooms(), null, null, 0, -1);
+				ModelAndView mv = new ModelAndView("AdminPanel/dashboard");
+				mv.addObject("rooms", rooms);
+				session.setAttribute("loginData", login.get(0));
+				return mv;
+			}else {
+				return new ModelAndView("redirect:./");
+			}
+		}
 	}
 	@RequestMapping(value="/amenities")
 	public ModelAndView amenities(HttpServletRequest request) throws IOException{

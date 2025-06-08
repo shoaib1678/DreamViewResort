@@ -310,7 +310,7 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 										</div>
 										<div class="col-12 c6">
 											<button type="button" class="btn-form1-submit" id="sbmt">
-											  <span class="btn-text">Book Now</span>
+											  <span class="btn-text" id="bk">Book Now</span>
 											  <span class="spinner" style="display: none;"></span>
 											</button>
 										</div>
@@ -399,11 +399,11 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
  $("#payment_mode").change(function(){
 	 var val = $(this).val();
 	 if($(this).val() == "Online"){
-		 $("#sbmt").html("Pay and Continue");
+		 $("#bk").html("Pay and Continue");
 		 $("#ptype").css("display","block");
 	 }else{
 		 $("#ptype").css("display","none");
-		 $("#sbmt").html("Book Now")
+		 $("#bk").html("Book Now")
 	 }
  })
  function next() {

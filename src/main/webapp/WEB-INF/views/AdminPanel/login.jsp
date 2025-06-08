@@ -19,10 +19,9 @@
 <jsp:include page="css.jsp"></jsp:include>
 
 <style type="text/css">
-	#user_password-error{
+	#password-error{
 		position: absolute;
-	    top: 40px;
-	    right: 2px;
+	    top: 88%;
 	}
 </style>
   </head>

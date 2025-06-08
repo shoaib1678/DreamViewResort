@@ -205,7 +205,7 @@ List<Testimonial> test = (List<Testimonial>)request.getAttribute("test");
                                     "<%=t.getReview()%>"
                                 </div>
                                 <div class="author clearfix">
-                                    <figure><img src="displayimage?url=<%=t.getImage()%>" alt="" class="img-fluid"></figure>
+                                    <figure><img src="displayimage?url=<%=t.getImage()%>" alt="" class="img-fluid" style="height: 75px; object-fit:cover;"></figure>
                                     <div class="caption">
                                         <div class="txt1"><%=t.getName()%></div>
                                        <!--  <div class="txt2">Web Developer</div> -->
