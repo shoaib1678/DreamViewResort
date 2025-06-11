@@ -138,30 +138,39 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 												</div>
 											</div>
 										</div>
+										
 										<div class="col-md-6 mb-3 c2">
+											<div class="input1_wrapper">
+												<label>No of Adult</label>
+												<div class="">
+													<input type="number" class="form-control" id="no_of_adult" onchange="calr()" name="no_of_adult"
+														placeholder="No of Adult" style="padding: 20px;"  min="1" value="1">
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6 mb-3 c2">
+											<div class="input1_wrapper">
+												<label>No of Child</label>
+												<div class="">
+													<input type="number" class="form-control" onchange="calr()" id="no_of_child" name="no_of_child"
+														placeholder="No of child (Blew 10 years)" style="padding: 20px;"  min="0" value="0">
+												</div>
+											</div>
+										</div>
+										<!-- <div class="col-md-6 mb-3 c2">
 											<div class="input1_wrapper">
 												<label>No of Room</label>
 												<div class="">
 													<input type="text" class="form-control" id="no_of_room" name="no_of_room"
-														placeholder="No of Room" style="padding: 20px;">
+														placeholder="No of Room" style="padding: 20px;" disabled>
 												</div>
 											</div>
-										</div>
-										<div class="col-md-6 mb-3 c2">
-											<div class="input1_wrapper">
-												<label>No of Guests</label>
-												<div class="">
-													<input type="text" class="form-control" id="no_of_guest" name="no_of_guest"
-														placeholder="No of Guests" style="padding: 20px;">
-												</div>
-											</div>
-										</div>
-
+										</div> -->
 										<div class="col-md-6 mb-3 c2">
 											<div class="input1_wrapper">
 												<label>Full Name</label>
 												<div class="">
-													<input type="text" class="form-control" id="name"
+													<input type="text" class="form-control" id="name" onchange="calr()"
 														name="name" placeholder="Full Name" style="padding: 20px;">
 												</div>
 											</div>
@@ -213,8 +222,33 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 												<div class="">
 													<input type="text" class="form-control" id="coupon_code"
 														name="coupon_code" placeholder="Enter Coupon Code"
-														style="padding: 20px;"> <a href="" class="apply">Apply</a>
+														style="padding: 20px;"> <a href="javacript:void(0)" onclick="apply_coupon()" class="apply">Apply</a>
 												</div>
+											</div>
+										</div>
+										<div class="col-md-6 c4 mb-3">
+											<div class="select1_wrapper">
+												<label>Payment Mode</label>
+												<div class="select1_inner">
+													<select class="select2 select" id="payment_mode"
+														name="payment_mode" style="width: 100%">
+														<option value="1">Payment Mode</option>
+														<option value="Online">Online</option>
+														<option value="Offline">Offline</option>
+													</select>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-6 mb-3" id="ptype" style="display: none;">
+											<div class="pm">
+												<input type="radio" id="pay20" name="payment" value="20%">
+												  <label for="pay20" style="display: block;">20%
+													Payment </label><i class="fa fa-inr" style="margin: 7px;"></i><span id="tp">0</span>
+											</div>
+											<div class="pm">
+												  <input type="radio" id="full_payment" name="payment"
+													value="100%">   <label for="full_payment"
+													style="display: block;">Full Payment </label>  <i class="fa fa-inr" style="margin: 7px;"></i><span id="fullp">0</span>
 											</div>
 										</div>
 									</div>
@@ -242,6 +276,15 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 										<div class="col-md-12 mb-3"
 											style="border-bottom: 1px solid lightgray;">
 											<div style="display: flex; justify-content: space-between;">
+												<p style="font-weight: bold;">No of Room:</p>
+												<p style="float: right;">
+													<span id="no_of_room"></span>
+												</p>
+											</div>
+										</div>
+										<div class="col-md-12 mb-3"
+											style="border-bottom: 1px solid lightgray;">
+											<div style="display: flex; justify-content: space-between;">
 												<p style="font-weight: bold;">No of Nights:</p>
 												<p style="float: right;">
 													<span id="no_of_nights"></span>
@@ -257,6 +300,7 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 												</p>
 											</div>
 										</div>
+										
 										<div class="col-md-12 mb-3"
 											style="border-bottom: 1px solid lightgray;">
 											<div style="display: flex; justify-content: space-between;">
@@ -269,35 +313,34 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 										<div class="col-md-12 mb-3"
 											style="border-bottom: 1px solid lightgray;">
 											<div style="display: flex; justify-content: space-between;">
+												<p style="font-weight: bold;">Gst:</p>
+												<p style="float: right;">
+													<i class="fa fa-inr"></i> <span id="gst">0</span>
+												</p>
+											</div>
+										</div>
+										<div class="col-md-12 mb-3"
+											style="border-bottom: 1px solid lightgray;">
+											<div style="display: flex; justify-content: space-between;">
 												<p class="totalamt">Total Payable Amount:</p>
 												<p class="totalamt" style="float: right;">
 													<i class="fa fa-inr"></i> <span id="final_amount">0</span>
 												</p>
 											</div>
 										</div>
-										<div class="col-md-12 c4 mb-3">
-											<div class="select1_wrapper">
-												<label>Payment Mode</label>
-												<div class="select1_inner">
-													<select class="select2 select" id="payment_mode"
-														name="payment_mode" style="width: 100%">
-														<option value="1">Payment Mode</option>
-														<option value="Online">Online</option>
-														<option value="Offline">Offline</option>
-													</select>
-												</div>
-											</div>
+										<div class="col-md-12 d-flex">
+										<input type="checkbox" id="gs" name="gs" >
+										<label for="gs" style="display: block; margin: 10px 10px;">GST Details (Not Mandatory)</label>
+											
+											
 										</div>
-										<div class="col-md-12 mb-3" id="ptype" style="display: none;">
-											<div class="pm">
-												<input type="radio" id="pay20" name="payment" value="20%">
-												  <label for="pay20" style="display: block;">20%
-													Payment <span id="tp"></span></label>
-											</div>
-											<div class="pm">
-												  <input type="radio" id="full_payment" name="payment"
-													value="100%">   <label for="full_payment"
-													style="display: block;">Full Payment <span id="fullp"></span></label>
+										<div class="col-md-12" id="gin" style="display: none;">
+											<div class="input1_wrapper" >
+												<label>GST Number</label>
+												<div class="">
+													<input type="text" class="form-control" id="gst_number"
+														name="gst_number" placeholder="GST Number" style="padding: 20px;">
+												</div>
 											</div>
 										</div>
 										<div class="col-12 d-flex">
@@ -401,11 +444,22 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 	 if($(this).val() == "Online"){
 		 $("#bk").html("Pay and Continue");
 		 $("#ptype").css("display","block");
+		
+		 
+		 
 	 }else{
 		 $("#ptype").css("display","none");
 		 $("#bk").html("Book Now")
 	 }
  })
+ $('#gs').change(function () {
+    if ($(this).is(':checked')) {
+      $('#gin').css("display","block");
+    } else {
+    	$("#gst_number").val("");
+    	$('#gin').css("display","none");
+    }
+  });
  function next() {
 	    currentYear = (currentMonth === 11) ? currentYear + 1 : currentYear;
 	    currentMonth = (currentMonth + 1) % 12;
@@ -430,6 +484,7 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 	    showCalendar(currentMonth, currentYear);
 	}
 	function checkAvailability(type) {
+		
 	    // Prevent selecting checkout before checkin
 	    if (type === "checkout" && !$("#check_in").val()) {
 	        alert("Please select a check-in date first.");
@@ -489,14 +544,8 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 	                                    background: 'green',
 	                                    color: 'white'
 	                                }).addClass('available_date');
-
-	                                // Store available_rooms in data attribute
 	                                targetElement.attr('data-available', data.data[i].available_rooms);
-
-	                                // Optional: Show as tooltip on hover
 	                                targetElement.attr('title', data.data[i].available_rooms + ' rooms available');
-
-	                                // Hover effect
 	                                targetElement.hover(
 	                                    function () {
 	                                        $(this).css({
@@ -526,12 +575,35 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 	                                    var date = yy + "-" + mm.toString().padStart(2, '0') + "-" + dd.toString().padStart(2, '0');
 
 	                                    if (type === "checkin") {
-	                                        $("#abroom").css("display","block");
 	                                        $("#check_in").val(date);
-	                                        $("#nroom").html(available); // Show available rooms
 	                                        $("#check_out").val("");
 	                                    } else {
+	                                    	 $("#abroom").css("display","block");
 	                                        $("#check_out").val(date);
+	                            	    	var cin = $("#check_in").val();
+	                            			var fd = new FormData();
+	                            			fd.append("room_id", room_id);
+	                            			fd.append("check_in", cin);
+	                            			fd.append("check_out", date);
+	                            			$.ajax({
+	                            				url : 'check_room',
+	                            				type : 'post',
+	                            				data : fd,
+	                            				contentType : false,
+	                            				processData : false,
+	                            				success : function(data) {
+	                            					if (data['status'] == 'success') {
+	                            						$("#nroom").html(data['data'][0].available_rooms); // Show available rooms
+	                            						
+	                            					} else {
+	                            						Swal.fire({
+	                            							icon : 'Opps',
+	                            							title : 'Warning!',
+	                            							text : 'Invalid Details'
+	                            						})
+	                            					}
+	                            				}
+	                            			});
 	                                        calculateNights();
 	                                    }
 
@@ -568,19 +640,11 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 	    if (checkIn && checkOut) {
 	        var startDate = new Date(checkIn);
 	        var endDate = new Date(checkOut);
-
-	        // Difference in milliseconds
 	        var diffTime = endDate - startDate;
 
 	        if (diffTime > 0) {
 	            var diffDays = diffTime / (1000 * 60 * 60 * 24);
 	            $("#no_of_nights").html(diffDays);
-	            var b = $("#base_price").html();
-	            var d = $("#discount").html();
-	            var subt = parseFloat(diffDays) * parseFloat(b);
-	            var t = parseFloat(subt) - parseFloat(d);
-	            $("#sub_total").html(subt);
-	            $("#final_amount").html(t);
 	        } else {
 	            $("#no_of_nights").html('');
 	        }
@@ -595,7 +659,7 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 		      check_in: { required: true },
 		      check_out: { required: true },
 		      no_of_room: { required: true, digits: true },
-		      no_of_guest: { required: true, digits: true }, // Added
+		      no_of_adult: { required: true, digits: true }, // Added
 		      name: { required: true },
 		      phone: {
 		        required: true,
@@ -637,18 +701,21 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 		  });
 		});
 	function readytopayment() {
-	    if ($("#booking_form").valid()) {
+		
+	    if ($("#booking_form").valid() && $('#termsCheckbox').is(':checked')) {
 	    	var room_id = $('#room_id').val();
 	    	var check_in = $('#check_in').val();
 	    	var check_out = $('#check_out').val();
-	    	var no_of_room = $('#no_of_room').val();
-	    	var no_of_guest = $('#no_of_guest').val();
+	    	var no_of_room = $('#no_of_room').html();
+	    	var no_of_adult = $('#no_of_adult').val();
+	    	var no_of_child = $('#no_of_child').val();
 	    	var name = $('#name').val();
 	    	var phone = $('#phone').val();
 	    	var email = $('#email').val();
 	    	var city = $('#city').val();
 	    	var country = $('#country').val();
 	    	var coupon_code = $('#coupon_code').val();
+	    	var gst_number = $('#gst_number').val();
 
 	    	var base_price = $('#base_price').text().trim();
 	    	var no_of_nights = $('#no_of_nights').text().trim();
@@ -657,12 +724,28 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 	    	var final_amount = $('#final_amount').text().trim();
 
 	    	var payment_mode = $('#payment_mode').val();
-	    	var payment_option = $('input[name="payment"]:checked').val() || null;
+	    	
 	    	var terms_accepted = $('#termsCheckbox').is(':checked');
-	    	$("#sbmt").prop("disabled", true); 
-	    	$("#sbmt .btn-text").text("Please Wait..");
-	    	$("#sbmt .spinner").show();
+	    	
 			if(payment_mode === "Online"){
+				var due_amount = 0;
+				var payment_option = $('input[name="payment"]:checked').val() || null;
+
+				if (!payment_option) {
+				    alert("Please select a payment option");
+				    return false;
+				} else {
+					if(payment_option === "20%"){
+						final_amount = Math.round(parseFloat($("#tp").text().trim()));
+						due_amount = parseFloat($('#final_amount').text().trim()) - parseFloat($("#tp").text().trim());
+					}else{
+						final_amount = $('#final_amount').text().trim();
+					}
+				}
+				$("#sbmt").prop("disabled", true); 
+		    	$("#sbmt .btn-text").text("Please Wait..");
+		    	$("#sbmt .spinner").show();
+				alert(final_amount);
 	        $.ajax({
 	            url: 'create_order',
 	            data: JSON.stringify({"amount": parseFloat(final_amount)}),
@@ -689,9 +772,11 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 	                            		"check_in": check_in,
 	                            	    "check_out": check_out,
 	                            	    "no_of_rooms": no_of_room,
-	                            	    "guest": no_of_guest,
+	                            	    "adult": no_of_adult,
+	                            	    "chilt": no_of_child,
 	                            	    "name": name,
 	                            	    "mobile_number": phone,
+	                            	    "gst_number": gst_number,
 	                            	    "email": email,
 	                            	    "city": city,
 	                            	    "country": country,
@@ -701,6 +786,7 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 	                            	    "sub_total": sub_total,
 	                            	    "discount": discount,
 	                            	    "total_amount": final_amount,
+	                            	    "due_amount": due_amount,
 	                            	    "payment_mode": payment_mode,
 	                            	    "payment_type": payment_option,
 	                                "razorpay_payment_id": response.razorpay_payment_id,
@@ -719,8 +805,9 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 	                                    if (data['status'] === 'Success') {
 	                                        $(".text-success").css("display", "block");
 	                                        var booking_id = data['bid'];
+	                                        $("#sbmt .btn-text").text("Booking Confirmed");
+                                        	$("#sbmt .spinner").hide();
 	                                        setTimeout(function () {
-	                                            $(".text-success").css("display", "none");
 	                                            var mapForm = document.createElement("form");
 		                                        mapForm.method = "POST";
 		                                        mapForm.action = "thank_you";
@@ -729,15 +816,9 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 		                                        output.name = "booking_id";
 		                                        output.value = booking_id;
 		                                        mapForm.appendChild(output);
-		                                        var output1 = document.createElement("input");
-		                                        output1.type = "hidden";
-		                                        output1.name = "type";
-		                                        output1.value = "tour";
-		                                        mapForm.appendChild(output1);
-
 		                                        document.body.appendChild(mapForm);
 		                                        mapForm.submit();
-	                                        }, 3000);
+	                                        }, 1000);
 
 	                                    } else {
 	                                        swal({
@@ -778,12 +859,16 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 
 	        });
 	    }else{
+	    	$("#sbmt").prop("disabled", true); 
+	    	$("#sbmt .btn-text").text("Please Wait..");
+	    	$("#sbmt .spinner").show();
 	    	var obj = {
             		"room_id": room_id,
             		"check_in": check_in,
             	    "check_out": check_out,
             	    "no_of_rooms": no_of_room,
-            	    "guest": no_of_guest,
+            	    "adult": no_of_adult,
+            	    "chilt": no_of_child,
             	    "name": name,
             	    "mobile_number": phone,
             	    "email": email,
@@ -795,6 +880,7 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
             	    "sub_total": sub_total,
             	    "discount": discount,
             	    "total_amount": final_amount,
+            	    "due_amount": final_amount,
             	    "payment_mode": payment_mode,
             	    "payment_type": payment_option,
             };
@@ -808,8 +894,9 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
                     if (data['status'] === 'Success') {
                         $(".text-success").css("display", "block");
                         var booking_id = data['bid'];
+                        $("#sbmt .btn-text").text("Booking Confirmed");
+                    	$("#sbmt .spinner").hide();
                         setTimeout(function () {
-                            $(".text-success").css("display", "none");
                             var mapForm = document.createElement("form");
                             mapForm.method = "POST";
                             mapForm.action = "thank_you";
@@ -820,7 +907,7 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
                             mapForm.appendChild(output);
                             document.body.appendChild(mapForm);
                             mapForm.submit();
-                        }, 3000);
+                        }, 1000);
 
                     } else {
                         swal({
@@ -840,7 +927,79 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 	        return;
 	    }
 	}
+	
+	function calr() {
+	    var adult = parseInt($("#no_of_adult").val()) || 0;
+	    var maxAdultsPerRoom = 2;
 
+	    if (adult < 1) {
+	        alert("Minimum 1 adult is required");
+	        $(this).val(1);
+	        adult = 1;
+	    }
+	    var room = Math.ceil(adult / maxAdultsPerRoom);
+	    var r = $("#nroom").html();
+	    if(parseFloat(room) > parseFloat(r)){
+	    	alert("Only "+r+ "room available and only 2 adult allow in 1 room");
+	    	$("#no_of_room").html("");
+	    	$("#no_of_adult").val("1");
+	    	$("#no_of_child").val("0");
+	    }else{
+	    	 $("#no_of_room").html(room);
+	    	 
+	            var nt = $("#no_of_nights").html();
+	            var b = parseFloat($("#base_price").html()) * parseFloat(room);
+	            var d = $("#discount").html();
+	            var subt = parseFloat(nt) * parseFloat(b);
+	            var t = parseFloat(subt) - parseFloat(d);
+	            var gs ="";
+	            if(parseFloat(t) > 15000){
+	            	gs = parseFloat(t) * 18/100;
+	            }else{
+	            	gs = parseFloat(t) * 12/100;
+	            }
+	            var tot = parseFloat(t) + parseFloat(gs)
+	            $("#gst").html(gs);
+	            $("#sub_total").html(subt);
+	            $("#final_amount").html(tot);
+	            $("#fullp").html(tot);
+	            var tn = parseFloat(tot) *20/100;
+	            $("#tp").html(tn);
+	    }
+	}
+
+	function apply_coupon() {
+		var coupon_code =$("#coupon_code").val();
+		var fd = new FormData();
+		fd.append("coupon_code", coupon_code);
+		$.ajax({
+			url : 'get_data',
+			type : 'post',
+			data : fd,
+			contentType : false,
+			processData : false,
+			success : function(data) {
+				if (data['status'] == 'Success') {
+					var amount = data['data'][0].coupon_value;
+					if(data['data'][0].type === "Percentage"){
+						var sub = $("#sub_total").html();
+						if(parseFloat(sub) > 0){
+							var amt = parseFloat(sub) * parseFloat(amount)/100;
+							$("#discount").html(amt);
+							calr();
+						}
+					}else{
+						$("#discount").html(amount);
+						calr();
+					}
+					
+				} else {
+					alert("Invalid Coupon code!!!!")
+				}
+			}
+		});
+
+	}
  </script>
 
 </body>

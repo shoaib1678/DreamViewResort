@@ -30,10 +30,6 @@
       <script src="assets/Admin/vendor/libs/bootstrap-select/bootstrap-select.js"></script>
       <script src="assets/Admin/vendor/libs/flatpickr/flatpickr.js"></script>
        <script src="assets/Admin/vendor/libs/tagify/tagify.js"></script>
-      
-      
-    <!--  <script src="assets/ckeditor/ckeditor.js"></script>  -->
-      
           <!-- Vendors JS -->
     <script src="assets/Admin/vendor/libs/moment/moment.js"></script>
     <!-- <script src="assets/Admin/vendor/libs/datatables-bs5/datatables-bootstrap5.js"></script> -->
@@ -77,3 +73,21 @@
      	});
      	
      </script>
+     <script>
+document.querySelectorAll('.numberOnly').forEach(function(input) {
+  input.addEventListener('input', function () {
+    this.value = this.value.replace(/[^0-9]/g, '');
+  });
+});
+document.querySelectorAll('.decimalOnly').forEach(function(input) {
+	  input.addEventListener('input', function () {
+	    // Replace anything that is not a digit or dot
+	    this.value = this.value.replace(/[^0-9.]/g, '');
+
+	    // Allow only one dot
+	    if ((this.value.match(/\./g) || []).length > 1) {
+	      this.value = this.value.substring(0, this.value.length - 1);
+	    }
+	  });
+	});
+</script>

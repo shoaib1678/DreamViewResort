@@ -25,6 +25,19 @@
             <li class="menu-item">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-food-menu"></i>
+                <div data-i18n="Manage Banner">Manage Banner</div>
+              </a>
+              <ul class="menu-sub">
+                <li class="menu-item">
+                  <a href="manage_banner" class="menu-link">
+                    <div data-i18n="Banner">Banner</div>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="menu-item">
+              <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-food-menu"></i>
                 <div data-i18n="Safari Booking">Manage Rooms</div>
               </a>
               <ul class="menu-sub">
@@ -48,11 +61,11 @@
                     <div data-i18n="Rooms">Rooms</div>
                   </a>
                 </li>
-                <li class="menu-item">
+               <!--  <li class="menu-item">
                   <a href="room_availability" class="menu-link">
                     <div data-i18n="Rooms Availability">Rooms Availability</div>
                   </a>
-                </li>
+                </li> -->
                 <li class="menu-item">
                   <a href="coupons" class="menu-link">
                     <div data-i18n="Coupons">Coupons</div>
@@ -66,11 +79,11 @@
                 <div data-i18n="Reservation Management">Manage Booking</div>
               </a>
               <ul class="menu-sub">
-               <li class="menu-item">
+               <!-- <li class="menu-item">
                   <a href="manage_tours_itinerary" class="menu-link">
                     <div data-i18n="Searched Room">Searched Rooms</div>
                   </a>
-                </li>
+                </li> -->
                <li class="menu-item">
                   <a href="block_date" class="menu-link">
                     <div data-i18n="Block Date">Block Date</div>
@@ -82,7 +95,7 @@
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="manage_tours_package" class="menu-link">
+                  <a href="reserved_rooms" class="menu-link">
                     <div data-i18n="Reserved Rooms">Reserved Rooms</div>
                   </a>
                 </li>
@@ -170,7 +183,7 @@
               </a>
               <ul class="menu-sub">
                 <li class="menu-item">
-                  <a href="payments" class="menu-link">
+                  <a href="payment_details" class="menu-link">
                     <div data-i18n="Manage Payment">Manage Payment</div>
                   </a>
                 </li>

@@ -3,6 +3,7 @@ package com.shoaib.controller;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -168,18 +169,24 @@ public class HomeController {
 			room.get(0).setSimg(img);
 		}
 		Map<String, Object> mpp = new HashMap<String, Object>();
-		String[] aid = room.get(0).getAmenity_ids().split(",");
+		
+		
+		List<Amenities> am =new ArrayList<Amenities>();
 		String amm="";
+		if(room.get(0).getAmenity_ids() != null && !room.get(0).getAmenity_ids().isEmpty()) {
+		String[] aid = room.get(0).getAmenity_ids().split(",");
 		for(int i=0; i<aid.length; i++) {
 			mpp.put("sno", Integer.parseInt(aid[i]));
-			List<Amenities> am = (List<Amenities>)commonDao.getDataByMap(mpp, new Amenities(), null, null, 0, -1);
+			 am = (List<Amenities>)commonDao.getDataByMap(mpp, new Amenities(), null, null, 0, -1);
 			if(i==0) {
 				amm = am.get(0).getAmenity_name();
 			}else {
 				amm += "@@@"+am.get(0).getAmenity_name();
 			}
 		}
-		room.get(0).setAmenities_name(amm);
+			room.get(0).setAmenities_name(amm);
+		}
+		
 		Map<String, Object> mp =new HashMap<String, Object>();
 		mp.put("sno", room.get(0).getCategory_id());
 		List<Category> cat = (List<Category>)commonDao.getDataByMap(mp, new Category(), null, null, 0, -1);
@@ -265,6 +272,11 @@ public class HomeController {
 			}
 		}
 	}
+	@RequestMapping(value="/manage_banner")
+	public ModelAndView manage_banner(HttpServletRequest request) throws IOException{
+		ModelAndView mv = new ModelAndView("AdminPanel/Banner/banner");
+		return mv;
+	}
 	@RequestMapping(value="/amenities")
 	public ModelAndView amenities(HttpServletRequest request) throws IOException{
 		ModelAndView mv = new ModelAndView("AdminPanel/Manage_Rooms/amenities");
@@ -297,6 +309,10 @@ public class HomeController {
 	@RequestMapping(value="/coupons")
 	public ModelAndView coupons(HttpServletRequest request) throws IOException{
 		ModelAndView mv = new ModelAndView("AdminPanel/Manage_Rooms/coupons");
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		map1.put("status", "Active");
+		List<Rooms> rooms = (List<Rooms>)commonDao.getDataByMap(map1, new Rooms(), null, null, 0, -1);
+		mv.addObject("rooms", rooms);
 		return mv;
 	}
 	@RequestMapping(value="/blogs_category")
@@ -350,6 +366,20 @@ public class HomeController {
 		map.put("status", "Active");
 		List<Rooms> room = (List<Rooms>)commonDao.getDataByMap(map, new Rooms(), null, null, 0, -1);
 		mv.addObject("rooms", room);
+		return mv;
+	}
+	@RequestMapping(value="/reserved_rooms")
+	public ModelAndView reserved_room(HttpServletRequest request) throws IOException{
+		ModelAndView mv = new ModelAndView("AdminPanel/Booking/reservedRoom");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("status", "Active");
+		List<Rooms> room = (List<Rooms>)commonDao.getDataByMap(map, new Rooms(), null, null, 0, -1);
+		mv.addObject("rooms", room);
+		return mv;
+	}
+	@RequestMapping(value="/payment_details")
+	public ModelAndView payment_details(HttpServletRequest request) throws IOException{
+		ModelAndView mv = new ModelAndView("AdminPanel/Payment/payment");
 		return mv;
 	}
 }

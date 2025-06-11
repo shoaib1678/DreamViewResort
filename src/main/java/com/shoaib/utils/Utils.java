@@ -19,8 +19,8 @@ public class Utils {
 
 	@Autowired
 	CommonDao commonDao;
-		public static String staticimages = "C:/temp/"; 
-		//public static String staticimages = "/var/lib/tomcat9/webapps/uploads/";
+		//public static String staticimages = "C:/temp/"; 
+		public static String staticimages = "/var/lib/tomcat9/webapps/uploads/";
 		//public static String staticimages = "/opt/tomcat9/files/mpjungle_files/";
 		public static String userkey = "CbddmBz6lmP2766";
 
@@ -69,6 +69,23 @@ public class Utils {
 					sb.append(chars.charAt(randomIndex));
 				}
 
+				return sb.toString();
+			}
+			public static String generateCouponCode(int len) {
+				// ASCII range � alphanumeric (0-9, a-z, A-Z)
+				final String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+				
+				SecureRandom random = new SecureRandom();
+				StringBuilder sb = new StringBuilder();
+				
+				// each iteration of the loop randomly chooses a character from the given
+				// ASCII range and appends it to the `StringBuilder` instance
+				
+				for (int i = 0; i < len; i++) {
+					int randomIndex = random.nextInt(chars.length());
+					sb.append(chars.charAt(randomIndex));
+				}
+				
 				return sb.toString();
 			}
 			

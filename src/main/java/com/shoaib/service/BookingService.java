@@ -2,6 +2,7 @@ package com.shoaib.service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.shoaib.dao.CommonDao;
+import com.shoaib.modal.Banner;
 import com.shoaib.modal.Booking;
 import com.shoaib.modal.BookingDate;
 import com.shoaib.modal.Rooms;
@@ -170,4 +172,40 @@ public class BookingService {
         }
         return response;
     }
+
+	public Map<String, Object> get_booking(int start, int length, String search) {
+		Map<String,Object> response = new HashMap<String, Object>();
+		try {
+			Map<String,Object> map = new HashMap<String,Object>();
+			Map<String,Object> or_map = new HashMap<String,Object>();
+			List<Booking> list = (List<Booking>) commonDao.getDataByMapSearchAnd(new HashMap<String,Object>(),or_map, new Booking(), "sno", "desc", start, length);	
+			int count = commonDao.getDataByMapSearchAndSize(new HashMap<String,Object>(), or_map, new Booking(), "sno", "desc");
+			if(list.size()>0) {
+				for(Booking b : list) {
+					Map<String,Object> mp = new HashMap<String,Object>();
+					mp.put("sno", b.getRoom_id());
+					List<Rooms> room = (List<Rooms>)commonDao.getDataByMap(mp, new Rooms(), null, null, 0, -1);
+					b.setTitle(room.get(0).getTitle());
+				}
+				response.put("data", list);
+				response.put("recordsFiltered", count);
+				response.put("recordsTotal", count);
+				response.put("status", "Success");
+			}else {
+				response.put("data", new ArrayList());
+				response.put("recordsFiltered", 0);
+				response.put("recordsTotal", 0);
+				response.put("status","Failed");
+				return response;
+			}
+		} catch (Exception e) {
+			response.put("data", new ArrayList());
+			response.put("recordsFiltered", 0);
+			response.put("recordsTotal", 0);
+			response.put("message", "Internal server Error"+e);
+			e.printStackTrace();
+			return response;
+		}
+		return response;
+	}
 }

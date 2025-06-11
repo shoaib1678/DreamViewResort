@@ -51,7 +51,8 @@ public class PaymentController {
 	public ResponseEntity<Map<String,Object>> get_payment_details(HttpServletRequest request ){
 		int start = Integer.parseInt(request.getParameter("start"));
 		int length = Integer.parseInt(request.getParameter("length"));
-		Map<String, Object> response = paymentService.get_payment_details(start,length);
+		String search = request.getParameter("search[value]");
+		Map<String, Object> response = paymentService.get_payment_details(start,length,search);
 		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
 	}
 }

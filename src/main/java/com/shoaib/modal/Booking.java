@@ -18,6 +18,7 @@ public class Booking {
 	private int sno;
 	private int room_id;
 	private String booking_id;
+	private String gst_number;
 	private String order_id;
 	private String name;
 	private String email;
@@ -27,13 +28,15 @@ public class Booking {
 	private String payment_mode;
 	private String payment_status;
 	private int no_of_rooms;
-	private int guest;
+	private int adult;
+	private int child;
 	private int night;
 	private String payment_type;
 	private String status;
 	private double base_price;
 	private double sub_total;
 	private double discount;
+	private double due_amount;
 	private double total_amount;
 	private double paid_amount;
 	@Transient
@@ -83,6 +86,12 @@ public class Booking {
 	public void setPayment_mode(String payment_mode) {
 		this.payment_mode = payment_mode;
 	}
+	public double getDue_amount() {
+		return due_amount;
+	}
+	public void setDue_amount(double due_amount) {
+		this.due_amount = due_amount;
+	}
 	public int getNo_of_rooms() {
 		return no_of_rooms;
 	}
@@ -95,11 +104,24 @@ public class Booking {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public int getGuest() {
-		return guest;
+	
+	public String getGst_number() {
+		return gst_number;
 	}
-	public void setGuest(int guest) {
-		this.guest = guest;
+	public void setGst_number(String gst_number) {
+		this.gst_number = gst_number;
+	}
+	public int getAdult() {
+		return adult;
+	}
+	public void setAdult(int adult) {
+		this.adult = adult;
+	}
+	public int getChild() {
+		return child;
+	}
+	public void setChild(int child) {
+		this.child = child;
 	}
 	public int getNight() {
 		return night;

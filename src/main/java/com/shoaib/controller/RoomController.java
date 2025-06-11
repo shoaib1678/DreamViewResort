@@ -25,7 +25,7 @@ public class RoomController {
 	RoomService roomService;
 	
 	@RequestMapping(value="/add_rooms",method = RequestMethod.POST)
-	public ResponseEntity<Map<String,Object>> add_rooms(@RequestParam(value="roomdata") String roomdata,@RequestParam(value="sliderImages") MultipartFile[] sliderImages,@RequestParam(value="image") MultipartFile image){
+	public ResponseEntity<Map<String,Object>> add_rooms(@RequestParam(value="roomdata") String roomdata,@RequestParam(value="sliderImages",required = false) MultipartFile[] sliderImages,@RequestParam(value="image",required = false) MultipartFile image){
 		Gson  gson = new Gson();
 		Rooms rooms =gson.fromJson(roomdata, Rooms.class);
 		Map<String, Object> response = roomService.add_rooms(rooms,sliderImages,image);
@@ -38,6 +38,20 @@ public class RoomController {
 		int length = Integer.parseInt(request.getParameter("length"));
 		String search = request.getParameter("search[value]");
 		response = roomService.get_rooms(start,length,search);
+		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
+	}
+	@RequestMapping("/edit_room")
+	public ResponseEntity<Map<String,Object>> edit_rooms(HttpServletRequest request){
+		Map<String,Object> response = new HashMap<String,Object>();
+		String sno = request.getParameter("sno");
+		response = roomService.edit_rooms(sno);
+		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
+	}
+	@RequestMapping("/delete_image")
+	public ResponseEntity<Map<String,Object>> delete_image(HttpServletRequest request){
+		Map<String,Object> response = new HashMap<String,Object>();
+		String sno = request.getParameter("sno");
+		response = roomService.delete_image(sno);
 		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
 	}
 	

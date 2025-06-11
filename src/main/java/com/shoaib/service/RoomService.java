@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.shoaib.dao.CommonDao;
 import com.shoaib.modal.Rooms;
 import com.shoaib.modal.Category;
+import com.shoaib.modal.Gallery;
 import com.shoaib.modal.SliderImage;
 import com.shoaib.utils.Utils;
 
@@ -25,6 +26,7 @@ public class RoomService {
 	public Map<String, Object> add_rooms(Rooms rooms, MultipartFile[] sliderImages, MultipartFile image) {
 		 Map<String, Object> response = new HashMap<String, Object>();
 		 try {
+			 SliderImage slider = new SliderImage();
 			 Utils utils = new Utils();
 			 Map<String,Object> mapdata = new HashMap<String, Object>();
 			 mapdata.put("sno", rooms.getSno());
@@ -46,6 +48,14 @@ public class RoomService {
 				pk.get(0).setMeta_keywords(rooms.getMeta_keywords());
 				pk.get(0).setMeta_description(rooms.getMeta_description());
 				commonDao.updateDataToDb(pk.get(0));
+				if(sliderImages.length >0) {
+					for(int j = 0; j<sliderImages.length; j++) {
+						String img = utils.uploadImage(sliderImages[j]);
+						slider.setRoom_id(rooms.getSno());
+						slider.setImage(img);
+						commonDao.addDataToDb(slider);
+					}
+				}
 				
 				response.put("status", "Success");
 				response.put("message", "Rooms Updated Successfully");
@@ -66,7 +76,7 @@ public class RoomService {
 						 rooms.setCreatedAt(new Date());
 						 int i = commonDao.addDataToDb(rooms);
 						 if(i > 0) {
-							 SliderImage slider = new SliderImage();
+							
 							 if(sliderImages.length >0) {
 									for(int j = 0; j<sliderImages.length; j++) {
 										String img = utils.uploadImage(sliderImages[j]);
@@ -122,6 +132,54 @@ public class RoomService {
 			response.put("data", new ArrayList());
 			response.put("recordsFiltered", 0);
 			response.put("recordsTotal", 0);
+			response.put("message", "Internal server Error"+e);
+			e.printStackTrace();
+			return response;
+		}
+		return response;
+	}
+
+	public Map<String, Object> edit_rooms(String sno) {
+		Map<String,Object> response = new HashMap<String, Object>();
+		try {
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("sno", Integer.parseInt(sno));
+			List<Rooms> list = (List<Rooms>) commonDao.getDataByMap(map, new Rooms(), null, null, 0, -1);	
+			if(list.size()>0) {
+				Map<String,Object> mp = new HashMap<String,Object>();
+				mp.put("room_id", list.get(0).getSno());
+				List<SliderImage> sl = (List<SliderImage>)commonDao.getDataByMap(mp, new SliderImage(), null, null, 0, -1);
+				list.get(0).setSimg(sl);
+				response.put("data", list);
+				response.put("status", "Success");
+			}else {
+				response.put("status","Failed");
+				return response;
+			}
+		} catch (Exception e) {
+			response.put("message", "Internal server Error"+e);
+			e.printStackTrace();
+			return response;
+		}
+		return response;
+	}
+
+	public Map<String, Object> delete_image(String sno) {
+		Map<String,Object> response = new HashMap<String, Object>();
+		try {
+			Map<String,Object> map = new HashMap<String,Object>();
+			map.put("sno", Integer.parseInt(sno));
+			List<SliderImage> list = (List<SliderImage>) commonDao.getDataByMap(map, new SliderImage(), null, null, 0, -1);	
+			if(list.size()>0) {
+				Utils.deleteImage(list.get(0).getImage());
+				commonDao.delete(new SliderImage(), sno);
+				response.put("status", "Success");
+				response.put("message", "Deleted Successfully");
+			}else {
+				response.put("status","Failed");
+				return response;
+			}
+		} catch (Exception e) {
 			response.put("message", "Internal server Error"+e);
 			e.printStackTrace();
 			return response;

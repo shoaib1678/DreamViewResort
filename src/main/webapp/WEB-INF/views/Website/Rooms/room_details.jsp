@@ -261,12 +261,13 @@ scale(
 									<h4>Amenities</h4>
 									<div class="our-rooms-icon-txt1 rmt">
 										<%
+										if(room.get(0).getAmenity_ids() != null && room.get(0).getAmenity_ids() != ""){
 										String[] amm = room.get(0).getAmenities_name().split("@@@");
 										for (int i = 0; i < amm.length; i++) {
 										%>
 										<a><%=amm[i]%></a>
 										<%
-										}
+										}}
 										%>
 									</div>
 								</div>

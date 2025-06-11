@@ -278,16 +278,20 @@ public class PaymentService {
 	}
 
 
-	public Map<String, Object> get_payment_details(int start, int length) {
+	public Map<String, Object> get_payment_details(int start, int length, String search) {
 		Map<String, Object> response = new HashMap<String, Object>();
 		try {
-			List<RazorPayPaymentData> data = (List<RazorPayPaymentData>) commonDao.getDataByMap(new HashMap<String, Object>(),
+			Map<String, Object> map = new HashMap<String, Object>();
+			Map<String, Object> map_or = new HashMap<String, Object>();
+			map_or.put("name", search);
+			map_or.put("email", search);
+			map_or.put("phone", search);
+			map_or.put("orderId", search);
+			List<RazorPayPaymentData> data = (List<RazorPayPaymentData>) commonDao.getDataByMapSearchAnd(new HashMap<String, Object>(),map_or,
 					new RazorPayPaymentData(), "sno", "asc", start, length);
 			int count = commonDao.getDataByMapSize(new HashMap<String, Object>(), new RazorPayPaymentData(), null, null, 0,
 					-1);
-			System.out.println(data.size() + "asdasd");
 			if (data.size() > 0) {
-				System.out.println(data.size());
 				response.put("status", "Success");
 				response.put("message", "Data Fetched Successfully");
 				response.put("data", data);

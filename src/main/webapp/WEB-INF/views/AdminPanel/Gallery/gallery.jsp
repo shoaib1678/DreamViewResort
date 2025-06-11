@@ -215,7 +215,7 @@ List<Category> cat = (List<Category>)request.getAttribute("cat");
 				"data" : function(data, type,
 						dataToSet) {
 						var sno = data.sno;
-						var string = "<button class='btn btn-sm btn-secondary add-new btn-danger btn-sm '  type='button'  onclick='delete("+sno+")'>Delete</button> ";
+						var string = "<button class='btn btn-sm btn-secondary add-new btn-danger btn-sm '  type='button'  onclick='deletedata("+sno+")'>Delete</button> ";
 					//	string +='<button type="button" class="btn btn-sm btn-danger btn-sm ml-1 "  onclick="deletedata('+sno+')" style="margin-left: 10px;">Delete</button>';
 						return string;
 						}
@@ -344,18 +344,17 @@ List<Category> cat = (List<Category>)request.getAttribute("cat");
 					 
 					  	console.log(sno);
 					    console.log(status)
-						var fd = {
-					    	"category_id":sno,
-					    	};					
+						var fd = new FormData();
+						fd.append("sno", sno);
 						$.ajax({
-							url : 'delete_category', //add  Course  controller name AdminController
+							url : 'delete_gallery',
 							type : 'post',
-							data : JSON.stringify(fd),
-							contentType : 'application/json',
-							dataType : 'json',
+							data : fd,
+							contentType : false,
+							processData : false,
 							success : function(data) {
-								if (data['status'] == 'success') {
-									$('#tenderdata_table').DataTable().ajax.reload( null, false );
+								if (data['status'] == 'Success') {
+									$('#amenities_table').DataTable().ajax.reload( null, false );
 								 Swal.fire({
 									  icon: 'success',
 									  title: 'Delete successfully',

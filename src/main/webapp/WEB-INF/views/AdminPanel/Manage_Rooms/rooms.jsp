@@ -99,6 +99,34 @@
   position: relative;
   padding-bottom: 100%;
 }
+.prod-box{
+	position: relative;
+}
+.prod_img{
+	height: 150px;
+    object-fit: cover;
+    width: 100%;
+}
+.prod-box:hover .dlt_icon{
+	opacity: 1;
+}
+.dlt_icon a{
+		color: #fff !important;
+		font-size: 22px;
+	}
+.dlt_icon{
+	background: #000000ad;
+	position: absolute;
+	top: 0%;
+	left: 0%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+	transition: all .5s ease;
+}
 </style>
 
 </head>
@@ -220,24 +248,24 @@ List<Amenities> ame = (List<Amenities>)request.getAttribute("ame");
 											 <div class="col-md-6 mb-3">
 			                                  	 
 			                                <label class="form-label" for="rent">Rent / Night (in INR) <span style="color: red;">*</span></label> <input
-													type="text" class="form-control" id="rent" 
+													type="text" class="form-control decimalOnly" id="rent" 
 													name="rent" />
 			                                </div>
 			                            
 			                                
 			                                <div class="col-md-6 mb-3">
 			                                  	<label class="form-label" for="bed">Bed <span style="color: red;">*</span></label> <input
-													type="text" class="form-control" id="bed" 
+													type="text"  class="form-control numberOnly" id="bed" 
 													name="bed" />
 			                                </div>
 			                                <div class="col-md-6 mb-3">
 			                                  	<label class="form-label" for="bath">Bath <span style="color: red;">*</span></label> <input
-													type="text" class="form-control" id="bath" 
+													type="text" class="form-control numberOnly" id="bath" 
 													name="bath" />
 			                                </div>
 			                                <div class="col-md-6 mb-3">
 			                                  	<label class="form-label" for="guest">Max Guest <span style="color: red;">*</span></label> <input
-													type="text" class="form-control" id="guest" 
+													type="text" class="form-control numberOnly" id="guest" 
 													name="guest" />
 			                                </div>
 			                                <div class="col-md-12 mb-3">
@@ -248,16 +276,19 @@ List<Amenities> ame = (List<Amenities>)request.getAttribute("ame");
 												      <input type="file" multiple="" data-max_length="20" id="slider_image" name="slider_image" class="form-control upload__inputfile mb-3">
 												    </label>
 												  </div>
+												  
 												  <div class="upload__img-wrap row"></div>
 												</div>
 			                                </div>
+			                                <div class="row p-4" id="image_column">
+			                                </div>
 			                                <h5>Amenities</h5>
 			                                <%if(ame != null){ 
-			                                for(Amenities a : ame){%>
+			                                for(int i=0; i<ame.size(); i++){%>
 				                                <div class="col-4">
 					                    			<div class="form-check form-switch mb-2">
-					                                    <input class="form-check-input" type="checkbox" id="amenity<%=a.getSno() %>" value="<%=a.getSno() %>" name="amenity">
-					                                    <label class="form-check-label" for="amenity<%=a.getSno() %>"><%=a.getAmenity_name() %></label>
+					                                    <input class="form-check-input amenity" type="checkbox" id="amenity<%=i %>" value="<%=ame.get(i).getSno() %>" name="amenity">
+					                                    <label class="form-check-label" for="amenity<%=i %>"><%=ame.get(i).getAmenity_name() %></label>
 					                                </div>
 				                    			</div>
 			                                <%} }%>
@@ -304,62 +335,53 @@ List<Amenities> ame = (List<Amenities>)request.getAttribute("ame");
 		  ImgUpload();
 		});
 
-		function ImgUpload() {
+	function ImgUpload() {
 		  var imgWrap = "";
-		  var imgArray = [];
+		  var html = "";
 
 		  $('.upload__inputfile').each(function () {
 		    $(this).on('change', function (e) {
 		      imgWrap = $(this).closest('.upload__box').find('.upload__img-wrap');
 		      var maxLength = $(this).attr('data-max_length');
-
 		      var files = e.target.files;
 		      var filesArr = Array.prototype.slice.call(files);
-		      var iterator = 0;
-		      filesArr.forEach(function (f, index) {
 
+		      // Clear previously shown images and reset array
+		      imgWrap.empty();
+		      var imgArray = [];
+
+		      filesArr.forEach(function (f, index) {
 		        if (!f.type.match('image.*')) {
 		          return;
 		        }
 
-		        if (imgArray.length > maxLength) {
-		          return false
-		        } else {
-		          var len = 0;
-		          for (var i = 0; i < imgArray.length; i++) {
-		            if (imgArray[i] !== undefined) {
-		              len++;
-		            }
-		          }
-		          if (len > maxLength) {
-		            return false;
-		          } else {
-		            imgArray.push(f);
-
-		            var reader = new FileReader();
-		            reader.onload = function (e) {
-		              html = "<div class='col-3 upload__img-box'><div style='background-image: url(" + e.target.result + ")' data-number='" + $(".upload__img-close").length + "' data-file='" + f.name + "' class='img-bg'><div class='upload__img-close'></div></div></div>";
-		              imgWrap.append(html);
-		              iterator++;
-		            }
-		            reader.readAsDataURL(f);
-		          }
+		        if (imgArray.length >= maxLength) {
+		          return false;
 		        }
+
+		        imgArray.push(f);
+
+		        var reader = new FileReader();
+		        reader.onload = function (e) {
+		          html = "<div class='col-3 upload__img-box'>" +
+		                   "<div style='background-image: url(" + e.target.result + ")' " +
+		                   "data-number='" + $(".upload__img-close").length + "' " +
+		                   "data-file='" + f.name + "' class='img-bg'>" +
+		                   "<div class='upload__img-close'></div>" +
+		                 "</div></div>";
+		          imgWrap.append(html);
+		        }
+		        reader.readAsDataURL(f);
 		      });
 		    });
 		  });
 
+		  // Delete preview image on close button click
 		  $('body').on('click', ".upload__img-close", function (e) {
-		    var file = $(this).parent().data("file");
-		    for (var i = 0; i < imgArray.length; i++) {
-		      if (imgArray[i].name === file) {
-		        imgArray.splice(i, 1);
-		        break;
-		      }
-		    }
 		    $(this).parent().parent().remove();
 		  });
 		}
+
 	function data() {
 		$("#amenities_table").DataTable({
 			dom : "Blfrtip",
@@ -610,7 +632,7 @@ List<Amenities> ame = (List<Amenities>)request.getAttribute("ame");
 		var fd = new FormData();
 		fd.append("sno", i);
 		$.ajax({
-			url : 'edit_amenity',
+			url : 'edit_room',
 			type : 'post',
 			data : fd,
 			contentType : false,
@@ -618,7 +640,51 @@ List<Amenities> ame = (List<Amenities>)request.getAttribute("ame");
 			success : function(data) {
 				if (data['status'] == 'Success') {
 					$('#amenity_modal').modal('toggle');
-					$("#amenity_name").val(data['data'][0].amenity_name);
+					$("#title").val(data['data'][0].title);
+					 $("#category > option").each(function() {
+						    if (this.value ==  data['data'][0].category_id) {
+						    	$(this).prop("selected", "selected");
+						    }
+						});
+					 $("#no_of_rooms").val(data['data'][0].no_of_rooms);
+					 $("#rent").val(data['data'][0].price);
+					 $("#bed").val(data['data'][0].bed);
+					 $("#bath").val(data['data'][0].bath);
+					 $("#guest").val(data['data'][0].guest);
+					 $("#summery").val(data['data'][0].summery);
+					 if (descriptionEditor) {
+				            descriptionEditor.setData(data['data'][0].description);
+				        } else {
+				            console.warn("CKEditor not ready yet.");
+				        }
+					 $("#meta_kywords").val(data['data'][0].meta_keywords);
+					 $("#meta_description").val(data['data'][0].meta_description);
+					 $("#viewImg").attr("src", "displayimage?url="+data['data'][0].title_image+"");
+					 var am = data['data'][0].amenity_ids.split(",");
+
+					 if (am != null && am != "") {
+					     for (var i = 0; i < am.length; i++) {
+					         if (am[i] == $("#amenity" +i).val()) {
+					             $("#amenity" +i).prop("checked", true);
+					         }
+					     }
+					 }
+					 var html = '';
+					 var img = data['data'][0].simg;
+						if(img != null && img != ""){
+							for(var i = 0; i < img.length; i++){
+								var image = img[i].image;
+								html += '<div class="col-md-3">'
+									+ '<div class="prod-box">'
+									+ '<div class="inner-box">' + '<figure class="image-box">'
+									+ '<span class="dlt_icon"><a href="javascript:void(0);" onclick="deleteimg('+img[i].sno+')" class="fa-solid fa-xmark"></a></span>'
+									+ '<img class="prod_img" alt="product img" src="displayimage?url='+image+'">'
+									+ '</div>' 
+									+ '</div>' 
+									+ '</div>';
+							}
+							$("#image_column").html(html);
+						}
 				} else {
 					Swal.fire({
 						icon : 'Opps',
@@ -677,6 +743,53 @@ List<Amenities> ame = (List<Amenities>)request.getAttribute("ame");
 				});
 			}; 
 
+			function deleteimg(sno) {
+				
+				 /* Swal.fire({
+			    	  title: 'Do you want to delete image?',
+			    	  showDenyButton: true,
+			    	  //showCancelButton: true,
+			    	  confirmButtonText: 'Yes',
+			    	  denyButtonText: 'No',
+			    	  customClass: {
+			    	    actions: 'my-actions',
+			    	    cancelButton: 'order-1 right-gap',
+			    	    confirmButton: 'order-2',
+			    	    denyButton: 'order-3',
+			    	  }
+			    	}).then((result) => {
+			    	  if (result.isConfirmed) { */
+			    		  var fd = new FormData();
+							fd.append("sno", sno);
+							$.ajax({
+								url : 'delete_image',
+								type : 'post',
+								data : fd,
+								contentType : false,
+								processData : false,
+								success : function(data) {
+									if (data['status'] == 'Success') {
+										getimg();
+										Swal.fire({
+											icon : 'success',
+											title : 'Deleted!',
+											text : 'Image deleted successfully'
+										})
+									} else {
+										Swal.fire({
+											icon : 'Opps',
+											title : 'Warning!',
+											text : 'No Data'
+										})
+									}
+								}
+							});
+			    	  
+			    	   /* }
+			    	}); */
+					
+					
+				};
 			$("#clear_btn").click(function() {
 				$("#brandImage1").attr("src", "");
 		        $("input[type='text'], input[type='date'],input[type='hidden'],input[type='number'],input[type='file']").val("");
