@@ -747,7 +747,6 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 				$("#sbmt").prop("disabled", true); 
 		    	$("#sbmt .btn-text").text("Please Wait..");
 		    	$("#sbmt .spinner").show();
-				alert(final_amount);
 	        $.ajax({
 	            url: 'create_order',
 	            data: JSON.stringify({"amount": parseFloat(final_amount)}),
@@ -775,7 +774,7 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 	                            	    "check_out": check_out,
 	                            	    "no_of_rooms": no_of_room,
 	                            	    "adult": no_of_adult,
-	                            	    "chilt": no_of_child,
+	                            	    "child": no_of_child,
 	                            	    "name": name,
 	                            	    "mobile_number": phone,
 	                            	    "gst_number": gst_number,
@@ -872,7 +871,7 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
             	    "check_out": check_out,
             	    "no_of_rooms": no_of_room,
             	    "adult": no_of_adult,
-            	    "chilt": no_of_child,
+            	    "child": no_of_child,
             	    "name": name,
             	    "mobile_number": phone,
             	    "email": email,

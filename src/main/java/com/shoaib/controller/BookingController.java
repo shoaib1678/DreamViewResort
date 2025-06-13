@@ -37,4 +37,11 @@ public class BookingController {
 		response = bookingService.get_booking(start,length,search);
 		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
 	}
+	@RequestMapping("/getBdata")
+	public ResponseEntity<Map<String,Object>> getBdata(HttpServletRequest request){
+		Map<String,Object> response = new HashMap<String,Object>();
+		String booking_id = request.getParameter("booking_id");
+		response = bookingService.getBdata(booking_id);
+		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
+	}
 }

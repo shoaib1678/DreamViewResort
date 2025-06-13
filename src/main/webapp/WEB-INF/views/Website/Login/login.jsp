@@ -167,6 +167,9 @@ section .container.active .signinBx .imgBx {
     width: 100%;
   }
 }
+.error{
+color: red;
+}
      </style>
 </head>
 <body class="front" data-spy="scroll" data-target="#top-inner" data-offset="0">
@@ -187,11 +190,11 @@ section .container.active .signinBx .imgBx {
       <div class="user signinBx">
         <div class="imgBx"><img src="assets/images/loginf.webp" alt="" /></div>
         <div class="formBx">
-          <form action="" onsubmit="return false;">
+          <form action="./" id="login" name="login" method ="post">
             <h2>Sign In</h2>
-            <input type="text" name="" placeholder="Username" />
-            <input type="password" name="" placeholder="Password" />
-            <input type="submit" name="" value="Login" />
+            <input type="text" name="email" id="lemail" placeholder="Username" />
+            <input type="password" name="password" id="lpassword" placeholder="Password" />
+            <input type="submit" name="" id="bttnn" value="Login" />
             <p class="signup">
               Don't have an account ?
               <a href="#" onclick="toggleForm();">Sign Up.</a>
@@ -201,13 +204,13 @@ section .container.active .signinBx .imgBx {
       </div>
       <div class="user signupBx">
         <div class="formBx">
-          <form action="" onsubmit="return false;">
+          <form action="" onsubmit="return false;" id="register" name="register">
             <h2>Create an account</h2>
-            <input type="text" name="" placeholder="Username" />
-            <input type="email" name="" placeholder="Email Address" />
-            <input type="password" name="" placeholder="Create Password" />
-            <input type="password" name="" placeholder="Confirm Password" />
-            <input type="submit" name="" value="Sign Up" />
+            <input type="text" name="user_name" id="user_name" placeholder="Username" />
+            <input type="email" name="remail" id="remail" placeholder="Email Address" />
+            <input type="password" name="password" id="password" placeholder="Create Password" />
+            <input type="password" name="cpassword" id="cpassword" placeholder="Confirm Password" />
+            <input type="submit" name="" id="rbtn" value="Sign Up" />
             <p class="signup">
               Already have an account ?
               <a href="#" onclick="toggleForm();">Sign in.</a>
@@ -232,6 +235,149 @@ section .container.active .signinBx .imgBx {
  function toggleForm() {
 	  $('.container').toggleClass('active');
 	}
+ 
+ $(function() {
+		$("form[name='register']")
+				.validate(
+						{
+							rules : {
+								user_name : {
+									required : true,
+								},
+								remail : {
+									required : true,
+									email: true 
+								},
+								password : {
+									required : true,
+									minlength: 6
+								},
+								cpassword : {
+									required : true,
+									equalTo: "#password" 
+								},
+							},
+
+							messages : {
+
+								user_name : {
+									required : "Please enter user name",
+								},
+								remail : {
+									required : "Please enter email",
+									email: "Please enter a valid email address"
+								},
+								password : {
+									required : "Please enter pasword",
+									minlength: "Password must be at least 6 characters"
+								},
+								cpassword : {
+									required : "Please enter confirm password",
+									 equalTo: "Passwords do not match"
+									
+								},
+							},
+
+							submitHandler : function(form) {
+								$("#rbtn").attr("disabled", true);
+								$("#rbtn").val("Please Wait...");
+								var user_name = $("#user_name").val();
+								var email = $("#remail").val();
+								var password = $("#password").val();
+
+								var obj = {
+									"user_name" : user_name,
+									"email" : email,
+									"password" : password
+								};
+								
+								$.ajax({
+									url : 'add_user',
+									type : 'post',
+									data : JSON.stringify(obj),
+									dataType : 'json',
+									contentType :  'application/json',
+									success : function(data) {
+										if (data['status'] == 'Success') {
+											$("#rbtn").val(data['message']);
+											setTimeout(function () {
+												$("#rbtn").attr("disabled", false);
+												$("#rbtn").val("Sign Up");
+												toggleForm();
+	                                        }, 3000);
+											
+											} else if(data['status'] == 'Already_Exist'){
+												$("#rbtn").val(data['message']);
+												setTimeout(function () {
+													$("#rbtn").attr("disabled", false);
+													$("#rbtn").val("Sign Up");
+		                                        }, 3000);
+											}
+											else if(data['status'] == 'Failed'){
+												$("#rbtn").val(data['message']);
+												setTimeout(function () {
+													$("#rbtn").attr("disabled", false);
+													$("#rbtn").val("Sign Up");
+		                                        }, 3000);
+											}
+									}
+								});
+
+							}
+						});
+
+	});
+ $(function() {
+		$("form[name='login']").validate({
+			rules : {
+				email : {
+					required : true,
+				},
+				password : {
+					required : true,
+				}
+			},
+			messages : {
+				email : "Please enter valid username",
+				password : "Please enter password",
+
+			},
+			submitHandler : function(form) {
+				$("#bttnn").html("Please Wait..");
+				var email = $("#lemail").val();
+				var password = $("#lpassword").val();
+				
+				var fd = new FormData();
+				
+				fd.append("email",email);
+				fd.append("password",password);
+				fd.append("user_type","User");
+				
+
+				$.ajax({
+					url : 'checklogin',
+					type : 'post',
+					data : fd,
+					contentType : false,
+					processData : false,
+					success : function(data) {
+
+						if (data['status'] == 'Success') {
+							$("#bttnn").val("Success");
+							form.submit();
+						
+						} else{
+							$("#bttnn").val("Invalid Credentials");
+							setTimeout(function() {
+								$("#bttnn").val("Login");
+						      }, 3000);
+						}
+						
+					}
+				});
+			}
+		});
+	});
  </script>
 
 </body>

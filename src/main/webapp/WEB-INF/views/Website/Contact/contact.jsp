@@ -105,7 +105,22 @@ button.contact_form_submit {
 .socil_item_inner{
     padding-bottom: 10px;
 }
+@media only screen and (max-width: 768px) {
+  .contact_field {
+    padding: 20px 10px;
+  }
 
+  .contact_info_sec {
+    margin-top: 350px;
+  }
+
+  .contact_field p,h3 {
+    text-align: center;
+  }
+  .contact_form_inner{
+      height: 870px;
+  }
+}
 .map_sec{
     padding: 50px 0px;
 }
@@ -120,6 +135,9 @@ button.contact_form_submit {
    margin-top: 50px;
     border-radius: 30px;
     overflow: hidden;
+}
+.error{
+color: red;
 }
   </style>
 </head>
@@ -145,13 +163,16 @@ button.contact_form_submit {
                             <div class="col-md-10">
                                 <div class="contact_form_inner">
                                     <div class="contact_field">
-                                        <h3>Contatc Us</h3>
+                                        <h3>Contact Us</h3>
                                         <p>Feel Free to contact us any time. We will get back to you as soon as we can!.</p>
-                                        <input type="text" class="form-control form-group" placeholder="Name" />
-                                        <input type="text" class="form-control form-group" placeholder="Phone Number" />
-                                        <input type="text" class="form-control form-group" placeholder="Email" />
-                                        <textarea class="form-control form-group" placeholder="Message"></textarea>
-                                        <button class="contact_form_submit">Send</button>
+                                        <form action="" id="contact_form" name="contact_form">
+                                         <input type="text" class="form-control form-group" id="name" name="name" placeholder="Name" />
+                                        <input type="text" class="form-control form-group" id="mobile_number" name="mobile_number" placeholder="Phone Number" />
+                                        <input type="text" class="form-control form-group" id="email" name="email" placeholder="Email" />
+                                        <textarea class="form-control form-group" id="message" name="message" placeholder="Message"></textarea>
+                                        <button type="submit" class="contact_form_submit" id="sndbtn">Send</button>
+                                        </form>
+                                       
                                     </div>
                                 </div>
                             </div>
@@ -209,6 +230,78 @@ button.contact_form_submit {
 </div>
 
  <jsp:include page="../js.jsp" />
+ 
+ <script>
+ $(function () {
+	    $("form[name='contact_form']").validate({
+	        rules: {
+	            name: { required: true },
+	            email: { required: true },
+	            mobile_number: { required: true },
+	            message: { required: true }
+	        },
+	        messages: {
+	            name: "",
+	            email: "",
+	            mobile_number: "",
+	            message: ""
+	        },
+	        highlight: function (element) {
+	            $(element).css({
+	                "border": "none",
+	                "border-bottom": "2px solid red",
+	                "outline": "none",
+	                "box-shadow": "none"
+	            });
+	        },
+	        unhighlight: function (element) {
+	            $(element).css({
+	                "border": "none",
+	                "border-bottom": "2px solid #ccc",
+	                "outline": "none",
+	                "box-shadow": "none"
+	            });
+	        },
+	        errorPlacement: function () {
+	            return false; // Prevent error message display
+	        },
+	        submitHandler: function (form) {
+	            $("#sndbtn").attr("disabled", true).html("Please wait...");
+
+	            const obj = {
+	                name: $("#name").val(),
+	                email: $("#email").val(),
+	                mobile_number: $("#mobile_number").val(),
+	                message: $("#message").val()
+	            };
+
+	            $.ajax({
+	                url: 'add_enquiry',
+	                type: 'post',
+	                data: JSON.stringify(obj),
+	                dataType: 'json',
+	                contentType: 'application/json',
+	                success: function (data) {
+	                    if (data['status'] === 'Success') {
+	                        $("#sndbtn").css("background", "green").html(data['message']);
+	                        $('#contact_form').trigger("reset");
+
+	                        setTimeout(function () {
+	                            $("#sndbtn").html("send")
+	                                .css("background", "linear-gradient(to top right, #fab000 -5%, #db8136 100%)")
+	                                .attr("disabled", false);
+	                        }, 3000);
+	                    } else {
+	                        alert(data['message']);
+	                    }
+	                }
+	            });
+	        }
+	    });
+	});
+
+	
+	</script>
 
 </body>
 

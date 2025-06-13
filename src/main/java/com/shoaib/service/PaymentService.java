@@ -39,32 +39,31 @@ public class PaymentService {
 	private static final String HMAC_SHA256_ALGORITHM = "HmacSHA256";
 	
 
-//	public Map<String, Object> add_Payment(Payment payment) {
-//	    Map<String, Object> response = new HashMap<>();
-//	    try {
-//	    	payment.setPayment_status("Pending");
-//	        int i = commonDao.addDataToDb(payment);
-//	        if (i > 0) {
-//	        	paymentService.updateRazorPayOrder(payment.getOrder_id());
-//				response.put("status", "Success");
-//				response.put("message","Enquiry Saved Successfully");
-//				payment.setOrder_id(payment.getOrder_id());
-//				payment.setPayment_status("Paid");
-//				commonDao.updateDataToDb(payment);
-//				paymentService.add_razorpay_payment(payment.getOrder_id(),payment.getRazorpay_order_id(), payment.getRazorpay_payment_id(),payment.getRazorpay_signature(),payment.getType());
-//	            response.put("status", "Success");
-//	            response.put("message", "Payment Added Successfully");
-//	        } else {
-//	            response.put("status", "Failed");
-//	            response.put("message", "Something went wrong");
-//	        }
-//	    } catch (Exception e) {
-//	        e.printStackTrace();
-//	        response.put("status", "Failed");
-//	        response.put("message", "Internal Server Error: " + e.getMessage());
-//	    }
-//	    return response;
-//	}
+	public Map<String, Object> add_Payment(Booking booking) {
+	    Map<String, Object> response = new HashMap<>();
+	    try {
+	    	 Map<String, Object> map = new HashMap<String, Object>();
+	    	 map.put("booking_id", booking.getBooking_id());
+	    	 List<Booking> b = (List<Booking>)commonDao.getDataByMap(map, new Booking(), null, null, 0, -1);
+	    	 if(b.size() > 0) {
+	    		 double amt = b.get(0).getPaid_amount() + b.get(0).getDue_amount();
+	    		 b.get(0).setDue_amount(0);
+	    		 b.get(0).setPaid_amount(amt);
+	    		 b.get(0).setOrder_id(booking.getOrder_id());
+	    		 b.get(0).setPayment_status("Paid");
+	    		 commonDao.updateDataToDb(b.get(0));
+	    		 paymentService.updateRazorPayOrder(booking.getOrder_id());
+				 paymentService.add_razorpay_payment(booking.getOrder_id(),booking.getRazorpay_order_id(), booking.getRazorpay_payment_id(),booking.getRazorpay_signature(),booking.getType());
+		            response.put("status", "Success");
+		            response.put("message", "Payment Successfully");
+	    	 }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        response.put("status", "Failed");
+	        response.put("message", "Internal Server Error: " + e.getMessage());
+	    }
+	    return response;
+	}
 
 	public Map<String, Object> get_Payment(int start, int length, String search) {
 		Map<String,Object> response = new HashMap<String, Object>();

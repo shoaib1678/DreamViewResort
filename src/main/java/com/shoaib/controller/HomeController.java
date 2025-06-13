@@ -395,4 +395,9 @@ public class HomeController {
 		ModelAndView mv = new ModelAndView("AdminPanel/Payment/payment");
 		return mv;
 	}
+	@RequestMapping(value="/registered_user")
+	public ModelAndView registered_user(HttpServletRequest request) throws IOException{
+		ModelAndView mv = new ModelAndView("AdminPanel/User/users");
+		return mv;
+	}
 }

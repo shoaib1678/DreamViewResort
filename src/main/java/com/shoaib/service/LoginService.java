@@ -1,5 +1,7 @@
 package com.shoaib.service;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shoaib.dao.CommonDao;
+import com.shoaib.modal.Amenities;
+import com.shoaib.modal.Booking;
 import com.shoaib.modal.LoginCredentials;
 
 @Service
@@ -149,6 +153,73 @@ public class LoginService {
 			e.printStackTrace();
 			response.put("status", "Failed");
 			response.put("message", "Something Went Wrong" + e);
+		}
+		return response;
+	}
+
+	public Map<String, Object> add_user(LoginCredentials login) {
+		 Map<String, Object> response = new HashMap<>();
+		    try {
+		    	 Map<String, Object> map = new HashMap<String, Object>();
+		    	 map.put("email", login.getEmail());
+		    	 map.put("user_name", login.getUser_name());
+		    	 List<LoginCredentials> log = (List<LoginCredentials>)commonDao.getDataByMapOr(map, new LoginCredentials(), null, null, 0, -1);
+		    	 if(log.size() > 0) {
+		    		 response.put("status", "Already_Exist");
+					response.put("message", "User Details Already Exist");
+		    	 }else {
+		    		 login.setUser_id(0);
+		    		 login.setUser_type("User");
+		    		 login.setStatus("Active");
+		    		 login.setCreatedAt(new Date());
+		    		 int i = commonDao.addDataToDb(login);
+		    		 if(i >0) {
+		    			 response.put("status", "Success");
+						 response.put("message", "Success");
+		    		 }else {
+		    			 response.put("status", "Failed");
+		    			 response.put("message", "Something went wrong");
+		    		 }
+		    	 }
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		        response.put("status", "Failed");
+		        response.put("message", "Internal Server Error: " + e.getMessage());
+		    }
+		    return response;
+	}
+
+	public Map<String, Object> get_user(int start, int length, String search) {
+		Map<String,Object> response = new HashMap<String, Object>();
+		try {
+			Map<String,Object> map = new HashMap<String, Object>();
+			map.put("user_type", "User");
+			Map<String,Object> or_map = new HashMap<String, Object>();
+			if(search != null && !search.isEmpty()) {
+				or_map.put("user_name", search);
+				or_map.put("email", search);
+			}
+			List<LoginCredentials> list = (List<LoginCredentials>) commonDao.getDataByMapSearchAnd(map,or_map, new LoginCredentials(), "sno", "asc", start, length);	
+			int count = commonDao.getDataByMapSearchAndSize(map, or_map, new LoginCredentials(), "sno", "asc");
+			if(list.size()>0) {
+				response.put("data", list);
+				response.put("recordsFiltered", count);
+				response.put("recordsTotal", count);
+				response.put("status", "Success");
+			}else {
+				response.put("data", new ArrayList());
+				response.put("recordsFiltered", 0);
+				response.put("recordsTotal", 0);
+				response.put("status","Failed");
+				return response;
+			}
+		} catch (Exception e) {
+			response.put("data", new ArrayList());
+			response.put("recordsFiltered", 0);
+			response.put("recordsTotal", 0);
+			response.put("message", "Internal server Error"+e);
+			e.printStackTrace();
+			return response;
 		}
 		return response;
 	}

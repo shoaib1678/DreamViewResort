@@ -52,8 +52,12 @@ public class EnquiryService {
 
 
              emailService.sendEmailMessage(email, subject, message);
-			enquiry.setCreatedAt(new Date());
+            enquiry.setCreatedAt(new Date());
 			int i = commonDao.addDataToDb(enquiry);
+			if(i > 0) {
+				 response.put("status", "Success");
+	             response.put("message", "Enquiry raised successfully");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			response.put("message", "Internal server Error"+e);

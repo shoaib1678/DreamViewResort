@@ -126,7 +126,7 @@
               </a>
               <ul class="menu-sub">
                 <li class="menu-item">
-                  <a href="manage_hotels_services" class="menu-link">
+                  <a href="registered_user" class="menu-link">
                     <div data-i18n="Registered Users">Registered Users</div>
                   </a>
                 </li>

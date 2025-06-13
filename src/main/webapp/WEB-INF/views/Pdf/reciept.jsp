@@ -773,7 +773,7 @@ try {
 	cell.setBorderWidthLeft(1.0f);
 	cell.setBorderWidthRight(1.0f);
 	cell.setBorderWidthBottom(1.0f);
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
 	table.addCell(cell);
 	document.add(table);
 	

@@ -32,7 +32,7 @@
                                     <li class="nav-item"><a href="gallery" class="nav-link">Gallery</a></li>
                                     <li class="nav-item"><a href="blog" class="nav-link">Blog</a></li>
                                      <li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-toggle="modal" data-target="#genModal">Generate Receipt</a></li>
-                                     <li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-toggle="modal" data-target="#myModal">Payment</a></li>
+                                     <li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-toggle="modal" data-target="#pModal">Payment</a></li>
                                     <li class="nav-item"><a href="contacts" class="nav-link">Contact</a></li>
                                     <li class="nav-item"><a href="user_auth" class="nav-link btn btn-primary" style="line-height: 30px !important;background: #0073b7;margin-top: 20px;">Login</a></li>
                                    
@@ -45,7 +45,7 @@
         </div>
         
         <!-- The Modal -->
-<div class="modal fade" id="myModal">
+<div class="modal fade" id="pModal">
   <div class="modal-dialog">
     <div class="modal-content">
 
@@ -60,7 +60,16 @@
       <div class="modal-body">
        		<div class="row">
        			<div class="col-12 mb-3">
-       				<input class="form-control" id="booking_id" name="booking_id" placeholder="Booking ID">
+       				<input class="form-control" id="bking_id" name="bking_id" placeholder="Booking ID"><button type="button" id="getin" class="btn btn-primary btn-sm" onclick="getData()" style="position: absolute;top: 3px;right: 19px;">Get Details</button>
+       			</div>
+       			<div class="col-12 mb-3">
+       				<input class="form-control" id="name" name="name" placeholder="Name" disabled>
+       			</div>
+       			<div class="col-12 mb-3">
+       				<input class="form-control" id="email" name="email" placeholder="Email" disabled>
+       			</div>
+       			<div class="col-12 mb-3">
+       				<input class="form-control" id="phone" name="phone" placeholder="Phone Number" disabled>
        			</div>
        			<div class="col-12 mb-3">
        				<input class="form-control" id="title" name="title" placeholder="Room Name" disabled>
@@ -75,7 +84,7 @@
       <!-- Modal footer -->
       <div class="modal-footer">
         <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary btn-sm">Pay</button>
+        <button type="button" id="pmntbtn" class="btn btn-primary btn-sm" onclick="payment()">Pay</button>
       </div>
 	</form>
     </div>

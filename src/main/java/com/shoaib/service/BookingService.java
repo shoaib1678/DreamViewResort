@@ -215,4 +215,24 @@ public class BookingService {
 		}
 		return response;
 	}
+
+	public Map<String, Object> getBdata(String booking_id) {
+		Map<String,Object> response = new HashMap<String, Object>();
+		try {
+			Map<String,Object> map = new HashMap<String,Object>();
+			Map<String,Object> mp = new HashMap<String,Object>();
+			map.put("booking_id", booking_id);
+			List<Booking> book = (List<Booking>)commonDao.getDataByMap(map, new Booking(), null, null, 0, -1);
+			mp.put("sno", book.get(0).getRoom_id());
+			List<Rooms> room = (List<Rooms>)commonDao.getDataByMap(mp, new Rooms(), null, null, 0, -1);
+			book.get(0).setTitle(room.get(0).getTitle());
+			response.put("status", "Success");
+			response.put("data", book);
+		} catch (Exception e) {
+			response.put("message", "Internal server Error"+e);
+			e.printStackTrace();
+			return response;
+		}
+		return response;
+	}
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.razorpay.RazorpayException;
+import com.shoaib.modal.Booking;
 import com.shoaib.service.PaymentService;
 
 
@@ -24,12 +25,12 @@ public class PaymentController {
 	@Autowired
 	PaymentService paymentService;
 	
-//	@RequestMapping("/add_Payment")
-//	public ResponseEntity<Map<String,Object>> add_Payment(@RequestBody Payment payment){
-//		Map<String,Object> response = new HashMap<String,Object>();
-//		response = paymentService.add_Payment(payment);
-//		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
-//	}
+	@RequestMapping("/add_Payment")
+	public ResponseEntity<Map<String,Object>> add_Payment(@RequestBody Booking booking){
+		Map<String,Object> response = new HashMap<String,Object>();
+		response = paymentService.add_Payment(booking);
+		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
+	}
 	
 	@RequestMapping("/get_Payment")
 	public ResponseEntity<Map<String,Object>> get_Payment(HttpServletRequest request){

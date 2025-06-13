@@ -10,6 +10,7 @@
     <link href="assets/css/owl.carousel.css" rel="stylesheet">
     <link href="assets/css/slick.css" rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
+     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     
     <style>
 @media screen and (min-width: 1200px) {
