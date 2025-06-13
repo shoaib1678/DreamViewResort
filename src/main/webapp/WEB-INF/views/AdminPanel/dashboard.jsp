@@ -43,6 +43,12 @@
     z-index: 10;
     background: #00ae00 !important;
 }
+.table-calendar td, .table-calendar th {
+    padding: 30px 10px !important;
+    }
+    .container-calendar {
+    max-width: 100% !important;
+}
 	
 </style>
 </head>
@@ -148,7 +154,7 @@ List<Rooms> rooms = (List<Rooms>)request.getAttribute("rooms");
 
 							<div class="col-md-12  ">
 								<div class="row">
-									<div class="col-md-6 ">
+									<div class="col-md-12 ">
 										<div class="card">
 											<div class="card-body" id="yourchartDiv">
 													<div class="mb-3" style="padding: 0px 30px;">

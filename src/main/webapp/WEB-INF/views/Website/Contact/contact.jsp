@@ -148,6 +148,7 @@ button.contact_form_submit {
                                         <h3>Contatc Us</h3>
                                         <p>Feel Free to contact us any time. We will get back to you as soon as we can!.</p>
                                         <input type="text" class="form-control form-group" placeholder="Name" />
+                                        <input type="text" class="form-control form-group" placeholder="Phone Number" />
                                         <input type="text" class="form-control form-group" placeholder="Email" />
                                         <textarea class="form-control form-group" placeholder="Message"></textarea>
                                         <button class="contact_form_submit">Send</button>
@@ -157,9 +158,8 @@ button.contact_form_submit {
                             <div class="col-md-2">
                                 <div class="right_conatct_social_icon d-flex align-items-end">
                                    <div class="socil_item_inner d-flex">
-                                      <li><a href="#"><i class="fab fa-facebook-square"></i></a></li>
-                                      <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-                                      <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                                      <li><a href="https://www.facebook.com/dreamviewresort.madhai/"><i class="fa fa-facebook-square"></i></a></li>
+                                      <li><a href="https://www.instagram.com/dreamviewresortmadhai/"><i class="fa fa-instagram"></i></a></li>
                                    </div>
                                 </div>
                             </div>
@@ -168,15 +168,15 @@ button.contact_form_submit {
                             <h4>Contact Info</h4>
                             <div class="d-flex info_single align-items-center">
                                 <i class="fas fa-headset"></i>
-                                <span>+91 8009 054294</span>
+                                <span>+919329197477, +919098753337</span>
                             </div>
                             <div class="d-flex info_single align-items-center">
                                 <i class="fas fa-envelope-open-text"></i>
-                                <span>info@flightmantra.com</span>
+                                <span>info.dreamviewheritage@gmail.com</span>
                             </div>
                             <div class="d-flex info_single align-items-center">
                                 <i class="fas fa-map-marked-alt"></i>
-                                <span>1000+ Travel partners and 65+ Service city across India, USA, Canada & UAE</span>
+                                <span><b>Resort Address:</b> Infront MPT Bison Village – Sarangpur, Sohagpur Madhai</span>
                             </div>
             
                         </div>
@@ -191,7 +191,7 @@ button.contact_form_submit {
                 <div class="col-md-10 offset-md-1">
                     <div class="map_inner">
                         <h4>Find Us on Google Map</h4>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tempore quo beatae quasi assumenda, expedita aliquam minima tenetur maiores neque incidunt repellat aut voluptas hic dolorem sequi ab porro, quia error.</p>
+                        <p>Dream View Resort is nestled amidst nature, offering a peaceful escape from the city. Visit us and enjoy a relaxing stay surrounded by scenic beauty.</p>
                         <div class="map_bind">
                             <iframe src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=23.213300,%2081.534010+(My%20Business%20Name)&amp;t=&amp;z=10&amp;ie=UTF8&amp;iwloc=B&amp;output=embed" width="100%" height="450" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
                         </div>

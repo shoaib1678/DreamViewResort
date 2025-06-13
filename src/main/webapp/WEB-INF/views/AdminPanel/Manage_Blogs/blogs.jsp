@@ -169,7 +169,7 @@ List<Category> cat = (List<Category>)request.getAttribute("cat");
      <input type="hidden" id="sno" name="sno" value="0">
 	<jsp:include page="../js.jsp"></jsp:include>
 	<script type="text/javascript">
-	var sno = $("#sno").val();
+
 	function data() {
 		$("#amenities_table").DataTable({
 			dom : "Blfrtip",
@@ -243,7 +243,7 @@ List<Category> cat = (List<Category>)request.getAttribute("cat");
 						dataToSet) {
 						var sno = data.sno;
 						var string = "<button class='btn btn-sm btn-secondary add-new btn-primary btn-sm '  type='button'  onclick='edit("+sno+")'>Edit</button> ";
-					//	string +='<button type="button" class="btn btn-sm btn-danger btn-sm ml-1 "  onclick="deletedata('+sno+')" style="margin-left: 10px;">Delete</button>';
+						string +='<button type="button" class="btn btn-sm btn-danger btn-sm ml-1 "  onclick="deletedata('+sno+')" style="margin-left: 10px;">Delete</button>';
 						return string;
 						}
 					},
@@ -269,9 +269,9 @@ List<Category> cat = (List<Category>)request.getAttribute("cat");
 								summery : {
 									required : true,
 								},
-								image : {
+								/* image : {
 									required : true,
-								},
+								}, */
 								description : {
 									required : true,
 								},
@@ -285,9 +285,9 @@ List<Category> cat = (List<Category>)request.getAttribute("cat");
 								category : {
 									required : "Please Select Category",
 								},
-								image : {
+								/* image : {
 									required : "Please Upload Title Image",
-								},
+								}, */
 								summery : {
 									required : "Please write summery here",
 								},
@@ -297,6 +297,10 @@ List<Category> cat = (List<Category>)request.getAttribute("cat");
 							},
 
 							submitHandler : function(form) {
+								let sno = $("#sno").val();
+								if(sno == ""){
+									sno =0;
+								}
 								var title = $("#title").val();
 								var caregory_id = $("#category").val();
 								var image = $("#image")[0].files[0];
@@ -363,7 +367,7 @@ List<Category> cat = (List<Category>)request.getAttribute("cat");
 		var fd = new FormData();
 		fd.append("sno", i);
 		$.ajax({
-			url : 'edit_amenity',
+			url : 'get_blogs_for_edit',
 			type : 'post',
 			data : fd,
 			contentType : false,
@@ -371,7 +375,21 @@ List<Category> cat = (List<Category>)request.getAttribute("cat");
 			success : function(data) {
 				if (data['status'] == 'Success') {
 					$('#amenity_modal').modal('toggle');
-					$("#amenity_name").val(data['data'][0].amenity_name);
+					$("#title").val(data['data'][0].title);
+					$("#category > option").each(function() {
+					    if (this.value ==  data['data'][0].category_id) {
+					    	$(this).prop("selected", "selected");
+					    }
+					});
+					 $("#summery").val(data['data'][0].summery);
+					 if (descriptionEditor) {
+				            descriptionEditor.setData(data['data'][0].description);
+				        } else {
+				            console.warn("CKEditor not ready yet.");
+				        }
+					 $("#meta_keywords").val(data['data'][0].meta_keywords);
+					 $("#meta_description").val(data['data'][0].meta_description);
+					 $("#viewImg").attr("src", "displayimage?url="+data['data'][0].image+"");
 				} else {
 					Swal.fire({
 						icon : 'Opps',
@@ -388,7 +406,7 @@ List<Category> cat = (List<Category>)request.getAttribute("cat");
 		  function deletedata(sno)
 			{	 
 			 Swal.fire({
-				  title: 'Do you want to Delete Employee Details?',
+				  title: 'Do you want to Delete Blog Details?',
 				  showDenyButton: true,
 				  //showCancelButton: true,
 				  confirmButtonText: 'Yes',
@@ -401,21 +419,18 @@ List<Category> cat = (List<Category>)request.getAttribute("cat");
 				  }
 				}).then((result) => {
 				  if (result.isConfirmed) {
-					 
 					  	console.log(sno);
-					    console.log(status)
-						var fd = {
-					    	"category_id":sno,
-					    	};					
+						var fd  = new FormData();
+					    	fd.append("sno",sno);			
 						$.ajax({
-							url : 'delete_category', //add  Course  controller name AdminController
+							url : 'delete_blogs', //add  Course  controller name AdminController
 							type : 'post',
-							data : JSON.stringify(fd),
-							contentType : 'application/json',
-							dataType : 'json',
+							data : fd,
+							processData : false,
+							contentType :  false,
 							success : function(data) {
-								if (data['status'] == 'success') {
-									$('#tenderdata_table').DataTable().ajax.reload( null, false );
+								if (data['status'] == 'Success') {
+									$('#amenities_table').DataTable().ajax.reload( null, false );
 								 Swal.fire({
 									  icon: 'success',
 									  title: 'Delete successfully',

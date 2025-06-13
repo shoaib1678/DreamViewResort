@@ -996,11 +996,11 @@ transition: all 0.3s ease-out;
 .top-wrapper-dark .navbar_ .navbar-toggler-icon{background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255, 255, 255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");}
 .navbar_ .navbar-collapse{clear: both;}
 .navbar_ .navbar-nav{display: block; padding: 0; margin: 0;}
-.navbar_ .navbar-nav > li{display: block; float: left; white-space: nowrap; margin-left: 20px;}
+.navbar_ .navbar-nav > li{display: block; float: left; white-space: nowrap; /*margin-left: 20px;*/}
 .navbar_ .navbar-nav > li:first-child{margin-left: 0;}
 .navbar_ .navbar-nav > li > .nav-link i{padding-left: 3px}
 .top-wrapper-dark .navbar_ .navbar-nav > li > .nav-link{color: #fff!important; line-height: 72px;}
-.navbar_ .navbar-nav > li > .nav-link{display: block; text-decoration: none; font-family: 'Oswald', sans-serif; font-size: 19px; line-height: 132px; padding: 0 10px; margin: 0; color: #333333; border-bottom: 2px solid transparent;
+.navbar_ .navbar-nav > li > .nav-link{display: block; text-decoration: none; font-family: 'Oswald', sans-serif; font-size: 17px; line-height: 132px; padding: 0 10px; margin: 0; color: #333333; border-bottom: 2px solid transparent;
 transition: all 0.3s ease-out;
 }
 .navbar_ .navbar-nav > li > .nav-link:focus{color: #333333;border-bottom-color: transparent;}

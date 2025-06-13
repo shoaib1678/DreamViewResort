@@ -19,8 +19,8 @@ public class Utils {
 
 	@Autowired
 	CommonDao commonDao;
-		//public static String staticimages = "C:/temp/"; 
-		public static String staticimages = "/var/lib/tomcat9/webapps/uploads/";
+		public static String staticimages = "C:/temp/"; 
+		//public static String staticimages = "/var/lib/tomcat9/webapps/uploads/";
 		//public static String staticimages = "/opt/tomcat9/files/mpjungle_files/";
 		public static String userkey = "CbddmBz6lmP2766";
 

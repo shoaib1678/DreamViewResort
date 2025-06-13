@@ -143,19 +143,26 @@ public class BookingService {
                 emailService.sendEmailMessage(booking.getEmail(), subject1, message1);
                 if(booking.getPayment_mode().equalsIgnoreCase("Online")) {
 
-                paymentService.updateRazorPayOrder(booking.getOrder_id());
-                booking.setOrder_id(booking.getOrder_id());
-                booking.setPayment_status("Paid");
-                booking.setBooking_id(booking_id);
-                commonDao.updateDataToDb(booking);
-
-                paymentService.add_razorpay_payment(
-                        booking.getOrder_id(),
-                        booking.getRazorpay_order_id(),
-                        booking.getRazorpay_payment_id(),
-                        booking.getRazorpay_signature(),
-                        booking.getType()
-                );
+	                paymentService.updateRazorPayOrder(booking.getOrder_id());
+	                booking.setOrder_id(booking.getOrder_id());
+	                if(booking.getPayment_type().equalsIgnoreCase("20%")) {
+	                	 booking.setPayment_status("Partially Paid");
+	                }else {
+	                	 booking.setPayment_status("Paid");
+	                }
+	                booking.setBooking_id(booking_id);
+	                commonDao.updateDataToDb(booking);
+	
+	                paymentService.add_razorpay_payment(
+	                        booking.getOrder_id(),
+	                        booking.getRazorpay_order_id(),
+	                        booking.getRazorpay_payment_id(),
+	                        booking.getRazorpay_signature(),
+	                        booking.getType()
+	                );
+                }else {
+                	booking.setPayment_status("Pending");
+                	 commonDao.updateDataToDb(booking);
                 }
                 response.put("status", "Success");
                 response.put("bid", booking_id);

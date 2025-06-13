@@ -39,6 +39,7 @@ public class Booking {
 	private double due_amount;
 	private double total_amount;
 	private double paid_amount;
+	private double gst_amount;
 	@Transient
 	private String title;
 	@Transient
@@ -97,6 +98,12 @@ public class Booking {
 	}
 	public void setNo_of_rooms(int no_of_rooms) {
 		this.no_of_rooms = no_of_rooms;
+	}
+	public double getGst_amount() {
+		return gst_amount;
+	}
+	public void setGst_amount(double gst_amount) {
+		this.gst_amount = gst_amount;
 	}
 	public String getTitle() {
 		return title;

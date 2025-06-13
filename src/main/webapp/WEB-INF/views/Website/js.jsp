@@ -35,4 +35,24 @@
 		 var url = "booking?id=" + sno + "&/" + name;
 		    window.location.href = url;
 	}
+  
+  function generatereceipt() {
+	  var booking_id = $("#bkid").val()
+	  if(bookin_id != null && booking_id != ""){
+		  var mapForm = document.createElement("form");
+	      mapForm.method = "POST";
+	      mapForm.target = "_blank";
+	      mapForm.action = "reciept";
+	      var output = document.createElement("input");
+	      output.type = "hidden";
+	      output.name = "booking_id";
+	      output.value = booking_id;
+	      mapForm.appendChild(output);
+	      document.body.appendChild(mapForm);
+	      mapForm.submit();
+	  }else{
+		 alert("Please Enter Booking Id for generate receipt"); 
+	  }
+     
+}
 </script>

@@ -19,19 +19,23 @@
                             </button>
 
                             <div class="collapse navbar-collapse" id="navbarSupportedContent2">
-                            <div class="logo_wrapper">
+                            <div class="logo_wrapper" style=" width: min-content;">
                                 <a href="./" class="logo">
-                                    <img src="assets/images/logo_white.png" class="img-fluid" style="margin-right: 185px; height: 65px;">
+                                    <img src="assets/images/logo_white.png" class="img-fluid" style="margin-right: 330px; height: 65px;">
                                 </a>
                             </div>
                                 <ul class="nav navbar-nav sf-menu clearfix">
                                     <li class="nav-item "><a href="./" class="nav-link">Home</a></li>
                                     <li class="nav-item"><a href="about" class="nav-link">About us</a></li>
                                     <li class="nav-item"><a href="activities" class="nav-link">Activities</a></li>
-                                    <li class="nav-item"><a href="rooms" class="nav-link">Our Rooms</a></li>
+                                    <li class="nav-item"><a href="rooms" class="nav-link">Rooms</a></li>
                                     <li class="nav-item"><a href="gallery" class="nav-link">Gallery</a></li>
                                     <li class="nav-item"><a href="blog" class="nav-link">Blog</a></li>
+                                     <li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-toggle="modal" data-target="#genModal">Generate Receipt</a></li>
+                                     <li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-toggle="modal" data-target="#myModal">Payment</a></li>
                                     <li class="nav-item"><a href="contacts" class="nav-link">Contact</a></li>
+                                    <li class="nav-item"><a href="user_auth" class="nav-link btn btn-primary" style="line-height: 30px !important;background: #0073b7;margin-top: 20px;">Login</a></li>
+                                   
                                 </ul>
                             </div>
                         </nav>
@@ -39,3 +43,71 @@
                 </div>
             </div>
         </div>
+        
+        <!-- The Modal -->
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Payment Details</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      	<form action="">
+      <div class="modal-body">
+       		<div class="row">
+       			<div class="col-12 mb-3">
+       				<input class="form-control" id="booking_id" name="booking_id" placeholder="Booking ID">
+       			</div>
+       			<div class="col-12 mb-3">
+       				<input class="form-control" id="title" name="title" placeholder="Room Name" disabled>
+       			</div>
+       			<div class="col-12 mb-3">
+       				<input class="form-control" id="due_amount" name="due_amount" placeholder="Due Amount" disabled>
+       			</div>
+       		</div>
+       	
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary btn-sm">Pay</button>
+      </div>
+	</form>
+    </div>
+  </div>
+</div>
+        <!-- The Modal -->
+<div class="modal fade" id="genModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Generate Receipt</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+
+      <!-- Modal body -->
+      	<form action="">
+      <div class="modal-body">
+       		<div class="row">
+       			<div class="col-12">
+       				<input class="form-control" id="bkid" name="bkid" placeholder="Booking ID">
+       			</div>
+       		</div>
+       	
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-sm" onclick="generatereceipt()">Generate</button>
+      </div>
+	</form>
+    </div>
+  </div>
+</div>

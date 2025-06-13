@@ -210,7 +210,7 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 													<select class="select2 select" style="width: 100%"
 														id="country" name="country">
 														<option disabled selected>Country</option>
-														<option value="Online">Indian</option>
+														<option value="Indian">Indian</option>
 														<option value="Foreigner">Foreigner</option>
 													</select>
 												</div>
@@ -716,12 +716,14 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 	    	var country = $('#country').val();
 	    	var coupon_code = $('#coupon_code').val();
 	    	var gst_number = $('#gst_number').val();
+	    	var gst = $('#gst').html();
 
 	    	var base_price = $('#base_price').text().trim();
 	    	var no_of_nights = $('#no_of_nights').text().trim();
 	    	var sub_total = $('#sub_total').text().trim();
 	    	var discount = $('#discount').text().trim();
 	    	var final_amount = $('#final_amount').text().trim();
+	    	var payable_amount = $('#final_amount').text().trim();
 
 	    	var payment_mode = $('#payment_mode').val();
 	    	
@@ -785,8 +787,10 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 	                            	    "night": no_of_nights,
 	                            	    "sub_total": sub_total,
 	                            	    "discount": discount,
-	                            	    "total_amount": final_amount,
+	                            	    "total_amount": payable_amount,
+	                            	    "paid_amount": final_amount,
 	                            	    "due_amount": due_amount,
+	                            	    "gst_amount": gst,
 	                            	    "payment_mode": payment_mode,
 	                            	    "payment_type": payment_option,
 	                                "razorpay_payment_id": response.razorpay_payment_id,
@@ -879,8 +883,10 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
             	    "night": no_of_nights,
             	    "sub_total": sub_total,
             	    "discount": discount,
-            	    "total_amount": final_amount,
-            	    "due_amount": final_amount,
+            	    "total_amount": payable_amount,
+            	    "paid_amount": final_amount,
+            	    "due_amount": due_amount,
+            	    "gst_amount": gst,
             	    "payment_mode": payment_mode,
             	    "payment_type": payment_option,
             };

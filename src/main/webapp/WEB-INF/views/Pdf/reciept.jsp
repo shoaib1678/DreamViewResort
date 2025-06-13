@@ -1,3 +1,4 @@
+<%@page import="com.shoaib.modal.Booking"%>
 <%@page import="com.itextpdf.text.html.WebColors"%>
 <%@page import="java.util.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
@@ -50,6 +51,8 @@ BaseColor myColor = WebColors.getRGBColor("#bdbdbd");
 BaseColor myColor1 = WebColors.getRGBColor("#00515D");
 fontnormalhead1.setColor(myColor1);
 
+List<Booking> book = (List<Booking>)request.getAttribute("book");
+
 try {
 	ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 	PdfWriter.getInstance(document, buffer);
@@ -63,21 +66,7 @@ try {
 
 	document.add(table);
 	
-	table = new PdfPTable(12);
-	table.setWidthPercentage(100);
-
-	phrase = new Phrase();
-	phrase.add(new Chunk("HOTEL BOOKING DETAILS", fontnormalhead1));
-
-	cell = new PdfPCell(phrase);
-	cell.setPaddingTop(-10);
-	cell.setPaddingBottom(0);
-	cell.setPaddingLeft(5);
-	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setColspan(12);
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-	table.addCell(cell);
-	document.add(table);
+	
 	
 	table = new PdfPTable(12);
 	table.setWidthPercentage(100);
@@ -99,12 +88,30 @@ try {
 	cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
 	table.addCell(cell);
 	document.add(table);
+	
+	table = new PdfPTable(12);
+	table.setWidthPercentage(100);
+
+	phrase = new Phrase();
+	phrase.add(new Chunk("Address: Infront MPT Bison Village – Sarangpur, Sohagpur Madhai, Contact Number: +919329197477, +919098753337    Email: info.dreamviewheritage@gmail.com ", fontbold));
+
+	cell = new PdfPCell(phrase);
+	cell.setPaddingTop(10);
+	cell.setPaddingBottom(0);
+	cell.setPaddingLeft(5);
+	cell.setBorder(PdfPCell.NO_BORDER);
+	cell.setColspan(12);
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+	/* cell.setBorderColorBottom(BaseColor.BLACK); // Set border color
+	cell.setBorderWidthBottom(1f); // Set border width */
+	table.addCell(cell);
+	document.add(table);
 
 	table = new PdfPTable(12);
 	table.setWidthPercentage(100);
 
 	phrase = new Phrase();
-	phrase.add(new Chunk("Shoaib Jamal", fontnormalhead2));
+	phrase.add(new Chunk(book.get(0).getTitle(), fontnormalhead2));
 
 	cell = new PdfPCell(phrase);
 	cell.setPaddingTop(30);
@@ -113,15 +120,13 @@ try {
 	cell.setBorder(PdfPCell.NO_BORDER);
 	cell.setColspan(6);
 	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-
-	// Set a styled border at the bottom of the cell
-	cell.setBorderColorBottom(BaseColor.BLACK); // Set border color
+	cell.setBorderColorBottom(BaseColor.BLACK); 
 	cell.setBorderWidthBottom(1f); // Set border width
 	cell.setBorder(PdfPCell.BOTTOM);
 	table.addCell(cell);
 	
 	phrase = new Phrase();
-	phrase.add(new Chunk("Booking ID: Booning101", fontnormalhead));
+	phrase.add(new Chunk("Booking ID: "+book.get(0).getBooking_id(), fontnormalhead));
 
 	cell = new PdfPCell(phrase);
 	cell.setPaddingTop(30);
@@ -143,14 +148,27 @@ try {
 	table.setWidthPercentage(100);
 
 	phrase = new Phrase();
-	phrase.add(new Chunk("BOOKING DETAILS", fontnormal));
+	phrase.add(new Chunk("BOOKING DETAILS", fontbold));
 
 	cell = new PdfPCell(phrase);
 	cell.setPaddingTop(10);
 	cell.setPaddingBottom(5);
 	cell.setPaddingLeft(0);
 	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setColspan(12);
+	cell.setColspan(6);
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+	table.addCell(cell);
+	document.add(table);
+	
+	phrase = new Phrase();
+	phrase.add(new Chunk("Guest Details", fontbold));
+
+	cell = new PdfPCell(phrase);
+	cell.setPaddingTop(10);
+	cell.setPaddingBottom(5);
+	cell.setPaddingLeft(0);
+	cell.setBorder(PdfPCell.NO_BORDER);
+	cell.setColspan(6);
 	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
 	table.addCell(cell);
 	document.add(table);
@@ -159,31 +177,31 @@ try {
 	table.setWidthPercentage(100);
 	
 	phrase = new Phrase();
-	phrase.add(new Chunk("Hotel Name", fontbold));
+	phrase.add(new Chunk("Check-in", fontbold));
 
 	cell = new PdfPCell(phrase);
 	cell.setPaddingTop(5);
 	cell.setPaddingBottom(5);
-	cell.setColspan(3);
+	cell.setColspan(2);
 	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setBorderWidthLeft(1.0f);
+	/* cell.setBorderWidthLeft(1.0f);
 	cell.setBorderWidthTop(1.0f);
-	cell.setBorderWidthBottom(1.0f);
+	cell.setBorderWidthBottom(1.0f); */
 	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
 	table.addCell(cell);
 	
 	phrase = new Phrase();
 
-	phrase.add(new Chunk("Resort Name", fontnormal));
+	phrase.add(new Chunk(book.get(0).getCheck_in()+"", fontnormal));
 
 	cell = new PdfPCell(phrase);
 	cell.setPaddingTop(3);
 	cell.setPaddingBottom(5);
-	cell.setColspan(3);
+	cell.setColspan(4);
 	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setBorderWidthLeft(1.0f);
+	/* cell.setBorderWidthLeft(1.0f);
 	cell.setBorderWidthTop(1.0f);
-	cell.setBorderWidthBottom(1.0f);
+	cell.setBorderWidthBottom(1.0f); */
 	/* cell.setBackgroundColor(BaseColor.BLACK);
 	/* cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT); */
 	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
@@ -191,34 +209,34 @@ try {
 
 	
 	phrase = new Phrase();
-	phrase.add(new Chunk("Arrival Date", fontbold));
+	phrase.add(new Chunk("Name", fontbold));
 
 	cell = new PdfPCell(phrase);
 	cell.setPaddingTop(3);
 	cell.setPaddingBottom(5);
 	cell.setColspan(3);
 	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setBorderWidthLeft(1.0f);
+	/* cell.setBorderWidthLeft(1.0f);
 	cell.setBorderWidthTop(1.0f);
-	cell.setBorderWidthBottom(1.0f);
+	cell.setBorderWidthBottom(1.0f); */
 	/* cell.setBackgroundColor(BaseColor.BLACK);
 	/* cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT); */
 	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
 	table.addCell(cell);
-
-
+	
 	phrase = new Phrase();
-	phrase.add(new Chunk("2025-07-05", fontnormal));
+	phrase.add(new Chunk(book.get(0).getName()+"", fontnormal));
 
 	cell = new PdfPCell(phrase);
 	cell.setPaddingTop(3);
 	cell.setPaddingBottom(5);
 	cell.setColspan(3);
 	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setBorderWidthLeft(1.0f);
-	cell.setBorderWidthRight(1.0f);
+	/* cell.setBorderWidthLeft(1.0f);
 	cell.setBorderWidthTop(1.0f);
-	cell.setBorderWidthBottom(1.0f);
+	cell.setBorderWidthBottom(1.0f); */
+	/* cell.setBackgroundColor(BaseColor.BLACK);
+	/* cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT); */
 	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
 	table.addCell(cell);
 	document.add(table);
@@ -227,29 +245,27 @@ try {
 	table.setWidthPercentage(100);
 	
 	phrase = new Phrase();
-	phrase.add(new Chunk("Rooms", fontbold));
+	phrase.add(new Chunk("Check-out", fontbold));
 
 	cell = new PdfPCell(phrase);
 	cell.setPaddingTop(3);
 	cell.setPaddingBottom(5);
-	cell.setColspan(3);
+	cell.setColspan(2);
 	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setBorderWidthLeft(1.0f);
-	cell.setBorderWidthBottom(1.0f);
 	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
 	table.addCell(cell);
 	
 	phrase = new Phrase();
 
-	phrase.add(new Chunk("5", fontnormal));
+	phrase.add(new Chunk(book.get(0).getCheck_out()+"", fontnormal));
 
 	cell = new PdfPCell(phrase);
 	cell.setPaddingTop(3);
 	cell.setPaddingBottom(5);
-	cell.setColspan(3);
+	cell.setColspan(4);
 	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setBorderWidthLeft(1.0f);
-	cell.setBorderWidthBottom(1.0f);
+	/* cell.setBorderWidthLeft(1.0f);
+	cell.setBorderWidthBottom(1.0f); */
 	/* cell.setBackgroundColor(BaseColor.BLACK);
 	/* cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT); */
 	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
@@ -257,262 +273,96 @@ try {
 
 	
 	phrase = new Phrase();
-	phrase.add(new Chunk("Departure Date", fontbold));
+	phrase.add(new Chunk("Email", fontbold));
 
 	cell = new PdfPCell(phrase);
 	cell.setPaddingTop(3);
 	cell.setPaddingBottom(5);
 	cell.setColspan(3);
 	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setBorderWidthLeft(1.0f);
-	cell.setBorderWidthBottom(1.0f);
+	/* cell.setBorderWidthLeft(1.0f);
+	cell.setBorderWidthBottom(1.0f); */
 	/* cell.setBackgroundColor(BaseColor.BLACK);
 	/* cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT); */
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+	table.addCell(cell);
+	
+	phrase = new Phrase();
+	phrase.add(new Chunk(book.get(0).getEmail()+"", fontnormal));
+
+	cell = new PdfPCell(phrase);
+	cell.setPaddingTop(3);
+	cell.setPaddingBottom(5);
+	cell.setColspan(3);
+	cell.setBorder(PdfPCell.NO_BORDER);
+	/* cell.setBorderWidthLeft(1.0f);
+	cell.setBorderWidthBottom(1.0f); */
+	/* cell.setBackgroundColor(BaseColor.BLACK);
+	/* cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT); */
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+	table.addCell(cell);
+	document.add(table);
+	
+	table = new PdfPTable(12);
+	table.setWidthPercentage(100);
+	
+	phrase = new Phrase();
+	phrase.add(new Chunk("Guest", fontbold));
+
+	cell = new PdfPCell(phrase);
+	cell.setPaddingTop(3);
+	cell.setPaddingBottom(5);
+	cell.setColspan(2);
+	cell.setBorder(PdfPCell.NO_BORDER);
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+	table.addCell(cell);
+	
+	phrase = new Phrase();
+
+	phrase.add(new Chunk(book.get(0).getAdult()+" Adults, "+book.get(0).getChild()+" Children", fontnormal));
+
+	cell = new PdfPCell(phrase);
+	cell.setPaddingTop(3);
+	cell.setPaddingBottom(5);
+	cell.setColspan(4);
+	cell.setBorder(PdfPCell.NO_BORDER);
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+	table.addCell(cell);
+
+	
+	phrase = new Phrase();
+	phrase.add(new Chunk("Mobile Number", fontbold));
+
+	cell = new PdfPCell(phrase);
+	cell.setPaddingTop(3);
+	cell.setPaddingBottom(5);
+	cell.setColspan(3);
+	cell.setBorder(PdfPCell.NO_BORDER);
 	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
 	table.addCell(cell);
 
 
 	phrase = new Phrase();
-	phrase.add(new Chunk("2025-06-05", fontnormal));
+	phrase.add(new Chunk(book.get(0).getMobile_number()+"", fontnormal));
 
 	cell = new PdfPCell(phrase);
 	cell.setPaddingTop(3);
 	cell.setPaddingBottom(5);
 	cell.setColspan(3);
 	cell.setBorder(PdfPCell.NO_BORDER);
+	/* cell.setBorderWidthLeft(1.0f);
 	cell.setBorderWidthRight(1.0f);
-	cell.setBorderWidthLeft(1.0f);
-	cell.setBorderWidthBottom(1.0f);
+	cell.setBorderWidthBottom(1.0f); */
 	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
 	table.addCell(cell);
 	document.add(table);
-	
-	table = new PdfPTable(12);
-	table.setWidthPercentage(100);
-	
-	phrase = new Phrase();
-	phrase.add(new Chunk("Room Type", fontbold));
-
-	cell = new PdfPCell(phrase);
-	cell.setPaddingTop(3);
-	cell.setPaddingBottom(5);
-	cell.setColspan(3);
-	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setBorderWidthLeft(1.0f);
-	cell.setBorderWidthBottom(1.0f);
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-	table.addCell(cell);
-	
-	phrase = new Phrase();
-
-	phrase.add(new Chunk("Acc", fontnormal));
-
-	cell = new PdfPCell(phrase);
-	cell.setPaddingTop(3);
-	cell.setPaddingBottom(5);
-	cell.setColspan(3);
-	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setBorderWidthLeft(1.0f);
-	cell.setBorderWidthBottom(1.0f);
-	/* cell.setBackgroundColor(BaseColor.BLACK);
-	/* cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT); */
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-	table.addCell(cell);
-
-	
-	phrase = new Phrase();
-	phrase.add(new Chunk("Travellers", fontbold));
-
-	cell = new PdfPCell(phrase);
-	cell.setPaddingTop(3);
-	cell.setPaddingBottom(5);
-	cell.setColspan(3);
-	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setBorderWidthLeft(1.0f);
-	cell.setBorderWidthBottom(1.0f);
-	/* cell.setBackgroundColor(BaseColor.BLACK);
-	/* cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT); */
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-	table.addCell(cell);
-
-
-	phrase = new Phrase();
-	phrase.add(new Chunk("2", fontnormal));
-
-	cell = new PdfPCell(phrase);
-	cell.setPaddingTop(3);
-	cell.setPaddingBottom(5);
-	cell.setColspan(3);
-	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setBorderWidthLeft(1.0f);
-	cell.setBorderWidthRight(1.0f);
-	cell.setBorderWidthBottom(1.0f);
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-	table.addCell(cell);
-	document.add(table);
-	
-	table = new PdfPTable(12);
-	table.setWidthPercentage(100);
-	
-	phrase = new Phrase();
-	phrase.add(new Chunk("Inclussion", fontbold));
-
-	cell = new PdfPCell(phrase);
-	cell.setPaddingTop(3);
-	cell.setPaddingBottom(5);
-	cell.setColspan(3);
-	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setBorderWidthLeft(1.0f);
-	cell.setBorderWidthBottom(1.0f);
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-	table.addCell(cell);
-	
-	phrase = new Phrase();
-
-	phrase.add(new Chunk("amenities", fontnormal));
-
-	cell = new PdfPCell(phrase);
-	cell.setPaddingTop(3);
-	cell.setPaddingBottom(5);
-	cell.setColspan(3);
-	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setBorderWidthLeft(1.0f);
-	cell.setBorderWidthBottom(1.0f);
-	/* cell.setBackgroundColor(BaseColor.BLACK);
-	/* cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT); */
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-	table.addCell(cell);
-
-	
-	phrase = new Phrase();
-	phrase.add(new Chunk("", fontbold));
-
-	cell = new PdfPCell(phrase);
-	cell.setPaddingTop(3);
-	cell.setPaddingBottom(5);
-	cell.setColspan(3);
-	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setBorderWidthLeft(1.0f);
-	cell.setBorderWidthBottom(1.0f);
-	/* cell.setBackgroundColor(BaseColor.BLACK);
-	/* cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT); */
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-	table.addCell(cell);
-
-
-	phrase = new Phrase();
-	phrase.add(new Chunk("", fontnormal));
-
-	cell = new PdfPCell(phrase);
-	cell.setPaddingTop(3);
-	cell.setPaddingBottom(5);
-	cell.setColspan(3);
-	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setBorderWidthLeft(1.0f);
-	cell.setBorderWidthRight(1.0f);
-	cell.setBorderWidthBottom(1.0f);
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-	table.addCell(cell);
-	document.add(table);
-
-	
-	table = new PdfPTable(12);
-	table.setWidthPercentage(100);
-
-	phrase = new Phrase();
-	phrase.add(new Chunk("TOURIST DETAILS", fontnormal));
-
-	cell = new PdfPCell(phrase);
-	cell.setPaddingTop(10);
-	cell.setPaddingBottom(5);
-	cell.setPaddingLeft(0);
-	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setColspan(12);
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-	table.addCell(cell);
-	document.add(table);
-	
-	table = new PdfPTable(12);
-	table.setWidthPercentage(100);
-	
-	phrase = new Phrase();
-	phrase.add(new Chunk("Sno", fontbold));
-
-	cell = new PdfPCell(phrase);
-	cell.setPaddingTop(3);
-	cell.setPaddingBottom(5);
-	cell.setBackgroundColor(myColor);
-	cell.setColspan(1);
-	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setBorderWidthLeft(1.0f);
-	cell.setBorderWidthTop(1.0f);
-	cell.setBorderWidthBottom(1.0f);
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-	table.addCell(cell);
-	
-	phrase = new Phrase();
-	phrase.add(new Chunk("Primary Guest Name ", fontbold));
-
-	cell = new PdfPCell(phrase);
-	cell.setPaddingTop(4);
-	cell.setPaddingBottom(5);
-	cell.setBackgroundColor(myColor);
-	cell.setColspan(11);
-	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setBorderWidthLeft(1.0f);
-	cell.setBorderWidthRight(1.0f);
-	cell.setBorderWidthTop(1.0f);
-	cell.setBorderWidthBottom(1.0f);
-	/* cell.setBackgroundColor(BaseColor.BLACK);
-	/* cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT); */
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-	table.addCell(cell);
-	
-	document.add(table);
-	
-	
-	table = new PdfPTable(12);
-	table.setWidthPercentage(100);
-	
-	phrase = new Phrase();
-	phrase.add(new Chunk("1", fontnormal));
-
-	cell = new PdfPCell(phrase);
-	cell.setPaddingTop(3);
-	cell.setPaddingBottom(5);
-	cell.setColspan(1);
-	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setBorderWidthLeft(1.0f);
-	cell.setBorderWidthBottom(1.0f);
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
-	table.addCell(cell);
-	
-	phrase = new Phrase();
-
-	phrase.add(new Chunk("Shh", fontnormal));
-
-	cell = new PdfPCell(phrase);
-	cell.setPaddingTop(3);
-	cell.setPaddingBottom(5);
-	cell.setColspan(11);
-	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setBorderWidthLeft(1.0f);
-	cell.setBorderWidthRight(1.0f);
-	cell.setBorderWidthBottom(1.0f);
-	/* cell.setBackgroundColor(BaseColor.BLACK);
-	/* cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT); */
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-	table.addCell(cell);
-	document.add(table);
-	
-	
 	
 	
 	table = new PdfPTable(12);
 	table.setWidthPercentage(100);
 
 	phrase = new Phrase();
-	phrase.add(new Chunk("PAYMENT DETAILS", fontnormal));
+	phrase.add(new Chunk("PAYMENT DETAILS", fontbold));
 
 	cell = new PdfPCell(phrase);
 	cell.setPaddingTop(10);
@@ -530,7 +380,7 @@ try {
 	table.setWidthPercentage(100);
 	
 	phrase = new Phrase();
-	phrase.add(new Chunk("Booking Date", fontbold));
+	phrase.add(new Chunk("Payment Mode", fontbold));
 
 	cell = new PdfPCell(phrase);
 	cell.setPaddingTop(3);
@@ -545,7 +395,7 @@ try {
 	
 	phrase = new Phrase();
 
-	phrase.add(new Chunk("2025-25-01", fontnormal));
+	phrase.add(new Chunk(book.get(0).getPayment_mode()+"", fontnormal));
 
 	cell = new PdfPCell(phrase);
 	cell.setPaddingTop(3);
@@ -562,7 +412,7 @@ try {
 
 	
 	phrase = new Phrase();
-	phrase.add(new Chunk("Payment Date", fontbold));
+	phrase.add(new Chunk("Payment Status", fontbold));
 
 	cell = new PdfPCell(phrase);
 	cell.setPaddingTop(3);
@@ -579,7 +429,7 @@ try {
 
 
 	phrase = new Phrase();
-	phrase.add(new Chunk("2025", fontnormal));
+	phrase.add(new Chunk(book.get(0).getPayment_status()+"", fontnormal));
 
 	cell = new PdfPCell(phrase);
 	cell.setPaddingTop(3);
@@ -597,54 +447,25 @@ try {
 	table = new PdfPTable(12);
 	table.setWidthPercentage(100);
 	
-	phrase = new Phrase();
-	phrase.add(new Chunk("Transaction ID", fontbold));
-
-	cell = new PdfPCell(phrase);
-	cell.setPaddingTop(3);
-	cell.setPaddingBottom(5);
-	cell.setColspan(3);
-	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setBorderWidthLeft(1.0f);
-	cell.setBorderWidthBottom(1.0f);
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-	table.addCell(cell);
 	
 	phrase = new Phrase();
-
-	phrase.add(new Chunk("1254556655", fontnormal));
-
-	cell = new PdfPCell(phrase);
-	cell.setPaddingTop(3);
-	cell.setPaddingBottom(5);
-	cell.setColspan(3);
-	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setBorderWidthLeft(1.0f);
-	cell.setBorderWidthBottom(1.0f);
-	/* cell.setBackgroundColor(BaseColor.BLACK);
-	/* cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT); */
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-	table.addCell(cell);
-
-	
-	phrase = new Phrase();
-	phrase.add(new Chunk("Email ID", fontbold));
+	phrase.add(new Chunk("Base Price", fontbold));
 
 	cell = new PdfPCell(phrase);
 	cell.setPaddingTop(3);
 	cell.setPaddingBottom(5);
-	cell.setColspan(3);
+	cell.setColspan(9);
 	cell.setBorder(PdfPCell.NO_BORDER);
 	cell.setBorderWidthLeft(1.0f);
-	cell.setBorderWidthBottom(1.0f);
+	//cell.setBorderWidthBottom(1.0f);
 	/* cell.setBackgroundColor(BaseColor.BLACK);
 	/* cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT); */
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
 	table.addCell(cell);
 
 
 	phrase = new Phrase();
-	phrase.add(new Chunk("@gmail.com", fontnormal));
+	phrase.add(new Chunk("RS "+book.get(0).getBase_price()+"/Night", fontnormal));
 
 	cell = new PdfPCell(phrase);
 	cell.setPaddingTop(3);
@@ -652,73 +473,44 @@ try {
 	cell.setColspan(3);
 	cell.setBorder(PdfPCell.NO_BORDER);
 	cell.setBorderWidthRight(1.0f);
-	cell.setBorderWidthLeft(1.0f);
-	cell.setBorderWidthBottom(1.0f);
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+	//cell.setBorderWidthLeft(1.0f);
+	//cell.setBorderWidthBottom(1.0f);
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
 	table.addCell(cell);
 	document.add(table);
+	
 	
 	table = new PdfPTable(12);
 	table.setWidthPercentage(100);
 	
 	phrase = new Phrase();
-	phrase.add(new Chunk("Reservration Fee", fontbold));
+	phrase.add(new Chunk("No of Rooms", fontbold));
 
 	cell = new PdfPCell(phrase);
 	cell.setPaddingTop(3);
 	cell.setPaddingBottom(5);
-	cell.setColspan(3);
+	cell.setColspan(9);
 	cell.setBorder(PdfPCell.NO_BORDER);
 	cell.setBorderWidthLeft(1.0f);
-	cell.setBorderWidthBottom(1.0f);
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-	table.addCell(cell);
-	
-	phrase = new Phrase();
-
-	phrase.add(new Chunk("4500", fontnormal));
-
-	cell = new PdfPCell(phrase);
-	cell.setPaddingTop(3);
-	cell.setPaddingBottom(5);
-	cell.setColspan(3);
-	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setBorderWidthLeft(1.0f);
-	cell.setBorderWidthBottom(1.0f);
+	//cell.setBorderWidthBottom(1.0f);
 	/* cell.setBackgroundColor(BaseColor.BLACK);
 	/* cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT); */
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
 	table.addCell(cell);
 
-	
+
 	phrase = new Phrase();
-	phrase.add(new Chunk("Contact No", fontbold));
+	phrase.add(new Chunk(book.get(0).getNo_of_rooms()+"", fontnormal));
 
 	cell = new PdfPCell(phrase);
 	cell.setPaddingTop(3);
 	cell.setPaddingBottom(5);
 	cell.setColspan(3);
 	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setBorderWidthLeft(1.0f);
-	cell.setBorderWidthBottom(1.0f);
-	/* cell.setBackgroundColor(BaseColor.BLACK);
-	/* cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT); */
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-	table.addCell(cell);
-
-
-	phrase = new Phrase();
-	phrase.add(new Chunk("8298108066", fontnormal));
-
-	cell = new PdfPCell(phrase);
-	cell.setPaddingTop(3);
-	cell.setPaddingBottom(5);
-	cell.setColspan(3);
-	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setBorderWidthLeft(1.0f);
 	cell.setBorderWidthRight(1.0f);
-	cell.setBorderWidthBottom(1.0f);
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+	//cell.setBorderWidthLeft(1.0f);
+	//cell.setBorderWidthBottom(1.0f);
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
 	table.addCell(cell);
 	document.add(table);
 	
@@ -726,117 +518,264 @@ try {
 	table = new PdfPTable(12);
 	table.setWidthPercentage(100);
 
+	
 	phrase = new Phrase();
-	phrase.add(new Chunk("Price Includes:", fontbold));
+	phrase.add(new Chunk("No of Nights", fontbold));
 
 	cell = new PdfPCell(phrase);
-	cell.setPaddingTop(10);
+	cell.setPaddingTop(3);
 	cell.setPaddingBottom(5);
-	cell.setPaddingLeft(5);
-	cell.setPaddingLeft(0);
+	cell.setColspan(9);
 	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setColspan(12);
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+	cell.setBorderWidthLeft(1.0f);
+	//cell.setBorderWidthBottom(1.0f);
+	/* cell.setBackgroundColor(BaseColor.BLACK);
+	/* cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT); */
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
+	table.addCell(cell);
+
+
+	phrase = new Phrase();
+	phrase.add(new Chunk(book.get(0).getNight()+"", fontnormal));
+
+	cell = new PdfPCell(phrase);
+	cell.setPaddingTop(3);
+	cell.setPaddingBottom(5);
+	cell.setColspan(3);
+	cell.setBorder(PdfPCell.NO_BORDER);
+	cell.setBorderWidthRight(1.0f);
+	//cell.setBorderWidthLeft(1.0f);
+	//cell.setBorderWidthBottom(1.0f);
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
 	table.addCell(cell);
 	document.add(table);
 	
-	
-	String htl = "";
-    String htdec = htl.replaceAll("\\<.*?\\>|&nbsp;", "");
 	table = new PdfPTable(12);
 	table.setWidthPercentage(100);
-
+	
+	
 	phrase = new Phrase();
-	phrase.add(new Chunk(""+htdec, fontnormal));
+	phrase.add(new Chunk("Sub Total", fontbold));
 
 	cell = new PdfPCell(phrase);
-	cell.setPaddingTop(0);
+	cell.setPaddingTop(3);
 	cell.setPaddingBottom(5);
-	cell.setPaddingLeft(5);
-	cell.setPaddingLeft(0);
+	cell.setColspan(9);
 	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setColspan(12);
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+	cell.setBorderWidthLeft(1.0f);
+	//cell.setBorderWidthBottom(1.0f);
+	/* cell.setBackgroundColor(BaseColor.BLACK);
+	/* cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT); */
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
+	table.addCell(cell);
+ 
+	
+ double b = book.get(0).getBase_price();
+ int n = book.get(0).getNight();
+ int r = book.get(0).getNo_of_rooms();
+ double subt = b*n*r;
+ 
+
+	phrase = new Phrase();
+	phrase.add(new Chunk("RS "+subt, fontnormal));
+
+	cell = new PdfPCell(phrase);
+	cell.setPaddingTop(3);
+	cell.setPaddingBottom(5);
+	cell.setColspan(3);
+	cell.setBorder(PdfPCell.NO_BORDER);
+	cell.setBorderWidthRight(1.0f);
+	//cell.setBorderWidthLeft(1.0f);
+	//cell.setBorderWidthBottom(1.0f);
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
 	table.addCell(cell);
 	document.add(table);
 	
-	if(1 >0){
+	table = new PdfPTable(12);
+	table.setWidthPercentage(100);
 	
-		String paymentPolicyHtml = "This is term and conditions";
-	    String tc = paymentPolicyHtml.replaceAll("\\<.*?\\>|&nbsp;", "");
+	phrase = new Phrase();
+	phrase.add(new Chunk("Discount", fontbold));
+
+	cell = new PdfPCell(phrase);
+	cell.setPaddingTop(3);
+	cell.setPaddingBottom(5);
+	cell.setColspan(9);
+	cell.setBorder(PdfPCell.NO_BORDER);
+	cell.setBorderWidthLeft(1.0f);
+	//cell.setBorderWidthBottom(1.0f);
+	/* cell.setBackgroundColor(BaseColor.BLACK);
+	/* cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT); */
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
+	table.addCell(cell);
+
+
+	phrase = new Phrase();
+	phrase.add(new Chunk("RS "+book.get(0).getDiscount(), fontnormal));
+
+	cell = new PdfPCell(phrase);
+	cell.setPaddingTop(3);
+	cell.setPaddingBottom(5);
+	cell.setColspan(3);
+	cell.setBorder(PdfPCell.NO_BORDER);
+	cell.setBorderWidthRight(1.0f);
+	//cell.setBorderWidthLeft(1.0f);
+	//cell.setBorderWidthBottom(1.0f);
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
+	table.addCell(cell);
+	document.add(table);
+	
+	table = new PdfPTable(12);
+	table.setWidthPercentage(100);
+	
+	phrase = new Phrase();
+	phrase.add(new Chunk("GST Amount", fontbold));
+
+	cell = new PdfPCell(phrase);
+	cell.setPaddingTop(3);
+	cell.setPaddingBottom(5);
+	cell.setColspan(9);
+	cell.setBorder(PdfPCell.NO_BORDER);
+	cell.setBorderWidthLeft(1.0f);
+	//cell.setBorderWidthBottom(1.0f);
+	/* cell.setBackgroundColor(BaseColor.BLACK);
+	/* cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT); */
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
+	table.addCell(cell);
+
+
+	phrase = new Phrase();
+	phrase.add(new Chunk("RS "+book.get(0).getGst_amount(), fontnormal));
+
+	cell = new PdfPCell(phrase);
+	cell.setPaddingTop(3);
+	cell.setPaddingBottom(5);
+	cell.setColspan(3);
+	cell.setBorder(PdfPCell.NO_BORDER);
+	cell.setBorderWidthRight(1.0f);
+	//cell.setBorderWidthLeft(1.0f);
+	//cell.setBorderWidthBottom(1.0f);
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
+	table.addCell(cell);
+	document.add(table);
+	
+	table = new PdfPTable(12);
+	table.setWidthPercentage(100);
 		
-	table = new PdfPTable(12);
-	table.setWidthPercentage(100);
+	phrase = new Phrase();
+	phrase.add(new Chunk("Payable Amount", fontbold));
+
+	cell = new PdfPCell(phrase);
+	cell.setPaddingTop(3);
+	cell.setPaddingBottom(5);
+	cell.setColspan(9);
+	cell.setBorder(PdfPCell.NO_BORDER);
+	cell.setBorderWidthLeft(1.0f);
+	cell.setBorderWidthBottom(1.0f);
+	/* cell.setBackgroundColor(BaseColor.BLACK);
+	/* cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT); */
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
+	table.addCell(cell);
+
 
 	phrase = new Phrase();
-	phrase.add(new Chunk("Terms & Condition:", fontbold));
+	phrase.add(new Chunk("RS "+book.get(0).getTotal_amount(), fontnormal));
+
+	cell = new PdfPCell(phrase);
+	cell.setPaddingTop(3);
+	cell.setPaddingBottom(5);
+	cell.setColspan(3);
+	cell.setBorder(PdfPCell.NO_BORDER);
+	cell.setBorderWidthRight(1.0f);
+	//cell.setBorderWidthLeft(1.0f);
+	cell.setBorderWidthBottom(1.0f);
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
+	table.addCell(cell);
+	document.add(table);
+	
+	table = new PdfPTable(12);
+	table.setWidthPercentage(100);
+	
+	phrase = new Phrase();
+	phrase.add(new Chunk("Amount Paid", fontbold));
+
+	cell = new PdfPCell(phrase);
+	cell.setPaddingTop(3);
+	cell.setPaddingBottom(5);
+	cell.setColspan(3);
+	cell.setBorder(PdfPCell.NO_BORDER);
+	cell.setBorderWidthLeft(1.0f);
+	cell.setBorderWidthBottom(1.0f);
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+	table.addCell(cell);
+	
+	phrase = new Phrase();
+
+	phrase.add(new Chunk("RS "+book.get(0).getPaid_amount(), fontnormal));
+
+	cell = new PdfPCell(phrase);
+	cell.setPaddingTop(3);
+	cell.setPaddingBottom(5);
+	cell.setColspan(3);
+	cell.setBorder(PdfPCell.NO_BORDER);
+	cell.setBorderWidthLeft(1.0f);
+	cell.setBorderWidthBottom(1.0f);
+	/* cell.setBackgroundColor(BaseColor.BLACK);
+	/* cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT); */
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+	table.addCell(cell);
+
+	
+	phrase = new Phrase();
+	phrase.add(new Chunk("Amount Due", fontbold));
+
+	cell = new PdfPCell(phrase);
+	cell.setPaddingTop(3);
+	cell.setPaddingBottom(5);
+	cell.setColspan(3);
+	cell.setBorder(PdfPCell.NO_BORDER);
+	cell.setBorderWidthLeft(1.0f);
+	cell.setBorderWidthBottom(1.0f);
+	/* cell.setBackgroundColor(BaseColor.BLACK);
+	/* cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT); */
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+	table.addCell(cell);
+
+
+	phrase = new Phrase();
+	phrase.add(new Chunk("RS "+book.get(0).getDue_amount(), fontnormal));
+
+	cell = new PdfPCell(phrase);
+	cell.setPaddingTop(3);
+	cell.setPaddingBottom(5);
+	cell.setColspan(3);
+	cell.setBorder(PdfPCell.NO_BORDER);
+	cell.setBorderWidthLeft(1.0f);
+	cell.setBorderWidthRight(1.0f);
+	cell.setBorderWidthBottom(1.0f);
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+	table.addCell(cell);
+	document.add(table);
+	
+	
+	
+	table = new PdfPTable(12);
+	table.setWidthPercentage(100);
+	
+	phrase = new Phrase();
+	phrase.add(new Chunk("***Thank you for choosing us. We look forward to welcoming you!***", fontbold));
 
 	cell = new PdfPCell(phrase);
 	cell.setPaddingTop(10);
 	cell.setPaddingBottom(5);
-	cell.setPaddingLeft(5);
-	cell.setPaddingLeft(0);
-	cell.setBorder(PdfPCell.NO_BORDER);
 	cell.setColspan(12);
+	cell.setBorder(PdfPCell.NO_BORDER);
+	cell.setBorderWidthLeft(1.0f);
+	cell.setBorderWidthRight(1.0f);
+	cell.setBorderWidthBottom(1.0f);
 	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
 	table.addCell(cell);
 	document.add(table);
-	
-	table = new PdfPTable(12);
-	table.setWidthPercentage(100);
-	phrase = new Phrase();
-	phrase.add(new Chunk(""+tc, fontnormal));
-
-	cell = new PdfPCell(phrase);
-	cell.setPaddingTop(0);
-	cell.setPaddingBottom(5);
-	cell.setPaddingLeft(5);
-	cell.setPaddingLeft(0);
-	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setColspan(12);
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-	table.addCell(cell);
-	document.add(table);
-	}
-	
-	/* if(terms.size() >0){
-	table = new PdfPTable(12);
-	table.setWidthPercentage(100);
-
-	phrase = new Phrase();
-	phrase.add(new Chunk("Payment Policy:", fontbold));
-
-	cell = new PdfPCell(phrase);
-	cell.setPaddingTop(0);
-	cell.setPaddingBottom(5);
-	cell.setPaddingLeft(5);
-	cell.setPaddingLeft(0);
-	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setColspan(12);
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-	table.addCell(cell);
-	document.add(table);
-	
-	
-	table = new PdfPTable(12);
-	table.setWidthPercentage(100);
-	String paymentPolicyHtml = policy.get(0).getPayment_policy();
-    String paymentPolicyText = paymentPolicyHtml.replaceAll("\\<.*?\\>|&nbsp;", "");
-	phrase = new Phrase();
-	phrase.add(new Chunk(""+paymentPolicyText, fontnormal));
-
-	cell = new PdfPCell(phrase);
-	cell.setPaddingTop(0);
-	cell.setPaddingBottom(5);
-	cell.setPaddingLeft(5);
-	cell.setPaddingLeft(0);
-	cell.setBorder(PdfPCell.NO_BORDER);
-	cell.setColspan(12);
-	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
-	table.addCell(cell);
-	document.add(table);
-	} */
-	
 	
 
 	document.newPage();

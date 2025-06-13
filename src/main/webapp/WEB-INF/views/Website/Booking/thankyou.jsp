@@ -133,8 +133,25 @@
     <p>Your resort booking has been successfully completed.</p>
     <p>We’ve sent the booking details to your email.</p>
     
-    <a href="javascript:void('<%=booking_id%>')" class="btn">Download Receipt</a>
+    <a href="javascript:void(0)" onclick="generateReceipt('<%=booking_id%>')" class="btn">Download Receipt</a>
     <a href="./" class="btn">Back to Home</a>
   </div>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="text/javascript">
+  function generateReceipt(booking_id) {
+	        var mapForm = document.createElement("form");
+	        mapForm.method = "POST";
+	        mapForm.target = "_blank";
+	        mapForm.action = "reciept";
+	        var output = document.createElement("input");
+	        output.type = "hidden";
+	        output.name = "booking_id";
+	        output.value = booking_id;
+	        mapForm.appendChild(output);
+	        document.body.appendChild(mapForm);
+	        mapForm.submit();
+	}
+  </script>
 </body>
 </html>

@@ -124,7 +124,7 @@ scale(
 
             <div class="title2">Lorem ipsum dolor sit amet concateur non troppo di saronno la prada</div> --%>
 
-				<div class="booking2-wrapper">
+				<!-- <div class="booking2-wrapper">
 					<div class="">
 						<div class="booking-inner clearfix">
 							<form action="javascript:;" class="form1 clearfix">
@@ -193,7 +193,7 @@ scale(
 							</form>
 						</div>
 					</div>
-				</div>
+				</div> -->
 
 				<div class="slider2-wrapper">
 					<div class="slider-for2">

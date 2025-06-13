@@ -121,9 +121,6 @@ public class BlogService {
 			map.put("sno", Integer.parseInt(sno));
 			List<Blogs> list = (List<Blogs>) commonDao.getDataByMap(map, new Blogs(), null, null, 0, -1);	
 			if(list.size()>0) {
-				Map<String,Object> mp = new HashMap<String, Object>();
-				mp.put("blogs_id", list.get(0).getSno());
-				List<Blogs> pta = (List<Blogs>)commonDao.getDataByMap(mp, new Blogs(), null, null, 0, -1);
 				response.put("data", list);
 				response.put("status", "Success");
 				response.put("message", "Data Fetched Successfully");

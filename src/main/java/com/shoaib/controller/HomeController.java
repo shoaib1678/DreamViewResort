@@ -26,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.shoaib.dao.CommonDao;
 import com.shoaib.modal.Amenities;
 import com.shoaib.modal.Blogs;
+import com.shoaib.modal.Booking;
 import com.shoaib.modal.Category;
 import com.shoaib.modal.Gallery;
 import com.shoaib.modal.LoginCredentials;
@@ -71,6 +72,11 @@ public class HomeController {
 		map.put("status", "Active");
 		List<Testimonial> test = (List<Testimonial>)commonDao.getDataByMap(map, new Testimonial(), null, null, 0, -1);
 		mv.addObject("test", test);
+		return mv;
+	}
+	@RequestMapping(value="/user_auth")
+	public ModelAndView user_auth(HttpServletRequest request) throws IOException{
+		ModelAndView mv = new ModelAndView("Website/Login/login");
 		return mv;
 	}
 	@RequestMapping(value="/activities")
@@ -215,8 +221,15 @@ public class HomeController {
 	@RequestMapping(value="/reciept")
 	public ModelAndView reciept(HttpServletRequest request) throws IOException{
 		ModelAndView mv = new ModelAndView("Pdf/reciept");
-//		String booking_id = request.getParameter("booking_id");
-//		mv.addObject("booking_id", booking_id);
+		String booking_id = request.getParameter("booking_id");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("booking_id", booking_id);
+		List<Booking> book = (List<Booking>)commonDao.getDataByMap(map, new Booking(), null, null, 0, -1);
+		Map<String, Object> mp = new HashMap<String, Object>();
+		map.put("sno", book.get(0).getRoom_id());
+		List<Rooms> room = (List<Rooms>)commonDao.getDataByMap(mp, new Rooms(), null, null, 0, -1);
+		book.get(0).setTitle(room.get(0).getTitle());
+		mv.addObject("book", book);
 		return mv;
 	}
 	/********************************* Website Panel Urls End ************************************************/

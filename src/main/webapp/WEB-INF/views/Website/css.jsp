@@ -20,3 +20,14 @@
 }
 
 </style>
+<style>
+.modal.fade .modal-dialog {
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+    transform: translate(0, -25%);
+    opacity: 0;
+}
+.modal.fade.show .modal-dialog {
+    transform: translate(0, 0);
+    opacity: 1;
+}
+</style>
