@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import com.shoaib.dao.CommonDao;
 import com.shoaib.modal.Amenities;
 import com.shoaib.modal.Blogs;
@@ -30,6 +31,7 @@ import com.shoaib.modal.Booking;
 import com.shoaib.modal.Category;
 import com.shoaib.modal.Gallery;
 import com.shoaib.modal.LoginCredentials;
+import com.shoaib.modal.PackagePlan;
 import com.shoaib.modal.Rooms;
 import com.shoaib.modal.SliderImage;
 import com.shoaib.modal.Testimonial;
@@ -44,26 +46,57 @@ public class HomeController {
 	/********************************* Website Urls ************************************************/
 
 	@RequestMapping(value="/")
-	public ModelAndView home(HttpServletRequest request) throws IOException{
-		ModelAndView mv = new ModelAndView("Website/Home/home");
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("status", "Active");
-		List<Testimonial> test = (List<Testimonial>)commonDao.getDataByMap(map, new Testimonial(), null, null, 0, -1);
-		List<Rooms> room = (List<Rooms>)commonDao.getDataByMap(map, new Rooms(), null, null, 0, -1);
-		if(room.size() > 0) {
-			for(Rooms r : room) {
-				Map<String, Object> mapp = new HashMap<String, Object>();
-				mapp.put("sno", r.getCategory_id());
-				List<Category> cat = (List<Category>)commonDao.getDataByMap(mapp, new Category(), null, null, 0, -1);
-				r.setCategory_name(cat.get(0).getCategory_name());
+	public ModelAndView home(HttpServletRequest request, HttpSession session) throws IOException{
+		String email = request.getParameter("email");
+		Map<String, Object> mpp = new HashMap<String, Object>();
+		mpp.put("email", email);
+		mpp.put("user_type", "User");
+		List<LoginCredentials> log = (List<LoginCredentials>)commonDao.getDataByMap(mpp, new LoginCredentials(), null, null, 0, -1);
+		if(log.size() >0) {
+			ModelAndView mv = new ModelAndView("Website/Home/home");
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("status", "Active");
+			List<Testimonial> test = (List<Testimonial>)commonDao.getDataByMap(map, new Testimonial(), null, null, 0, -1);
+			List<Rooms> room = (List<Rooms>)commonDao.getDataByMap(map, new Rooms(), null, null, 0, -1);
+			if(room.size() > 0) {
+				for(Rooms r : room) {
+					Map<String, Object> mapp = new HashMap<String, Object>();
+					mapp.put("sno", r.getCategory_id());
+					List<Category> cat = (List<Category>)commonDao.getDataByMap(mapp, new Category(), null, null, 0, -1);
+					r.setCategory_name(cat.get(0).getCategory_name());
+				}
+				
 			}
-			
+			List<Blogs> blog = (List<Blogs>)commonDao.getDataByMap(map, new Blogs(), "sno", "asc", 0, -1);
+			session.setAttribute("logindata", log.get(0));
+			mv.addObject("blog", blog);
+			mv.addObject("room", room);
+			mv.addObject("test", test);
+			System.out.println("dsgdfxhfdshgfssd");
+			return mv;
+		}else {
+			ModelAndView mv = new ModelAndView("Website/Home/home");
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("status", "Active");
+			List<Testimonial> test = (List<Testimonial>)commonDao.getDataByMap(map, new Testimonial(), null, null, 0, -1);
+			List<Rooms> room = (List<Rooms>)commonDao.getDataByMap(map, new Rooms(), null, null, 0, -1);
+			if(room.size() > 0) {
+				for(Rooms r : room) {
+					Map<String, Object> mapp = new HashMap<String, Object>();
+					mapp.put("sno", r.getCategory_id());
+					List<Category> cat = (List<Category>)commonDao.getDataByMap(mapp, new Category(), null, null, 0, -1);
+					r.setCategory_name(cat.get(0).getCategory_name());
+				}
+				
+			}
+			List<Blogs> blog = (List<Blogs>)commonDao.getDataByMap(map, new Blogs(), "sno", "asc", 0, -1);
+			mv.addObject("blog", blog);
+			mv.addObject("room", room);
+			mv.addObject("test", test);
+			return mv;
 		}
-		List<Blogs> blog = (List<Blogs>)commonDao.getDataByMap(map, new Blogs(), "sno", "asc", 0, -1);
-		mv.addObject("blog", blog);
-		mv.addObject("room", room);
-		mv.addObject("test", test);
-		return mv;
+		
+		
 	}
 	@RequestMapping(value="/about")
 	public ModelAndView about(HttpServletRequest request) throws IOException{
@@ -78,6 +111,28 @@ public class HomeController {
 	public ModelAndView user_auth(HttpServletRequest request) throws IOException{
 		ModelAndView mv = new ModelAndView("Website/Login/login");
 		return mv;
+	}
+	@RequestMapping(value="/profile")
+	public ModelAndView profile(HttpServletRequest request, HttpSession session) throws IOException{
+		LoginCredentials login = (LoginCredentials)session.getAttribute("logindata");
+		if(login != null) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("email", login.getEmail());
+			List<Booking> booking = (List<Booking>)commonDao.getDataByMap(map, new Booking(), "sno", "asc", 0, -1);
+			if(booking.size() > 0) {
+				for(Booking b : booking) {
+					Map<String, Object> mp = new HashMap<String, Object>();
+					mp.put("sno", b.getRoom_id());
+					List<Rooms> r = (List<Rooms>)commonDao.getDataByMap(mp, new Rooms(), null, null, 0, -1);
+					b.setTitle(r.get(0).getTitle());
+				}
+			}
+			ModelAndView mv = new ModelAndView("Website/Profile/profile");
+			mv.addObject("book", booking);
+			return mv;
+		}else {
+			return new ModelAndView("redirect:./");
+		}
 	}
 	@RequestMapping(value="/activities")
 	public ModelAndView activities(HttpServletRequest request) throws IOException{
@@ -120,7 +175,11 @@ public class HomeController {
 		Map<String, Object> map =new HashMap<String, Object>();
 		map.put("sno", Integer.parseInt(sno));
 		List<Rooms> room = (List<Rooms>)commonDao.getDataByMap(map, new Rooms(), null, null, 0, -1);
+		Map<String, Object> map1 =new HashMap<String, Object>();
+		map1.put("room_id", Integer.parseInt(sno));
+		List<PackagePlan> pack = (List<PackagePlan>)commonDao.getDataByMap(map1, new PackagePlan(), null, null, 0, -1);
 		mv.addObject("room", room);
+		mv.addObject("pack", pack);
 		return mv;
 	}
 	@RequestMapping(value="/contacts")
@@ -322,6 +381,15 @@ public class HomeController {
 	@RequestMapping(value="/coupons")
 	public ModelAndView coupons(HttpServletRequest request) throws IOException{
 		ModelAndView mv = new ModelAndView("AdminPanel/Manage_Rooms/coupons");
+		Map<String, Object> map1 = new HashMap<String, Object>();
+		map1.put("status", "Active");
+		List<Rooms> rooms = (List<Rooms>)commonDao.getDataByMap(map1, new Rooms(), null, null, 0, -1);
+		mv.addObject("rooms", rooms);
+		return mv;
+	}
+	@RequestMapping(value="/package_plan")
+	public ModelAndView package_plan(HttpServletRequest request) throws IOException{
+		ModelAndView mv = new ModelAndView("AdminPanel/Manage_Rooms/plan");
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		map1.put("status", "Active");
 		List<Rooms> rooms = (List<Rooms>)commonDao.getDataByMap(map1, new Rooms(), null, null, 0, -1);

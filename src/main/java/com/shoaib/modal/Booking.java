@@ -18,6 +18,7 @@ public class Booking {
 	private int sno;
 	private int room_id;
 	private String booking_id;
+	private String plan_ids;
 	private String gst_number;
 	private String order_id;
 	private String name;
@@ -39,9 +40,12 @@ public class Booking {
 	private double due_amount;
 	private double total_amount;
 	private double paid_amount;
+	private double package_amount;
 	private double gst_amount;
 	@Transient
 	private String title;
+	@Transient
+	private String plan_name;
 	@Transient
 	private String razorpay_payment_id;
 	@Transient
@@ -111,7 +115,24 @@ public class Booking {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	
+	public String getPlan_ids() {
+		return plan_ids;
+	}
+	public void setPlan_ids(String plan_ids) {
+		this.plan_ids = plan_ids;
+	}
+	public double getPackage_amount() {
+		return package_amount;
+	}
+	public void setPackage_amount(double package_amount) {
+		this.package_amount = package_amount;
+	}
+	public String getPlan_name() {
+		return plan_name;
+	}
+	public void setPlan_name(String plan_name) {
+		this.plan_name = plan_name;
+	}
 	public String getGst_number() {
 		return gst_number;
 	}

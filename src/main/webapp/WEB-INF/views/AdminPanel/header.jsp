@@ -1,5 +1,6 @@
  
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
  <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
          <div class="app-brand demo">
             <a href="dashboard" class="app-brand-link">
@@ -61,11 +62,11 @@
                     <div data-i18n="Rooms">Rooms</div>
                   </a>
                 </li>
-               <!--  <li class="menu-item">
-                  <a href="room_availability" class="menu-link">
-                    <div data-i18n="Rooms Availability">Rooms Availability</div>
+                <li class="menu-item">
+                  <a href="package_plan" class="menu-link">
+                    <div data-i18n="Package Plan">Package Plan</div>
                   </a>
-                </li> -->
+                </li>
                 <li class="menu-item">
                   <a href="coupons" class="menu-link">
                     <div data-i18n="Coupons">Coupons</div>

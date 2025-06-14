@@ -1,4 +1,7 @@
-
+<%@page import="com.shoaib.modal.LoginCredentials"%>
+<%
+LoginCredentials log = (LoginCredentials)session.getAttribute("logindata");
+%>
     <div class="top-wrapper top-wrapper-dark">
             <div class="top2-wrapper">
                 <div class="container">
@@ -31,11 +34,24 @@
                                     <li class="nav-item"><a href="rooms" class="nav-link">Rooms</a></li>
                                     <li class="nav-item"><a href="gallery" class="nav-link">Gallery</a></li>
                                     <li class="nav-item"><a href="blog" class="nav-link">Blog</a></li>
+                                    <%if(log == null){ %>
                                      <li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-toggle="modal" data-target="#genModal">Generate Receipt</a></li>
+                                    <%} %>
                                      <li class="nav-item"><a href="javascript:void(0)" class="nav-link" data-toggle="modal" data-target="#pModal">Payment</a></li>
                                     <li class="nav-item"><a href="contacts" class="nav-link">Contact</a></li>
+                                   <%if(log != null){ %>
+                                   		 <li class="nav-item sub-menu sub-menu-2">
+                                        <a href="javascript:void(0)" class="nav-link">Account <i class="fa fa-angle-down" aria-hidden="true"></i></a>
+                                        <div class="sf-mega">
+                                            <ul>
+                                                <li><a href="profile">Profile</a></li>
+                                                <li><a href="logout">Logout</a></li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                   <%}else{ %>
                                     <li class="nav-item"><a href="user_auth" class="nav-link btn btn-primary" style="line-height: 30px !important;background: #0073b7;margin-top: 20px;">Login</a></li>
-                                   
+                                   <%} %>
                                 </ul>
                             </div>
                         </nav>

@@ -37,11 +37,6 @@ public class CommonDao {
 	@Autowired
 	private SessionFactory sessionFactory;
 	
-
-	
-
-	 
-
 	public int addDataToDb(Object objectdata) {
 		Integer i = (Integer) sessionFactory.getCurrentSession().save(objectdata);
 		return i;

@@ -1,3 +1,4 @@
+<%@page import="com.shoaib.modal.PackagePlan"%>
 <%@page import="com.shoaib.modal.Rooms"%>
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -81,12 +82,80 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
 </style>
+<style>
+  .checkbox-wrapper-51 input[type="checkbox"] {
+    visibility: hidden;
+    display: none;
+  }
+
+  .checkbox-wrapper-51 .toggle {
+    position: relative;
+    display: block;
+    width: 42px;
+    height: 24px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transform: translate3d(0, 0, 0);
+  }
+  .checkbox-wrapper-51 .toggle:before {
+    content: "";
+    position: relative;
+    top: 1px;
+    left: 1px;
+    width: 40px;
+    height: 22px;
+    display: block;
+    background: #c8ccd4;
+    border-radius: 12px;
+    transition: background 0.2s ease;
+  }
+  .checkbox-wrapper-51 .toggle span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 24px;
+    height: 24px;
+    display: block;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 2px 6px rgba(154,153,153,0.75);
+    transition: all 0.2s ease;
+  }
+  .checkbox-wrapper-51 .toggle span svg {
+    margin: 7px;
+    fill: none;
+  }
+  .checkbox-wrapper-51 .toggle span svg path {
+    stroke: #c8ccd4;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 24;
+    stroke-dashoffset: 0;
+    transition: all 0.5s linear;
+  }
+  .checkbox-wrapper-51 input[type="checkbox"]:checked + .toggle:before {
+    background: #52d66b;
+  }
+  .checkbox-wrapper-51 input[type="checkbox"]:checked + .toggle span {
+    transform: translateX(18px);
+  }
+  .checkbox-wrapper-51 input[type="checkbox"]:checked + .toggle span path {
+    stroke: #52d66b;
+    stroke-dasharray: 25;
+    stroke-dashoffset: 25;
+  }
+</style>
+
+
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
 </head>
 <%
 List<Rooms> room = (List<Rooms>) request.getAttribute("room");
+List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 %>
 <body class="front" data-spy="scroll" data-target="#top-inner"
 	data-offset="0">
@@ -138,7 +207,29 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 												</div>
 											</div>
 										</div>
-										
+										<%if(pack != null){ %>
+										<div class="col-md-12">
+											<p style="font-weight: bold;">Package Plan</p>
+										<div class="row mb-3">
+										<%
+											for(PackagePlan p :pack){%>
+											
+										<div class="col-md-6">
+											<div class="checkbox-wrapper-51" style="display: flex;">
+											  <input type="checkbox" class="pack-checkbox" id="cbx-5<%=p.getSno()%>" data-price="<%=p.getFinal_price()%>" value="<%=p.getSno()%>" name="pack_plan"/>
+											  <label for="cbx-5<%=p.getSno()%>" class="toggle" style="display: block;">
+											    <span>
+											      <svg width="10px" height="10px" viewBox="0 0 10 10">
+											        <path d="M5,1 L5,1 C2.790861,1 1,2.790861 1,5 L1,5 C1,7.209139 2.790861,9 5,9 L5,9 C7.209139,9 9,7.209139 9,5 L9,5 C9,2.790861 7.209139,1 5,1 L5,9 L5,1 Z"></path>
+											      </svg>
+											    </span>
+											  </label><span><%=p.getPlan_name() %> <span style="font-weight: bold;"><i class="fa fa-inr"></i> <%=p.getFinal_price() %></span></span>
+											</div>
+										</div>
+										<%} %>
+										</div>
+										</div>
+										<%} %>
 										<div class="col-md-6 mb-3 c2">
 											<div class="input1_wrapper">
 												<label>No of Adult</label>
@@ -316,6 +407,15 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 												<p style="font-weight: bold;">Gst:</p>
 												<p style="float: right;">
 													<i class="fa fa-inr"></i> <span id="gst">0</span>
+												</p>
+											</div>
+										</div>
+										<div class="col-md-12 mb-3"
+											style="border-bottom: 1px solid lightgray;">
+											<div style="display: flex; justify-content: space-between;">
+												<p style="font-weight: bold;">Package amount:</p>
+												<p style="float: right;">
+													<i class="fa fa-inr"></i> <span id="pkgamt">0</span>
 												</p>
 											</div>
 										</div>
@@ -703,6 +803,10 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 	function readytopayment() {
 		
 	    if ($("#booking_form").valid() && $('#termsCheckbox').is(':checked')) {
+	    	var checkedValues = $("input[name='pack_plan']:checked").map(function() {
+	    	    return this.value;
+	    	}).get();
+	    	var packPlanIds = checkedValues.join(",");
 	    	var room_id = $('#room_id').val();
 	    	var check_in = $('#check_in').val();
 	    	var check_out = $('#check_out').val();
@@ -713,6 +817,7 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 	    	var phone = $('#phone').val();
 	    	var email = $('#email').val();
 	    	var city = $('#city').val();
+	    	var pkgamt = $('#pkgamt').html();
 	    	var country = $('#country').val();
 	    	var coupon_code = $('#coupon_code').val();
 	    	var gst_number = $('#gst_number').val();
@@ -770,6 +875,7 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 	                        "handler": function (response) {
 	                            var obj = {
 	                            		"room_id": room_id,
+	                            		"plan_ids": packPlanIds,
 	                            		"check_in": check_in,
 	                            	    "check_out": check_out,
 	                            	    "no_of_rooms": no_of_room,
@@ -790,6 +896,7 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 	                            	    "paid_amount": final_amount,
 	                            	    "due_amount": due_amount,
 	                            	    "gst_amount": gst,
+	                            	    "package_amount": pkgamt,
 	                            	    "payment_mode": payment_mode,
 	                            	    "payment_type": payment_option,
 	                                "razorpay_payment_id": response.razorpay_payment_id,
@@ -867,6 +974,7 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 	    	$("#sbmt .spinner").show();
 	    	var obj = {
             		"room_id": room_id,
+            		"plan_ids": packPlanIds,
             		"check_in": check_in,
             	    "check_out": check_out,
             	    "no_of_rooms": no_of_room,
@@ -877,6 +985,7 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
             	    "email": email,
             	    "city": city,
             	    "country": country,
+            	    "package_amount": pkgamt,
             	    "coupon_code": coupon_code,
             	    "base_price": base_price,
             	    "night": no_of_nights,
@@ -963,11 +1072,13 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 	            }else{
 	            	gs = parseFloat(t) * 12/100;
 	            }
-	            var tot = parseFloat(t) + parseFloat(gs)
+	            var pkg = $("#pkgamt").html();
+	            var tot = parseFloat(t) + parseFloat(gs) + parseFloat(pkg);
 	            $("#gst").html(gs);
 	            $("#sub_total").html(subt);
 	            $("#final_amount").html(tot);
 	            $("#fullp").html(tot);
+	           
 	            var tn = parseFloat(tot) *20/100;
 	            $("#tp").html(tn);
 	    }
@@ -1005,6 +1116,25 @@ List<Rooms> room = (List<Rooms>) request.getAttribute("room");
 		});
 
 	}
+	
+	$(function() {
+	    $('.pack-checkbox').change(function() {
+	      let total = 0;
+	      let checkedBoxes = $('.pack-checkbox:checked');
+
+	      checkedBoxes.each(function() {
+	        total += parseFloat($(this).data('price'));
+	      });
+
+	      if (checkedBoxes.length > 0) {
+	        $('#pkgamt').text(total.toFixed(2));
+	        calr();
+	      } else {
+	        $('#pkgamt').text('0');
+	        calr();
+	      }
+	    });
+	});
  </script>
 
 </body>
