@@ -30,7 +30,7 @@ LoginCredentials log = (LoginCredentials)session.getAttribute("logindata");
                                 <ul class="nav navbar-nav sf-menu clearfix">
                                     <li class="nav-item "><a href="./" class="nav-link">Home</a></li>
                                     <li class="nav-item"><a href="about" class="nav-link">About us</a></li>
-                                    <li class="nav-item"><a href="activities" class="nav-link">Activities</a></li>
+                                   <!--  <li class="nav-item"><a href="activities" class="nav-link">Activities</a></li> -->
                                     <li class="nav-item"><a href="rooms" class="nav-link">Rooms</a></li>
                                     <li class="nav-item"><a href="gallery" class="nav-link">Gallery</a></li>
                                     <li class="nav-item"><a href="blog" class="nav-link">Blog</a></li>

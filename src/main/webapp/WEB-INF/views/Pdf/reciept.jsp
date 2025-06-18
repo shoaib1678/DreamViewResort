@@ -1,3 +1,4 @@
+<%@page import="com.shoaib.modal.PackagePlan"%>
 <%@page import="com.shoaib.modal.Booking"%>
 <%@page import="com.itextpdf.text.html.WebColors"%>
 <%@page import="java.util.Date"%>
@@ -52,6 +53,7 @@ BaseColor myColor1 = WebColors.getRGBColor("#00515D");
 fontnormalhead1.setColor(myColor1);
 
 List<Booking> book = (List<Booking>)request.getAttribute("book");
+List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 
 try {
 	ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -358,6 +360,99 @@ try {
 	document.add(table);
 	
 	
+	if(pack != null && pack.size() > 0){
+		table = new PdfPTable(12);
+		table.setWidthPercentage(100);
+		
+		phrase = new Phrase();
+		phrase.add(new Chunk("PACKAGE PLAN", fontbold));
+
+		cell = new PdfPCell(phrase);
+		cell.setPaddingTop(5);
+		cell.setPaddingBottom(5);
+		cell.setColspan(12);
+		cell.setBorder(PdfPCell.NO_BORDER);
+		/* cell.setBorderWidthLeft(1.0f);
+		cell.setBorderWidthRight(1.0f); */
+		cell.setBorderWidthBottom(1.0f);
+		cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+		table.addCell(cell);
+		document.add(table);
+		
+		table = new PdfPTable(12);
+		table.setWidthPercentage(100);
+		
+		phrase = new Phrase();
+		phrase.add(new Chunk("Plan", fontbold));
+
+		cell = new PdfPCell(phrase);
+		cell.setPaddingTop(5);
+		cell.setPaddingBottom(5);
+		cell.setColspan(6);
+		cell.setBorder(PdfPCell.NO_BORDER);
+		//cell.setBorderWidthTop(1.0f);
+		cell.setBorderWidthLeft(1.0f);
+		cell.setBorderWidthRight(1.0f);
+		cell.setBorderWidthBottom(1.0f);
+		cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+		table.addCell(cell);
+		
+		phrase = new Phrase();
+		phrase.add(new Chunk("Price", fontbold));
+
+		cell = new PdfPCell(phrase);
+		cell.setPaddingTop(5);
+		cell.setPaddingBottom(5);
+		cell.setColspan(6);
+		cell.setBorder(PdfPCell.NO_BORDER);
+		//cell.setBorderWidthTop(1.0f);
+		//cell.setBorderWidthLeft(1.0f);
+		cell.setBorderWidthRight(1.0f);
+		cell.setBorderWidthBottom(1.0f);
+		cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+		table.addCell(cell);
+		
+		document.add(table);
+		
+		for(PackagePlan p : pack){
+		
+		table = new PdfPTable(12);
+		table.setWidthPercentage(100);
+		
+		phrase = new Phrase();
+		phrase.add(new Chunk(""+p.getPlan_name(), fontbold));
+
+		cell = new PdfPCell(phrase);
+		cell.setPaddingTop(5);
+		cell.setPaddingBottom(5);
+		cell.setColspan(6);
+		cell.setBorder(PdfPCell.NO_BORDER);
+		//cell.setBorderWidthTop(1.0f);
+		cell.setBorderWidthLeft(1.0f);
+		cell.setBorderWidthRight(1.0f);
+		cell.setBorderWidthBottom(1.0f);
+		cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+		table.addCell(cell);
+		
+		phrase = new Phrase();
+		phrase.add(new Chunk("RS "+p.getFinal_price(), fontbold));
+
+		cell = new PdfPCell(phrase);
+		cell.setPaddingTop(10);
+		cell.setPaddingBottom(5);
+		cell.setColspan(6);
+		cell.setBorder(PdfPCell.NO_BORDER);
+		//cell.setBorderWidthTop(1.0f);
+		//cell.setBorderWidthLeft(1.0f);
+		cell.setBorderWidthRight(1.0f);
+		cell.setBorderWidthBottom(1.0f);
+		cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+		table.addCell(cell);
+		
+		document.add(table);
+		}
+		}
+	
 	table = new PdfPTable(12);
 	table.setWidthPercentage(100);
 
@@ -659,6 +754,43 @@ try {
 	table.addCell(cell);
 	document.add(table);
 	
+	if(pack != null && pack.size() > 0){
+	table = new PdfPTable(12);
+	table.setWidthPercentage(100);
+	
+	phrase = new Phrase();
+	phrase.add(new Chunk("Package amount", fontbold));
+
+	cell = new PdfPCell(phrase);
+	cell.setPaddingTop(3);
+	cell.setPaddingBottom(5);
+	cell.setColspan(9);
+	cell.setBorder(PdfPCell.NO_BORDER);
+	cell.setBorderWidthLeft(1.0f);
+	//cell.setBorderWidthBottom(1.0f);
+	/* cell.setBackgroundColor(BaseColor.BLACK);
+	/* cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT); */
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
+	table.addCell(cell);
+
+
+	phrase = new Phrase();
+	phrase.add(new Chunk("RS "+book.get(0).getPackage_amount(), fontnormal));
+
+	cell = new PdfPCell(phrase);
+	cell.setPaddingTop(3);
+	cell.setPaddingBottom(5);
+	cell.setColspan(3);
+	cell.setBorder(PdfPCell.NO_BORDER);
+	cell.setBorderWidthRight(1.0f);
+	//cell.setBorderWidthLeft(1.0f);
+	//cell.setBorderWidthBottom(1.0f);
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
+	table.addCell(cell);
+	document.add(table);
+	
+	}
+	
 	table = new PdfPTable(12);
 	table.setWidthPercentage(100);
 		
@@ -757,7 +889,23 @@ try {
 	table.addCell(cell);
 	document.add(table);
 	
+	table = new PdfPTable(12);
+	table.setWidthPercentage(100);
 	
+	phrase = new Phrase();
+	phrase.add(new Chunk("", fontbold));
+
+	cell = new PdfPCell(phrase);
+	cell.setPaddingTop(10);
+	cell.setPaddingBottom(5);
+	cell.setColspan(12);
+	cell.setBorder(PdfPCell.NO_BORDER);
+	/* cell.setBorderWidthLeft(1.0f);
+	cell.setBorderWidthRight(1.0f);
+	cell.setBorderWidthBottom(1.0f); */
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
+	table.addCell(cell);
+	document.add(table);
 	
 	table = new PdfPTable(12);
 	table.setWidthPercentage(100);

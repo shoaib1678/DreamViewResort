@@ -1325,7 +1325,7 @@ transition: all 0.3s ease-out; -moz-transition: all 0.3s ease-out; -webkit-trans
         position: absolute;
         left: 0;
         width: 100%;
-        background: #fff;
+        background: #fab000;
         top: 100%;
         padding: 0 15px;
     }

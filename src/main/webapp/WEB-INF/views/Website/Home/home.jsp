@@ -1,3 +1,4 @@
+<%@page import="com.shoaib.modal.Banner"%>
 <%@page import="com.shoaib.modal.Testimonial"%>
 <%@page import="com.shoaib.modal.Blogs"%>
 <%@page import="com.shoaib.modal.Rooms"%>
@@ -28,6 +29,7 @@
 List<Rooms> room = (List<Rooms>)request.getAttribute("room");
 List<Blogs> blog = (List<Blogs>)request.getAttribute("blog");
 List<Testimonial> test = (List<Testimonial>)request.getAttribute("test");
+List<Banner> ban = (List<Banner>)request.getAttribute("ban");
 %>
 <body class="front" data-spy="scroll" data-target="#top-inner" data-offset="0">
 <div id="main">
@@ -38,24 +40,31 @@ List<Testimonial> test = (List<Testimonial>)request.getAttribute("test");
             <div id="slides_wrapper" class="">
                 <div id="slides">
                     <ul class="slides-container">
-                        <li>
-                            <img src="assets/images/slide01.jpg" alt="" class="img" style="height: 90vh; object-fit: cover;">
+                    <%if(ban.size() > 0){
+                    	for(Banner b : ban){%>
+                         <li>
+                            <img src="displayimage?url=<%=b.getImage()%>" alt="" class="img" style="height: 90vh; object-fit: cover;">
                         </li>
-                        <li>
-                            <img src="assets/images/slide04.jpg" alt="" class="img" style="height: 90vh; object-fit: cover;">
-                        </li>
-                        <li>
-                            <img src="assets/images/slide03.jpg" alt="" class="img" style="height: 90vh; object-fit: cover;">
-                        </li>
-                        <li>
-                            <img src="assets/images/slide02.jpg" alt="" class="img" style="height: 90vh; object-fit: cover;">
-                        </li>
-                        <li>
-                            <img src="assets/images/slide05.jpg" alt="" class="img" style="height: 90vh; object-fit: cover;">
-                        </li>
-                        <li>
-                            <img src="assets/images/slide06.jpg" alt="" class="img" style="height: 90vh; object-fit: cover;">
-                        </li>
+                        <%}}else{%>
+	                        <li>
+	                            <img src="assets/images/slide01.jpg" alt="" class="img" style="height: 90vh; object-fit: cover;">
+	                        </li>
+	                        <li>
+	                            <img src="assets/images/slide04.jpg" alt="" class="img" style="height: 90vh; object-fit: cover;">
+	                        </li>
+	                        <li>
+	                            <img src="assets/images/slide03.jpg" alt="" class="img" style="height: 90vh; object-fit: cover;">
+	                        </li>
+	                        <li>
+	                            <img src="assets/images/slide02.jpg" alt="" class="img" style="height: 90vh; object-fit: cover;">
+	                        </li>
+	                        <li>
+	                            <img src="assets/images/slide05.jpg" alt="" class="img" style="height: 90vh; object-fit: cover;">
+	                        </li>
+	                        <li>
+	                            <img src="assets/images/slide06.jpg" alt="" class="img" style="height: 90vh; object-fit: cover;">
+	                        </li>
+                        <%}%>
 
                     </ul>
                 </div>
@@ -114,7 +123,7 @@ List<Testimonial> test = (List<Testimonial>)request.getAttribute("test");
                             <div class="select1_wrapper">
                                 <label>Select Room</label>
                                 <div class="select1_inner">
-                                    <select class="select2 select" style="width: 100%">
+                                    <select class="select2 select" style="width: 100%" id="rm_id" name="rm_id">
                                         <option disabled selected>Select Room</option>
                                        <%if(room != null){
                                     	   for(Rooms r: room){%>
@@ -154,7 +163,7 @@ List<Testimonial> test = (List<Testimonial>)request.getAttribute("test");
                             </div>
                         </div>
                         <div class="col3 c5">
-                            <button type="submit" class="btn-form1-submit">CHECK AVAILABILITY</button>
+                            <button type="button" class="btn-form1-submit" onclick="getroom()">CHECK AVAILABILITY</button>
                         </div>
                     </form>
                 </div>

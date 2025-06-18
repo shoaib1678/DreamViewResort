@@ -330,7 +330,7 @@ List<Amenities> ame = (List<Amenities>)request.getAttribute("ame");
 	<input type="hidden" id="sno" name="sno" value="0">
 	<jsp:include page="../js.jsp"></jsp:include>
 	<script type="text/javascript">
-	var sno = $("#sno").val();
+	
 	jQuery(document).ready(function () {
 		  ImgUpload();
 		});
@@ -481,9 +481,9 @@ List<Amenities> ame = (List<Amenities>)request.getAttribute("ame");
 								category : {
 									required : true,
 								},
-								title_image : {
+								/* title_image : {
 									required : true,
-								},
+								}, */
 								rent : {
 									required : true,
 								},
@@ -499,9 +499,9 @@ List<Amenities> ame = (List<Amenities>)request.getAttribute("ame");
 								guest : {
 									required : true,
 								},
-								slider_image : {
+								/* slider_image : {
 									required : true,
-								},
+								}, */
 								no_of_rooms : {
 									required : true,
 								},
@@ -515,9 +515,9 @@ List<Amenities> ame = (List<Amenities>)request.getAttribute("ame");
 								category : {
 									required : "Please select category",
 								},
-								title_image : {
+								/* title_image : {
 									required : "Please upload title image",
-								},
+								}, */
 								rent : {
 									required : "Please enter rent per night",
 								},
@@ -536,15 +536,19 @@ List<Amenities> ame = (List<Amenities>)request.getAttribute("ame");
 								guest : {
 									required : "Please enter no of guest",
 								},
-								slider_image : {
+								/* slider_image : {
 									required : "Please upload slider image",
-								},
+								}, */
 								no_of_rooms : {
 									required : "Please enter no of rooms",
 								},
 							},
 
 							submitHandler : function(form) {
+								var sno = $("#sno").val();
+								if(sno == ""){
+									sno =0;
+								}
 								var title = $("#title").val();
 								var category = $("#category").val();
 								var rent = $("#rent").val();
@@ -674,7 +678,7 @@ List<Amenities> ame = (List<Amenities>)request.getAttribute("ame");
 						if(img != null && img != ""){
 							for(var i = 0; i < img.length; i++){
 								var image = img[i].image;
-								html += '<div class="col-md-3">'
+								html += '<div class="col-md-3" id="im'+img[i].sno+'">'
 									+ '<div class="prod-box">'
 									+ '<div class="inner-box">' + '<figure class="image-box">'
 									+ '<span class="dlt_icon"><a href="javascript:void(0);" onclick="deleteimg('+img[i].sno+')" class="fa-solid fa-xmark"></a></span>'
@@ -769,12 +773,7 @@ List<Amenities> ame = (List<Amenities>)request.getAttribute("ame");
 								processData : false,
 								success : function(data) {
 									if (data['status'] == 'Success') {
-										getimg();
-										Swal.fire({
-											icon : 'success',
-											title : 'Deleted!',
-											text : 'Image deleted successfully'
-										})
+										 $('#im' + sno).remove();  
 									} else {
 										Swal.fire({
 											icon : 'Opps',

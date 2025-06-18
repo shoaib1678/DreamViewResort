@@ -1,3 +1,4 @@
+<%@page import="com.shoaib.modal.Category"%>
 <%@page import="com.shoaib.modal.Blogs"%>
 <%@page import="com.shoaib.modal.Gallery"%>
 <%@page import="java.util.List"%>
@@ -34,6 +35,7 @@
 </head>
 <%
   List<Gallery> gallery = (List<Gallery>)request.getAttribute("gallery");
+List<Category> cat = (List<Category>)request.getAttribute("cat");
 %>
 <body class="front" data-spy="scroll" data-target="#top-inner" data-offset="0">
 <div id="main">
@@ -53,10 +55,10 @@
       <li class="nav-item">
         <a class="nav-link active" data-toggle="tab" href="#all">All</a>
       </li>
-      <% if (gallery != null && gallery.size() > 0) {
-        for (Gallery g : gallery) { %>
+      <% if (cat != null && cat.size() > 0) {
+        for (Category c : cat) { %>
           <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#<%=g.getCategory_name()%>"><%=g.getCategory_name()%></a>
+            <a class="nav-link" data-toggle="tab" href="#<%=c.getCategory_name()%>"><%=c.getCategory_name()%></a>
           </li>
       <% }} %>
     </ul>

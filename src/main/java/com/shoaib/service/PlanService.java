@@ -77,7 +77,7 @@ public class PlanService {
 			if(list.size()>0) {
 				for(PackagePlan p : list) {
 					Map<String,Object> map = new HashMap<String,Object>();
-					map.put("sno", p.getSno());
+					map.put("sno", p.getRoom_id());
 					List<Rooms> r = (List<Rooms>)commonDao.getDataByMap(map, new Rooms(), null, null, 0, -1);
 					p.setTitle(r.get(0).getTitle());
 				}

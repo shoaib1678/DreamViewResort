@@ -24,8 +24,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
+import com.lowagie.text.pdf.ArabicLigaturizer;
 import com.shoaib.dao.CommonDao;
 import com.shoaib.modal.Amenities;
+import com.shoaib.modal.Banner;
 import com.shoaib.modal.Blogs;
 import com.shoaib.modal.Booking;
 import com.shoaib.modal.Category;
@@ -57,6 +59,7 @@ public class HomeController {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("status", "Active");
 			List<Testimonial> test = (List<Testimonial>)commonDao.getDataByMap(map, new Testimonial(), null, null, 0, -1);
+			List<Banner> ban = (List<Banner>)commonDao.getDataByMap(map, new Banner(), null, null, 0, -1);
 			List<Rooms> room = (List<Rooms>)commonDao.getDataByMap(map, new Rooms(), null, null, 0, -1);
 			if(room.size() > 0) {
 				for(Rooms r : room) {
@@ -72,6 +75,7 @@ public class HomeController {
 			mv.addObject("blog", blog);
 			mv.addObject("room", room);
 			mv.addObject("test", test);
+			mv.addObject("ban", ban);
 			System.out.println("dsgdfxhfdshgfssd");
 			return mv;
 		}else {
@@ -79,6 +83,7 @@ public class HomeController {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("status", "Active");
 			List<Testimonial> test = (List<Testimonial>)commonDao.getDataByMap(map, new Testimonial(), null, null, 0, -1);
+			List<Banner> ban = (List<Banner>)commonDao.getDataByMap(map, new Banner(), null, null, 0, -1);
 			List<Rooms> room = (List<Rooms>)commonDao.getDataByMap(map, new Rooms(), null, null, 0, -1);
 			if(room.size() > 0) {
 				for(Rooms r : room) {
@@ -93,6 +98,7 @@ public class HomeController {
 			mv.addObject("blog", blog);
 			mv.addObject("room", room);
 			mv.addObject("test", test);
+			mv.addObject("ban", ban);
 			return mv;
 		}
 		
@@ -194,19 +200,29 @@ public class HomeController {
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		map.put("status", "Active");
 		List<Gallery> gallery = (List<Gallery>)commonDao.getDataByMap(map, new Gallery(), null, null, 0, -1);
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		map2.put("status", "Active");
+		map2.put("type", "Gallery");
+		List<Category> cat = (List<Category>)commonDao.getDataByMap(map2, new Category(), null, null, 0, -1);
 		for(Gallery g : gallery) {
 			map1.put("sno", g.getCategory_id());
-			List<Category> cat = (List<Category>)commonDao.getDataByMap(map1, new Category(), null, null, 0, -1);
-		g.setCategory_name(cat.get(0).getCategory_name());
+			
+			List<Category> ca = (List<Category>)commonDao.getDataByMap(map1, new Category(), null, null, 0, -1);
+		g.setCategory_name(ca.get(0).getCategory_name());
 		}
 		mv.addObject("gallery", gallery);
+		mv.addObject("cat", cat);
 		return mv;
 		
 	}
 	@RequestMapping(value="/rooms")
 	public ModelAndView rooms(HttpServletRequest request) throws IOException{
 		ModelAndView mv = new ModelAndView("Website/Rooms/rooms");
+		String rm = request.getParameter("room_id");
 		Map<String, Object> map = new HashMap<String, Object>();
+		if(rm != null && !rm.isEmpty()) {
+			map.put("sno", Integer.parseInt(rm));	
+		}
 		map.put("status", "Active");
 		List<Rooms> room = (List<Rooms>)commonDao.getDataByMap(map, new Rooms(), null, null, 0, -1);
 		if(room.size() > 0) {
@@ -288,7 +304,19 @@ public class HomeController {
 		map.put("sno", book.get(0).getRoom_id());
 		List<Rooms> room = (List<Rooms>)commonDao.getDataByMap(mp, new Rooms(), null, null, 0, -1);
 		book.get(0).setTitle(room.get(0).getTitle());
+		List<PackagePlan> pack = new ArrayList<PackagePlan>();
+		if(book.get(0).getPlan_ids() != null && !book.get(0).getPlan_ids().isEmpty()) {
+			String[] id =  book.get(0).getPlan_ids().split(",");
+			for(int i=0; i< id.length; i++) {
+				Map<String, Object> mmp = new HashMap<String, Object>();
+				mmp.put("sno",Integer.parseInt(id[i]));
+				List<PackagePlan> p = (List<PackagePlan>)commonDao.getDataByMap(mmp, new PackagePlan(), null, null, 0, -1);
+				pack.add(p.get(0));
+			}
+			
+		}
 		mv.addObject("book", book);
+		mv.addObject("pack", pack);
 		return mv;
 	}
 	/********************************* Website Panel Urls End ************************************************/
@@ -345,127 +373,229 @@ public class HomeController {
 		}
 	}
 	@RequestMapping(value="/manage_banner")
-	public ModelAndView manage_banner(HttpServletRequest request) throws IOException{
-		ModelAndView mv = new ModelAndView("AdminPanel/Banner/banner");
-		return mv;
+	public ModelAndView manage_banner(HttpServletRequest request,HttpSession session) throws IOException{
+		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
+		if(lg !=null) {
+			ModelAndView mv = new ModelAndView("AdminPanel/Banner/banner");
+			return mv;
+		}else {
+			return new ModelAndView("redirect:./");
+		}
+		
 	}
 	@RequestMapping(value="/amenities")
-	public ModelAndView amenities(HttpServletRequest request) throws IOException{
-		ModelAndView mv = new ModelAndView("AdminPanel/Manage_Rooms/amenities");
-		return mv;
+	public ModelAndView amenities(HttpServletRequest request,HttpSession session) throws IOException{
+		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
+		if(lg !=null) {
+			ModelAndView mv = new ModelAndView("AdminPanel/Manage_Rooms/amenities");
+			return mv;
+		}else {
+			return new ModelAndView("redirect:./");
+		}
+		
 	}
 	@RequestMapping(value="/category")
-	public ModelAndView category(HttpServletRequest request) throws IOException{
-		ModelAndView mv = new ModelAndView("AdminPanel/Manage_Rooms/category");
-		return mv;
+	public ModelAndView category(HttpServletRequest request,HttpSession session) throws IOException{
+		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
+		if(lg !=null) {
+			ModelAndView mv = new ModelAndView("AdminPanel/Manage_Rooms/category");
+			return mv;
+		}else {
+			return new ModelAndView("redirect:./");
+		}
+		
 	}
 	@RequestMapping(value="/manage_rooms")
-	public ModelAndView manage_rooms(HttpServletRequest request) throws IOException{
-		ModelAndView mv = new ModelAndView("AdminPanel/Manage_Rooms/rooms");
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("type", "Room");
-		map.put("status", "Active");
-		Map<String, Object> map1 = new HashMap<String, Object>();
-		map1.put("status", "Active");
-		List<Category> cat = (List<Category>)commonDao.getDataByMap(map, new Category(), null, null, 0, -1);
-		List<Amenities> ame = (List<Amenities>)commonDao.getDataByMap(map1, new Amenities(), null, null, 0, -1);
-		mv.addObject("cat", cat);
-		mv.addObject("ame", ame);
-		return mv;
+	public ModelAndView manage_rooms(HttpServletRequest request,HttpSession session) throws IOException{
+		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
+		if(lg !=null) {
+			ModelAndView mv = new ModelAndView("AdminPanel/Manage_Rooms/rooms");
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("type", "Room");
+			map.put("status", "Active");
+			Map<String, Object> map1 = new HashMap<String, Object>();
+			map1.put("status", "Active");
+			List<Category> cat = (List<Category>)commonDao.getDataByMap(map, new Category(), null, null, 0, -1);
+			List<Amenities> ame = (List<Amenities>)commonDao.getDataByMap(map1, new Amenities(), null, null, 0, -1);
+			mv.addObject("cat", cat);
+			mv.addObject("ame", ame);
+			return mv;
+		}else {
+			return new ModelAndView("redirect:./");
+		}
+		
 	}
 	@RequestMapping(value="/availability")
-	public ModelAndView availability(HttpServletRequest request) throws IOException{
-		ModelAndView mv = new ModelAndView("AdminPanel/Manage_Rooms/room_availability");
-		return mv;
+	public ModelAndView availability(HttpServletRequest request,HttpSession session) throws IOException{
+		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
+		if(lg !=null) {
+			ModelAndView mv = new ModelAndView("AdminPanel/Manage_Rooms/room_availability");
+			return mv;
+		}else {
+			return new ModelAndView("redirect:./");
+		}
+		
 	}
 	@RequestMapping(value="/coupons")
-	public ModelAndView coupons(HttpServletRequest request) throws IOException{
-		ModelAndView mv = new ModelAndView("AdminPanel/Manage_Rooms/coupons");
-		Map<String, Object> map1 = new HashMap<String, Object>();
-		map1.put("status", "Active");
-		List<Rooms> rooms = (List<Rooms>)commonDao.getDataByMap(map1, new Rooms(), null, null, 0, -1);
-		mv.addObject("rooms", rooms);
-		return mv;
+	public ModelAndView coupons(HttpServletRequest request,HttpSession session) throws IOException{
+		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
+		if(lg !=null) {
+			ModelAndView mv = new ModelAndView("AdminPanel/Manage_Rooms/coupons");
+			Map<String, Object> map1 = new HashMap<String, Object>();
+			map1.put("status", "Active");
+			List<Rooms> rooms = (List<Rooms>)commonDao.getDataByMap(map1, new Rooms(), null, null, 0, -1);
+			mv.addObject("rooms", rooms);
+			return mv;
+		}else {
+			return new ModelAndView("redirect:./");
+		}
+		
 	}
 	@RequestMapping(value="/package_plan")
-	public ModelAndView package_plan(HttpServletRequest request) throws IOException{
-		ModelAndView mv = new ModelAndView("AdminPanel/Manage_Rooms/plan");
-		Map<String, Object> map1 = new HashMap<String, Object>();
-		map1.put("status", "Active");
-		List<Rooms> rooms = (List<Rooms>)commonDao.getDataByMap(map1, new Rooms(), null, null, 0, -1);
-		mv.addObject("rooms", rooms);
-		return mv;
+	public ModelAndView package_plan(HttpServletRequest request,HttpSession session) throws IOException{
+		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
+		if(lg !=null) {
+			ModelAndView mv = new ModelAndView("AdminPanel/Manage_Rooms/plan");
+			Map<String, Object> map1 = new HashMap<String, Object>();
+			map1.put("status", "Active");
+			List<Rooms> rooms = (List<Rooms>)commonDao.getDataByMap(map1, new Rooms(), null, null, 0, -1);
+			mv.addObject("rooms", rooms);
+			return mv;
+		}else {
+			return new ModelAndView("redirect:./");
+		}
+		
 	}
 	@RequestMapping(value="/blogs_category")
-	public ModelAndView blogs_category(HttpServletRequest request) throws IOException{
-		ModelAndView mv = new ModelAndView("AdminPanel/Manage_Blogs/category");
-		return mv;
+	public ModelAndView blogs_category(HttpServletRequest request,HttpSession session) throws IOException{
+		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
+		if(lg !=null) {
+			ModelAndView mv = new ModelAndView("AdminPanel/Manage_Blogs/category");
+			return mv;
+		}else {
+			return new ModelAndView("redirect:./");
+		}
+		
 	}
 	@RequestMapping(value="/manage_blogs")
-	public ModelAndView manage_blogs(HttpServletRequest request) throws IOException{
-		ModelAndView mv = new ModelAndView("AdminPanel/Manage_Blogs/blogs");
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("type", "Blogs");
-		map.put("status", "Active");
-		List<Category> cat = (List<Category>)commonDao.getDataByMap(map, new Category(), null, null, 0, -1);
-		mv.addObject("cat", cat);
-		return mv;
+	public ModelAndView manage_blogs(HttpServletRequest request,HttpSession session) throws IOException{
+		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
+		if(lg !=null) {
+			ModelAndView mv = new ModelAndView("AdminPanel/Manage_Blogs/blogs");
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("type", "Blogs");
+			map.put("status", "Active");
+			List<Category> cat = (List<Category>)commonDao.getDataByMap(map, new Category(), null, null, 0, -1);
+			mv.addObject("cat", cat);
+			return mv;
+		}else {
+			return new ModelAndView("redirect:./");
+		}
+		
 	}
 	@RequestMapping(value="/gallery_category")
-	public ModelAndView gallery_category(HttpServletRequest request) throws IOException{
-		ModelAndView mv = new ModelAndView("AdminPanel/Gallery/category");
-		return mv;
+	public ModelAndView gallery_category(HttpServletRequest request,HttpSession session) throws IOException{
+		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
+		if(lg !=null) {
+			ModelAndView mv = new ModelAndView("AdminPanel/Gallery/category");
+			return mv;
+		}else {
+			return new ModelAndView("redirect:./");
+		}
+		
 	}
 	@RequestMapping(value="/manage_gallery")
-	public ModelAndView manage_gallery(HttpServletRequest request) throws IOException{
-		ModelAndView mv = new ModelAndView("AdminPanel/Gallery/gallery");
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("type", "Gallery");
-		map.put("status", "Active");
-		List<Category> cat = (List<Category>)commonDao.getDataByMap(map, new Category(), null, null, 0, -1);
-		mv.addObject("cat", cat);
-		return mv;
+	public ModelAndView manage_gallery(HttpServletRequest request,HttpSession session) throws IOException{
+		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
+		if(lg !=null) {
+			ModelAndView mv = new ModelAndView("AdminPanel/Gallery/gallery");
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("type", "Gallery");
+			map.put("status", "Active");
+			List<Category> cat = (List<Category>)commonDao.getDataByMap(map, new Category(), null, null, 0, -1);
+			mv.addObject("cat", cat);
+			return mv;
+		}else {
+			return new ModelAndView("redirect:./");
+		}
+		
 	}
 	@RequestMapping(value="/manage_testimonial")
-	public ModelAndView manage_testimonial(HttpServletRequest request) throws IOException{
-		ModelAndView mv = new ModelAndView("AdminPanel/Testimonials/testimonial");
-		return mv;
+	public ModelAndView manage_testimonial(HttpServletRequest request,HttpSession session) throws IOException{
+		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
+		if(lg !=null) {
+			ModelAndView mv = new ModelAndView("AdminPanel/Testimonials/testimonial");
+			return mv;
+		}else {
+			return new ModelAndView("redirect:./");
+		}
+		
 	}
 	@RequestMapping(value="/block_date")
-	public ModelAndView block_date(HttpServletRequest request) throws IOException{
-		ModelAndView mv = new ModelAndView("AdminPanel/Booking/blockdate");
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("status", "Active");
-		List<Rooms> room = (List<Rooms>)commonDao.getDataByMap(map, new Rooms(), null, null, 0, -1);
-		mv.addObject("room", room);
-		return mv;
+	public ModelAndView block_date(HttpServletRequest request,HttpSession session) throws IOException{
+		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
+		if(lg !=null) {
+			ModelAndView mv = new ModelAndView("AdminPanel/Booking/blockdate");
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("status", "Active");
+			List<Rooms> room = (List<Rooms>)commonDao.getDataByMap(map, new Rooms(), null, null, 0, -1);
+			mv.addObject("room", room);
+			return mv;
+		}else {
+			return new ModelAndView("redirect:./");
+		}
+		
 	}
 	@RequestMapping(value="/book_manually")
-	public ModelAndView book_manually(HttpServletRequest request) throws IOException{
-		ModelAndView mv = new ModelAndView("AdminPanel/Booking/manualbooking");
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("status", "Active");
-		List<Rooms> room = (List<Rooms>)commonDao.getDataByMap(map, new Rooms(), null, null, 0, -1);
-		mv.addObject("rooms", room);
-		return mv;
+	public ModelAndView book_manually(HttpServletRequest request,HttpSession session) throws IOException{
+		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
+		if(lg !=null) {
+			ModelAndView mv = new ModelAndView("AdminPanel/Booking/manualbooking");
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("status", "Active");
+			List<Rooms> room = (List<Rooms>)commonDao.getDataByMap(map, new Rooms(), null, null, 0, -1);
+			mv.addObject("rooms", room);
+			return mv;
+		}else {
+			return new ModelAndView("redirect:./");
+		}
+		
 	}
 	@RequestMapping(value="/reserved_rooms")
-	public ModelAndView reserved_room(HttpServletRequest request) throws IOException{
-		ModelAndView mv = new ModelAndView("AdminPanel/Booking/reservedRoom");
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("status", "Active");
-		List<Rooms> room = (List<Rooms>)commonDao.getDataByMap(map, new Rooms(), null, null, 0, -1);
-		mv.addObject("rooms", room);
-		return mv;
+	public ModelAndView reserved_room(HttpServletRequest request,HttpSession session) throws IOException{
+		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
+		if(lg !=null) {
+			ModelAndView mv = new ModelAndView("AdminPanel/Booking/reservedRoom");
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("status", "Active");
+			List<Rooms> room = (List<Rooms>)commonDao.getDataByMap(map, new Rooms(), null, null, 0, -1);
+			mv.addObject("rooms", room);
+			return mv;
+		}else {
+			return new ModelAndView("redirect:./");
+		}
+		
 	}
 	@RequestMapping(value="/payment_details")
-	public ModelAndView payment_details(HttpServletRequest request) throws IOException{
-		ModelAndView mv = new ModelAndView("AdminPanel/Payment/payment");
-		return mv;
+	public ModelAndView payment_details(HttpServletRequest request,HttpSession session) throws IOException{
+		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
+		if(lg !=null) {
+			ModelAndView mv = new ModelAndView("AdminPanel/Payment/payment");
+			return mv;
+		}else {
+			return new ModelAndView("redirect:./");
+		}
+		
 	}
 	@RequestMapping(value="/registered_user")
-	public ModelAndView registered_user(HttpServletRequest request) throws IOException{
-		ModelAndView mv = new ModelAndView("AdminPanel/User/users");
-		return mv;
+	public ModelAndView registered_user(HttpServletRequest request,HttpSession session) throws IOException{
+		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
+		if(lg !=null) {
+			ModelAndView mv = new ModelAndView("AdminPanel/User/users");
+			return mv;
+		}else {
+			return new ModelAndView("redirect:./");
+		}
+		
 	}
 }
