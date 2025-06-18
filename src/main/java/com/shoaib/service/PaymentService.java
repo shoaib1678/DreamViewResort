@@ -51,6 +51,7 @@ public class PaymentService {
 	    		 b.get(0).setPaid_amount(amt);
 	    		 b.get(0).setOrder_id(booking.getOrder_id());
 	    		 b.get(0).setPayment_type("100%");
+	    		 b.get(0).setPayment_mode("Online");
 	    		 b.get(0).setPayment_status("Paid");
 	    		 commonDao.updateDataToDb(b.get(0));
 	    		 paymentService.updateRazorPayOrder(booking.getOrder_id());

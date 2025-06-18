@@ -45,6 +45,9 @@
                   <b>Address: </b><span class="text-white">HEAD OFFICE- M-4, PLOT NO. 93-94, R.K TOWER, ZONE - II ,MP NAGAR BHOPAL</span>
                 </div>
                 <div class="contact1">
+                  <b>Resort Address: </b><span class="text-white">Infront MPT Bison Village - Sarangpur, Sohagpur Madhai</span>
+                </div>
+                <div class="contact1">
                   <b>Phone Number: </b><span class="text-white">+919329197477 , +919098753337</span>
                 <div class="contact1">
                   <b>Email: </b> <a href="mailto:info.dreamviewheritage@gmail.com">info.dreamviewheritage@gmail.com</a>

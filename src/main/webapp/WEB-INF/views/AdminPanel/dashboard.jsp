@@ -100,7 +100,7 @@ List<Rooms> rooms = (List<Rooms>)request.getAttribute("rooms");
 										<div class="card">
 											<div class="card-body  d-flex align-items-center justify-content-between">
 												<div>
-													<span class=" fw-semibold mb-1">Pending Enquiry</span>
+													<span class=" fw-semibold mb-1">All Booking</span>
 													<h3 class="card-title mt-3 mb-0">dgfh</h3>
 												</div>
 												<div class="avatar flex-shrink-0 rounded " style="background: #f5454545;">
@@ -117,7 +117,7 @@ List<Rooms> rooms = (List<Rooms>)request.getAttribute("rooms");
 											<div class="card">
 											<div class="card-body  d-flex align-items-center justify-content-between">
 												<div>
-													<span class=" fw-semibold mb-1">Completed Enquiry</span>
+													<span class=" fw-semibold mb-1">Pending Payment</span>
 													<h3 class="card-title mt-3 mb-0">43</h3>
 												</div>
 												<div class="avatar flex-shrink-0 bg-warning rounded ">
