@@ -136,3 +136,7 @@ LoginCredentials log = (LoginCredentials)session.getAttribute("logindata");
     </div>
   </div>
 </div>
+<div class="sticky-mobile d-md-block d-none">
+  <a href="tel:+919329197477">+91-9329197477</a><br>
+  <a href="tel:+919098753337">+91-9098753337</a>
+</div>

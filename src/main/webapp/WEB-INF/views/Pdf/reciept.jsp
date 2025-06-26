@@ -1,3 +1,5 @@
+<%@page import="java.util.regex.Pattern"%>
+<%@page import="java.util.regex.Matcher"%>
 <%@page import="com.shoaib.modal.PackagePlan"%>
 <%@page import="com.shoaib.modal.Booking"%>
 <%@page import="com.itextpdf.text.html.WebColors"%>
@@ -73,7 +75,7 @@ try {
 	table = new PdfPTable(12);
 	table.setWidthPercentage(100);
 
-	Image image = Image.getInstance("https://dreamviewresortmadhai.com/assets/img/1723011694.png"); // Replace with the path to your image file
+	Image image = Image.getInstance("https://dreamviewresortmadhai.com/assets/images/bllogo.jpg"); // Replace with the path to your image file
 	image.scaleAbsolute(65, 70);
 	float desiredWidth = 142; // set your desired width
 	float desiredHeight = 46; // set your desired height
@@ -359,6 +361,43 @@ try {
 	table.addCell(cell);
 	document.add(table);
 	
+	table = new PdfPTable(12);
+	table.setWidthPercentage(100);
+	
+	phrase = new Phrase();
+	phrase.add(new Chunk("Alotted Room no", fontbold));
+
+	cell = new PdfPCell(phrase);
+	cell.setPaddingTop(3);
+	cell.setPaddingBottom(5);
+	cell.setColspan(2);
+	cell.setBorder(PdfPCell.NO_BORDER);
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+	table.addCell(cell);
+	
+	phrase = new Phrase();
+	phrase.add(new Chunk(""+book.get(0).getRoom_number(), fontnormal));
+
+	cell = new PdfPCell(phrase);
+	cell.setPaddingTop(3);
+	cell.setPaddingBottom(5);
+	cell.setColspan(4);
+	cell.setBorder(PdfPCell.NO_BORDER);
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+	table.addCell(cell);
+	
+	phrase = new Phrase();
+	phrase.add(new Chunk("", fontnormal));
+
+	cell = new PdfPCell(phrase);
+	cell.setPaddingTop(3);
+	cell.setPaddingBottom(5);
+	cell.setColspan(6);
+	cell.setBorder(PdfPCell.NO_BORDER);
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
+	table.addCell(cell);
+	document.add(table);
+	
 	
 	if(pack != null && pack.size() > 0){
 		table = new PdfPTable(12);
@@ -609,6 +648,40 @@ try {
 	table.addCell(cell);
 	document.add(table);
 	
+	table = new PdfPTable(12);
+	table.setWidthPercentage(100);
+	
+	phrase = new Phrase();
+	phrase.add(new Chunk("Extra Bed Charge", fontbold));
+
+	cell = new PdfPCell(phrase);
+	cell.setPaddingTop(3);
+	cell.setPaddingBottom(5);
+	cell.setColspan(9);
+	cell.setBorder(PdfPCell.NO_BORDER);
+	cell.setBorderWidthLeft(1.0f);
+	//cell.setBorderWidthBottom(1.0f);
+	/* cell.setBackgroundColor(BaseColor.BLACK);
+	/* cell.setHorizontalAlignment(PdfPCell.ALIGN_LEFT); */
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
+	table.addCell(cell);
+
+
+	phrase = new Phrase();
+	phrase.add(new Chunk(book.get(0).getExtra_bed_charge()+"", fontnormal));
+
+	cell = new PdfPCell(phrase);
+	cell.setPaddingTop(3);
+	cell.setPaddingBottom(5);
+	cell.setColspan(3);
+	cell.setBorder(PdfPCell.NO_BORDER);
+	cell.setBorderWidthRight(1.0f);
+	//cell.setBorderWidthLeft(1.0f);
+	//cell.setBorderWidthBottom(1.0f);
+	cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
+	table.addCell(cell);
+	document.add(table);
+	
 	
 	table = new PdfPTable(12);
 	table.setWidthPercentage(100);
@@ -667,8 +740,15 @@ try {
 	
  double b = book.get(0).getBase_price();
  int n = book.get(0).getNight();
- int r = book.get(0).getNo_of_rooms();
- double subt = b*n*r;
+ String r = book.get(0).getNo_of_rooms();  // e.g., "2 Room + 1 Extra Bed"
+ int roomCount = 0;
+
+ Matcher matcher = Pattern.compile("(\\d+)\\s+Room").matcher(r);
+ if (matcher.find()) {
+     roomCount = Integer.parseInt(matcher.group(1));
+ }
+ double e = book.get(0).getExtra_bed_charge();
+ double subt = b*n*roomCount + e;
  
 
 	phrase = new Phrase();

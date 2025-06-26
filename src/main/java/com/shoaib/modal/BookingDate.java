@@ -19,9 +19,13 @@ public class BookingDate {
 	private int room_id;
 	@Transient
 	private String room_title;
+	private String room_number;
 	private String type;
 	@Temporal(TemporalType.DATE)
 	private Date booking_date;
+	@Transient
+	@Temporal(TemporalType.DATE)
+	private Date check_date;
 	private Date createdAt;
 	public int getSno() {
 		return sno;
@@ -40,6 +44,19 @@ public class BookingDate {
 	}
 	public void setBooking_date(Date booking_date) {
 		this.booking_date = booking_date;
+	}
+	
+	public Date getCheck_date() {
+		return check_date;
+	}
+	public void setCheck_date(Date check_date) {
+		this.check_date = check_date;
+	}
+	public String getRoom_number() {
+		return room_number;
+	}
+	public void setRoom_number(String room_number) {
+		this.room_number = room_number;
 	}
 	public Date getCreatedAt() {
 		return createdAt;

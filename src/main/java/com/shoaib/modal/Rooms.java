@@ -18,11 +18,13 @@ public class Rooms {
 	private int category_id; 
 	private String title; 
 	private double price; 
+	private double extra_bed_charge; 
 	private String title_image; 
 	@Transient
 	private String category_name; 
 	@Transient
 	private String amenities_name; 
+	private String room_number; 
 	private String summery; 
 	private int bed; 
 	private int bath; 
@@ -59,6 +61,12 @@ public class Rooms {
 	}
 	public void setPrice(double price) {
 		this.price = price;
+	}
+	public double getExtra_bed_charge() {
+		return extra_bed_charge;
+	}
+	public void setExtra_bed_charge(double extra_bed_charge) {
+		this.extra_bed_charge = extra_bed_charge;
 	}
 	public int getNo_of_rooms() {
 		return no_of_rooms;
@@ -131,6 +139,12 @@ public class Rooms {
 	}
 	public void setMeta_description(String meta_description) {
 		this.meta_description = meta_description;
+	}
+	public String getRoom_number() {
+		return room_number;
+	}
+	public void setRoom_number(String room_number) {
+		this.room_number = room_number;
 	}
 	public String getStatus() {
 		return status;

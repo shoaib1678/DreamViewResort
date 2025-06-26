@@ -40,5 +40,14 @@ public class AvailabilityController {
 		response =  availabilityService.check_room(check_in,check_out,room_id);
 		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
 	}
+	@RequestMapping(value="/check_abvlty", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> check_abvlty(HttpServletRequest request){
+		Map<String, Object> response = new HashMap<String,Object>();
+		String check_in = request.getParameter("check_in");
+		String check_out = request.getParameter("check_out");
+		String room_id = request.getParameter("room_id");
+		response =  availabilityService.check_abvlty(Integer.parseInt(room_id),check_in,check_out);
+		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
+	}
 
 }

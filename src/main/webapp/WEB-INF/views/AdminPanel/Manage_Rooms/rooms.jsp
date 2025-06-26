@@ -242,9 +242,11 @@ List<Amenities> ame = (List<Amenities>)request.getAttribute("ame");
 					                      					 <input type="file" accept="image/*" class="form-control" id="title_image" name="title_image" onchange='document.getElementById("viewImg").src = window.URL.createObjectURL(this.files[0])'>
 					                                </div>	
 			                                </div>
+			                                 
 			                                <div class="col-md-6 mb-3">
 			                                  	<img id="viewImg" name="viewImg" height="115px" width="100px" style="margin-top: 30px;">
 			                                </div>
+			                                <div id="room_inputs" class="mt-3"></div>
 											 <div class="col-md-6 mb-3">
 			                                  	 
 			                                <label class="form-label" for="rent">Rent / Night (in INR) <span style="color: red;">*</span></label> <input
@@ -254,16 +256,21 @@ List<Amenities> ame = (List<Amenities>)request.getAttribute("ame");
 			                            
 			                                
 			                                <div class="col-md-6 mb-3">
+			                                  	<label class="form-label" for="bed_charge">Extra Bed charge <span style="color: red;">*</span></label> <input
+													type="text"  class="form-control decimalOnly" id="bed_charge" 
+													name="bed_charge" />
+			                                </div>
+			                                <div class="col-md-4 mb-3">
 			                                  	<label class="form-label" for="bed">Bed <span style="color: red;">*</span></label> <input
 													type="text"  class="form-control numberOnly" id="bed" 
 													name="bed" />
 			                                </div>
-			                                <div class="col-md-6 mb-3">
+			                                <div class="col-md-4 mb-3">
 			                                  	<label class="form-label" for="bath">Bath <span style="color: red;">*</span></label> <input
 													type="text" class="form-control numberOnly" id="bath" 
 													name="bath" />
 			                                </div>
-			                                <div class="col-md-6 mb-3">
+			                                <div class="col-md-4 mb-3">
 			                                  	<label class="form-label" for="guest">Max Guest <span style="color: red;">*</span></label> <input
 													type="text" class="form-control numberOnly" id="guest" 
 													name="guest" />
@@ -496,7 +503,13 @@ List<Amenities> ame = (List<Amenities>)request.getAttribute("ame");
 								bath : {
 									required : true,
 								},
+								room_number : {
+									required : true,
+								},
 								guest : {
+									required : true,
+								},
+								bed_charge : {
 									required : true,
 								},
 								/* slider_image : {
@@ -527,6 +540,9 @@ List<Amenities> ame = (List<Amenities>)request.getAttribute("ame");
 								rent : {
 									required : "Please enter rent per night",
 								},
+								bed_charge : {
+									required : "Please enter Extra bed charge",
+								},
 								bed : {
 									required : "Please enter no of bed",
 								},
@@ -549,11 +565,15 @@ List<Amenities> ame = (List<Amenities>)request.getAttribute("ame");
 								if(sno == ""){
 									sno =0;
 								}
+								var roomNumbers = $("input[name='room_number']").map(function() {
+								    return $(this).val();
+								}).get().join(",");
 								var title = $("#title").val();
 								var category = $("#category").val();
 								var rent = $("#rent").val();
 								var bed = $("#bed").val();
 								var bath = $("#bath").val();
+								var bed_charge = $("#bed_charge").val();
 								var guest = $("#guest").val();
 								var summery = $("#summery").val();
 								var no_of_rooms = $("#no_of_rooms").val();
@@ -576,7 +596,9 @@ List<Amenities> ame = (List<Amenities>)request.getAttribute("ame");
 									"bed" : bed,
 									"bath" : bath,
 									"no_of_rooms" : no_of_rooms,
+									"room_number" : roomNumbers,
 									"guest" : guest,
+									"extra_bed_charge" : bed_charge,
 									"description" : description,
 									"meta_keywords" : meta_keywords,
 									"meta_description" : meta_description,
@@ -654,6 +676,7 @@ List<Amenities> ame = (List<Amenities>)request.getAttribute("ame");
 					 $("#rent").val(data['data'][0].price);
 					 $("#bed").val(data['data'][0].bed);
 					 $("#bath").val(data['data'][0].bath);
+					 $("#bed_charge").val(data['data'][0].extra_bed_charge);
 					 $("#guest").val(data['data'][0].guest);
 					 $("#summery").val(data['data'][0].summery);
 					 if (descriptionEditor) {
@@ -689,6 +712,34 @@ List<Amenities> ame = (List<Amenities>)request.getAttribute("ame");
 							}
 							$("#image_column").html(html);
 						}
+						var rooms = data['data'][0].room_number.split(",");
+						var html = '';
+
+						if (rooms != null && rooms.length > 0) {
+						    var html = '';
+						    for (var i = 0; i < parseInt(data['data'][0].no_of_rooms); i++) {
+						        var number = rooms[i];
+						        var j = i + 1;
+
+						        // Start new row for every 2 items
+						        if (i % 2 === 0) {
+						            html += '<div class="row">';
+						        }
+
+						        html += '<div class="col-md-6" id="room' + j + '">'
+						              + '<label for="room_number_' + j + '">Room ' + j + ' Number:</label>'
+						              + '<input type="text" class="form-control" name="room_number" id="room_number_' + j + '" value="' + number + '" placeholder="Enter Room Number">'
+						              + '</div>';
+
+						        // Close the row after 2 columns
+						        if (i % 2 === 1 || i === parseInt(data['data'][0].no_of_rooms) - 1) {
+						            html += '</div>'; // close .row
+						        }
+						    }
+
+						    $("#room_inputs").html(html);
+						}
+
 				} else {
 					Swal.fire({
 						icon : 'Opps',
@@ -789,6 +840,31 @@ List<Amenities> ame = (List<Amenities>)request.getAttribute("ame");
 					
 					
 				};
+				$(document).ready(function () {
+					  $('#no_of_rooms').on('input', function () {
+					    var num = parseInt($(this).val());
+					    var container = $('#room_inputs');
+					    container.empty(); // Clear previous inputs
+
+					    if (!isNaN(num) && num > 0) {
+					      for (var i = 1; i <= num; i++) {
+					        // Create a new row every 2 columns
+					        if ((i - 1) % 2 === 0) {
+					          container.append('<div class="row mb-2" id="row_' + i + '"></div>');
+					        }
+
+					        var rowIndex = i - (i % 2 === 0 ? 1 : 0);
+					        $('#row_' + rowIndex).append(
+					          '<div class="col-md-6">' +
+					            '<label for="room_number_' + i + '">Room ' + i + ' Number:</label>' +
+					            '<input type="text" class="form-control" name="room_number" id="room_number_' + i + '" placeholder="Enter Room ' + i + ' Number">' +
+					          '</div>'
+					        );
+					      }
+					    }
+					  });
+					});
+
 			$("#clear_btn").click(function() {
 				$("#brandImage1").attr("src", "");
 		        $("input[type='text'], input[type='date'],input[type='hidden'],input[type='number'],input[type='file']").val("");

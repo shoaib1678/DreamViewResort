@@ -67,3 +67,15 @@
         </div>
     </div>
    </div>
+<!-- Sticky Call Button (Mobile Only) -->
+<a href="javascript:void(0);" class="pstapp d-lg-none d-block" id="call-toggle" title="Call Us">
+  <i class="fa-solid fa-phone"></i>
+</a>
+
+<!-- Hidden Call Numbers Box -->
+<div id="call-popup" class="call-popup d-lg-none">
+  <a href="tel:+919329197477"><i class="fa-solid fa-phone"></i> +91-9329197477</a>
+  <a href="tel:+919098753337"><i class="fa-solid fa-phone"></i> +91-9098753337</a>
+</div>
+
+   

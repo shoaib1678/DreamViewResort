@@ -18,6 +18,7 @@ public class Booking {
 	private int sno;
 	private int room_id;
 	private String booking_id;
+	private String room_number;
 	private String plan_ids;
 	private String gst_number;
 	private String order_id;
@@ -28,7 +29,7 @@ public class Booking {
 	private String country;
 	private String payment_mode;
 	private String payment_status;
-	private int no_of_rooms;
+	private String no_of_rooms;
 	private int adult;
 	private int child;
 	private int night;
@@ -37,6 +38,7 @@ public class Booking {
 	private double base_price;
 	private double sub_total;
 	private double discount;
+	private double extra_bed_charge;
 	private double due_amount;
 	private double total_amount;
 	private double paid_amount;
@@ -78,7 +80,18 @@ public class Booking {
 	public void setBooking_id(String booking_id) {
 		this.booking_id = booking_id;
 	}
-	
+	public String getRoom_number() {
+		return room_number;
+	}
+	public double getExtra_bed_charge() {
+		return extra_bed_charge;
+	}
+	public void setExtra_bed_charge(double extra_bed_charge) {
+		this.extra_bed_charge = extra_bed_charge;
+	}
+	public void setRoom_number(String room_number) {
+		this.room_number = room_number;
+	}
 	public String getOrder_id() {
 		return order_id;
 	}
@@ -97,10 +110,10 @@ public class Booking {
 	public void setDue_amount(double due_amount) {
 		this.due_amount = due_amount;
 	}
-	public int getNo_of_rooms() {
+	public String getNo_of_rooms() {
 		return no_of_rooms;
 	}
-	public void setNo_of_rooms(int no_of_rooms) {
+	public void setNo_of_rooms(String no_of_rooms) {
 		this.no_of_rooms = no_of_rooms;
 	}
 	public double getGst_amount() {

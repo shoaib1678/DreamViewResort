@@ -123,12 +123,12 @@
 
 	                if (response.status === "created") {
 	                    var options = {
-	                        "key": "rzp_test_TAsu9r4XMXPVIJ",
+	                        "key": "rzp_live_Mm1lrSuypodIP2",
 	                        "amount": response.amount,
 	                        "currency": "INR",
-	                        "name": "Dream View Resort",
+	                        "name": "Dream View Resort Madhai",
 	                        "description": "Transaction",
-	                        "image": "	http://localhost:8081/safariBooking/assets/img/logo.png",
+	                        "image": "https://dreamviewresortmadhai.com/assets/images/bllogo.jpg",
 	                        "order_id": id,
 	                        "handler": function (response) {
 	                        	var obj = {
@@ -202,4 +202,17 @@
             }, 3000);
 	    }
   }
+  $(document).ready(function () {
+	    // Toggle call numbers on icon click
+	    $("#call-toggle").on("click", function () {
+	      $("#call-popup").slideToggle(200);
+	    });
+
+	    // Close popup if clicked outside
+	    $(document).on("click", function (e) {
+	      if (!$(e.target).closest("#call-toggle, #call-popup").length) {
+	        $("#call-popup").slideUp(200);
+	      }
+	    });
+	  });
 </script>

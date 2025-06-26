@@ -1,5 +1,8 @@
 package com.shoaib.service;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -122,58 +125,63 @@ public class BlockDateService {
 	}
 
 	public Map<String, Object> add_bookdate(BookingDate bookingDate) {
-		Map<String,Object> response = new HashMap<String,Object>();
-		try {
-			Map<String,Object>mapdata = new HashMap<String, Object>();
-			mapdata.put("sno", bookingDate.getSno());
-			List<BookingDate> list = (List<BookingDate>)commonDao.getDataByMapOr(mapdata, new BookingDate(), null, null, 0, -1);
-			if(list.size() > 0) {
-				list.get(0).setRoom_id(bookingDate.getRoom_id());
-				list.get(0).setBooking_date(bookingDate.getBooking_date());
-				commonDao.updateDataToDb(list.get(0));
-				response.put("status", "Success");
-				response.put("message", "Booking Date Updated Successfully");
-			}else {
-				Map<String,Object> map = new HashMap<String,Object>();
-				map.put("room_id", bookingDate.getRoom_id());
-				map.put("booking_date", bookingDate.getBooking_date());
-				List<BookingDate> data = (List<BookingDate>)commonDao.getDataByMap(map, new BookingDate(), null, null, 0, -1);
-				if(data.size() > 0) {
-					Map<String,Object> mp = new HashMap<String, Object>();
-					mp.put("sno", data.get(0).getRoom_id());
-					List<Rooms> room = (List<Rooms>)commonDao.getDataByMap(mp, new Rooms(), null, null, 0, -1);
-					if(data.size() == room.get(0).getNo_of_rooms()) {
-						response.put("status", "Already_Exist");
-						response.put("message", "Room Not Available");
-					}else {
-						int i = commonDao.addDataToDb(bookingDate);
-						if(i > 0) {
-							response.put("status", "Success");
-							response.put("message", "Booking Date Added Successfully");
-						}else {
-							response.put("status", "Failed");
-							response.put("message", "Something went wrong");
-						}
-					}
-				}else {
-					bookingDate.setCreatedAt(new Date());
-					int i = commonDao.addDataToDb(bookingDate);
-					if(i > 0) {
-						response.put("status", "Success");
-						response.put("message", "Booking Date Added Successfully");
-					}else {
-						response.put("status", "Failed");
-						response.put("message", "Something went wrong");
-					}
-				}
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			response.put("message", "Internal server Error"+e);
-		}
-		return response;
+	    Map<String, Object> response = new HashMap<>();
+	    try {
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	        String checkInStr = sdf.format(bookingDate.getBooking_date());
+	        String checkOutStr = sdf.format(bookingDate.getCheck_date());
+
+	        LocalDate checkInDate = LocalDate.parse(checkInStr, formatter);
+	        LocalDate checkOutDate = LocalDate.parse(checkOutStr, formatter);
+
+	        List<LocalDate> dateRange = new ArrayList<>();
+	        for (LocalDate date = checkInDate; !date.isAfter(checkOutDate); date = date.plusDays(1)) {
+	            dateRange.add(date);
+	        }
+	        Map<String, Object> roomMap = new HashMap<>();
+	        roomMap.put("sno", bookingDate.getRoom_id());
+	        List<Rooms> roomList = (List<Rooms>) commonDao.getDataByMap(roomMap, new Rooms(), null, null, 0, -1);
+	        int maxRooms = roomList.get(0).getNo_of_rooms();
+
+	        boolean someSkipped = false;
+
+	        for (LocalDate date : dateRange) {
+	            Date bookingDateJava = java.sql.Date.valueOf(date);
+	            Map<String, Object> map = new HashMap<>();
+	            map.put("room_id", bookingDate.getRoom_id());
+	            map.put("booking_date", bookingDateJava);
+	            List<BookingDate> existing = (List<BookingDate>) commonDao.getDataByMap(map, new BookingDate(), null, null, 0, -1);
+
+	            if (existing.size() < maxRooms) {
+	                BookingDate newBooking = new BookingDate();
+	                newBooking.setRoom_id(bookingDate.getRoom_id());
+	                newBooking.setRoom_number(bookingDate.getRoom_number());
+	                newBooking.setBooking_date(bookingDateJava);
+	                newBooking.setCreatedAt(new Date());
+	                commonDao.addDataToDb(newBooking);
+	            } else {
+	                someSkipped = true;
+	            }
+	        }
+
+	        if (someSkipped) {
+	            response.put("status", "Partial");
+	            response.put("message", "Some dates were already fully booked and skipped.");
+	        } else {
+	            response.put("status", "Success");
+	            response.put("message", "Booking Date(s) Added Successfully");
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        response.put("status", "Failed");
+	        response.put("message", "Internal Server Error: " + e.getMessage());
+	    }
+	    return response;
 	}
+
+
 
 	public Map<String, Object> get_bookdate(int start, int length, String search) {
 		Map<String,Object> response = new HashMap<String, Object>();

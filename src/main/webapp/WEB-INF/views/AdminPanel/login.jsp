@@ -53,7 +53,7 @@
             <div class="app-brand mb-5">
               <a href="" class="app-brand-link gap-2">
                 <span class="app-brand-logo demo mw-100">
-                  <img src="assets/images/logo.webp" alt="Dream View" title="Dream View" style="width: 75%;"/>
+                  <img src="assets/images/bllogo.jpg" alt="Dream View" title="Dream View" style="width: 75%;"/>
                 </span>
                 <!-- <span class="app-brand-text demo text-body fw-bolder">Deebash Fashion</span> -->
               </a>

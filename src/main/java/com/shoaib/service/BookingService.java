@@ -59,12 +59,14 @@ public class BookingService {
                 		b.setRoom_id(booking.getRoom_id());
                 		Date bookingDate = Date.from(nextDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
                 		b.setBooking_date(bookingDate);
+                		b.setRoom_number(booking.getRoom_number());
                 		b.setCreatedAt(new Date());
                 		commonDao.addDataToDb(b);
                 	}
                 }else {
                 	b.setRoom_id(booking.getRoom_id());
                 	b.setBooking_date(booking.getCheck_in());
+                	b.setRoom_number(booking.getRoom_number());
             		b.setCreatedAt(new Date());
             		commonDao.addDataToDb(b);
                 }
@@ -88,7 +90,7 @@ public class BookingService {
                 	    "</style>" +
                 	    "</head><body>" +
                 	    "<div class='container'>" +
-                	    "<img src='https://dreamviewresortmadhai.com/assets/img/1723011694.png' alt='Resort Logo' class='logo'>" +
+                	    "<img src='https://dreamviewresortmadhai.com/assets/images/bllogo.jpg' alt='Resort Logo' class='logo'>" +
                 	    "<h2>Booking Confirmation</h2>" +
                 	    "<table>" +
                 	    "  <tr><td class='label'>Booking ID:</td><td>" + booking_id + "</td></tr>" +
@@ -96,14 +98,18 @@ public class BookingService {
                 	    "  <tr><td class='label'>Email:</td><td>" + booking.getEmail() + "</td></tr>" +
                 	    "  <tr><td class='label'>Contact Number:</td><td>" + booking.getMobile_number() + "</td></tr>" +
                 	    "  <tr><td class='label'>Room:</td><td>" + room.get(0).getTitle() + "</td></tr>" +
+                	    "  <tr><td class='label'>Room Number:</td><td>" + booking.getRoom_number() + "</td></tr>" +
                 	    "  <tr><td class='label'>Check-in Date:</td><td>" + booking.getCheck_in() + "</td></tr>" +
                 	    "  <tr><td class='label'>Check-out Date:</td><td>" + booking.getCheck_out() + "</td></tr>" +
                 	    "  <tr><td class='label'>Payment Mode:</td><td>" + booking.getPayment_mode() + "</td></tr>" +
+                	    "  <tr><td class='label'>Paid Amount:</td><td>" + booking.getPaid_amount() + "</td></tr>" +
+                	    "  <tr><td class='label'>Due Amount:</td><td>" + booking.getDue_amount() + "</td></tr>" +
+                	    "  <tr><td class='label'>Payment Status:</td><td>" + booking.getPayment_status() + "</td></tr>" +
                 	    "</table>" +
                 	    "</div></body></html>";
 
 
-                emailService.sendEmailMessage(email, subject, message);
+               emailService.sendEmailMessage(email, subject, message);
 
                 String subject1 = "noreply";
                 String message1 = 
@@ -123,7 +129,7 @@ public class BookingService {
                 	    "</head>" +
                 	    "<body>" +
                 	    "<div class='container'>" +
-                	    "  <img src='https://dreamviewresortmadhai.com/assets/img/1723011694.png' alt='Resort Logo' class='logo'>" +
+                	    "  <img src='https://dreamviewresortmadhai.com/assets/images/bllogo.jpg' alt='Resort Logo' class='logo'>" +
                 	    "  <h2>Booking Confirmation Details</h2>" +
                 	    "  <table>" +
                 	    "    <tr><td class='label'>Booking ID:</td><td>" + booking_id + "</td></tr>" +
@@ -131,9 +137,13 @@ public class BookingService {
                 	    "    <tr><td class='label'>Email:</td><td>" + booking.getEmail() + "</td></tr>" +
                 	    "    <tr><td class='label'>Contact Number:</td><td>" + booking.getMobile_number() + "</td></tr>" +
                 	    "    <tr><td class='label'>Room:</td><td>" + room.get(0).getTitle() + "</td></tr>" +
+                	    "    <tr><td class='label'>Room Number:</td><td>" + booking.getRoom_number() + "</td></tr>" +
                 	    "    <tr><td class='label'>Check-in Date:</td><td>" + booking.getCheck_in() + "</td></tr>" +
                 	    "    <tr><td class='label'>Check-out Date:</td><td>" + booking.getCheck_out() + "</td></tr>" +
                 	    "    <tr><td class='label'>Payment Mode:</td><td>" + booking.getPayment_mode() + "</td></tr>" +
+                	    "  	 <tr><td class='label'>Paid Amount:</td><td>" + booking.getPaid_amount() + "</td></tr>" +
+                	    "  	 <tr><td class='label'>Due Amount:</td><td>" + booking.getDue_amount() + "</td></tr>" +
+                	    "    <tr><td class='label'>Payment Status:</td><td>" + booking.getPayment_status() + "</td></tr>" +
                 	    "  </table>" +
                 	    "  <div class='footer'>Thank you for choosing us. We look forward to welcoming you!</div>" +
                 	    "</div>" +
@@ -161,8 +171,8 @@ public class BookingService {
 	                        booking.getType()
 	                );
                 }else {
-                	booking.setPayment_status("Pending");
-                	 commonDao.updateDataToDb(booking);
+                	saf.get(0).setPayment_status("Pending");
+                	 commonDao.updateDataToDb(saf.get(0));
                 }
                 response.put("status", "Success");
                 response.put("bid", booking_id);

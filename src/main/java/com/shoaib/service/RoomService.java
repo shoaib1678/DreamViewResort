@@ -40,9 +40,11 @@ public class RoomService {
 				pk.get(0).setCategory_id(rooms.getCategory_id());
 				pk.get(0).setAmenity_ids(rooms.getAmenity_ids());
 				pk.get(0).setPrice(rooms.getPrice());
+				pk.get(0).setExtra_bed_charge(rooms.getExtra_bed_charge());
 				pk.get(0).setBed(rooms.getBed());
 				pk.get(0).setBath(rooms.getBath());
 				pk.get(0).setSummery(rooms.getSummery());
+				pk.get(0).setRoom_number(rooms.getRoom_number());
 				pk.get(0).setGuest(rooms.getGuest());
 				pk.get(0).setDescription(rooms.getDescription());
 				pk.get(0).setMeta_keywords(rooms.getMeta_keywords());

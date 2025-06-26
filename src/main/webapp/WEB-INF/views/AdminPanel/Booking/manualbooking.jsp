@@ -104,7 +104,7 @@ List<Rooms> room = (List<Rooms>)request.getAttribute("rooms");
 							<div class="row">
 								<div class=" col-lg-12 mb-6 mt-1">
 									<label class="form-label" for="category_name">Room Name<span style="color: red;">*</span></label> 
-									<select class="form-control" id="room" name="room">
+									<select class="form-control" id="room" name="room" onchange="getroomNumber()">
 										<option selected disabled>--Select Room--</option>
 										<%if(room != null){
 											for(Rooms r : room){%>
@@ -113,11 +113,20 @@ List<Rooms> room = (List<Rooms>)request.getAttribute("rooms");
 									</select>
 								</div>
 								<div class=" col-lg-12 mb-6 mt-1">
-									<label class="form-label" for="booking_date">Booking Date<span style="color: red;">*</span></label> <input
+									<label class="form-label" for="booking_date">Check-in Date<span style="color: red;">*</span></label> <input
 										type="date" class="form-control" id="booking_date" placeholder=" "
-										name="booking_date" aria-label=" " />
+										name="booking_date" aria-label=" " onchange="getroomNumber()"/>
+								</div>
+								<div class=" col-lg-12 mb-6 mt-1">
+									<label class="form-label" for="booking_date">Check-out Date<span style="color: red;">*</span></label> <input
+										type="date" class="form-control" id="check_date" placeholder=" "
+										name="check_date" aria-label=" " onchange="getroomNumber()"/>
 								</div>
 							</div>
+							<div class="row" id="room_box">
+							    <!-- Dynamically injected col-3 room checkboxes will appear here -->
+							</div>
+
 						</div>
 					</div>
 					<div class="modal-footer" style="border-top: 1px solid lightgray;">
@@ -200,8 +209,8 @@ List<Rooms> room = (List<Rooms>)request.getAttribute("rooms");
 				"data" : function(data, type,
 						dataToSet) {
 						var sno = data.sno;
-						var string = "<button class='btn btn-sm btn-secondary add-new btn-primary btn-sm '  type='button'  onclick='edit("+sno+")'>Edit</button> ";
-						string +='<button type="button" class="btn btn-sm btn-danger btn-sm ml-1 "  onclick="deletedata('+sno+')" style="margin-left: 10px;">Delete</button>';
+						//var string = "<button class='btn btn-sm btn-secondary add-new btn-primary btn-sm '  type='button'  onclick='edit("+sno+")'>Edit</button> ";
+						var string ='<button type="button" class="btn btn-sm btn-danger btn-sm ml-1 "  onclick="deletedata('+sno+')" style="margin-left: 10px;">Delete</button>';
 						return string;
 						}
 					},
@@ -224,6 +233,9 @@ List<Rooms> room = (List<Rooms>)request.getAttribute("rooms");
 								booking_date : {
 									required : true,
 								},
+								check_date : {
+									required : true,
+								},
 							},
 
 							messages : {
@@ -234,17 +246,26 @@ List<Rooms> room = (List<Rooms>)request.getAttribute("rooms");
 								booking_date : {
 									required : "Please choose date",
 								},
+								check_date : {
+									required : "Please choose date",
+								},
 							},
 
 							submitHandler : function(form) {
 								var room = $("#room").val();
 								var booking_date = $("#booking_date").val();
+								var check_date = $("#check_date").val();
 								var sno = $("#sno").val();
+								var checkedValues = $("input[name='room_number']:checked").map(function () {
+								    return this.value;
+								}).get().join(",");
 
 								var obj = {
 									"room_id" : room,
 									"booking_date" : booking_date,
+									"check_date" : check_date,
 									"type" : "Manual",
+									"room_number" :checkedValues,
 									"sno" : sno
 								};
 								
@@ -313,6 +334,57 @@ List<Rooms> room = (List<Rooms>)request.getAttribute("rooms");
 		});
 
 	}
+	 function getroomNumber() {
+		    var room = $("#room").val();
+		    var bdate = $("#booking_date").val();
+		    var cdate = $("#check_date").val();
+
+		    if (room != "" && bdate != "" && cdate != "") {
+		        var fd = new FormData();
+		        fd.append("room_id", room);
+		        fd.append("check_in", bdate);
+		        fd.append("check_out", cdate);
+
+		        $.ajax({
+		            url: 'check_abvlty',
+		            type: 'post',
+		            data: fd,
+		            contentType: false,
+		            processData: false,
+		            success: function (data) {
+		                if (data.status === 'success') {
+		                    var availableRooms = [];
+
+		                    if (data.data && data.data.length > 0 && data.data[0].room_number != null) {
+		                        availableRooms = data.data[0].room_number.split(",");
+		                    }
+
+		                    var html = '';
+		                    for (var i = 0; i < availableRooms.length; i++) {
+		                        var roomNum = availableRooms[i].trim();
+
+		                        html += '<div class="col-lg-3 col-md-4 col-sm-6 mt-3">';
+		                        html += '  <div class="form-check">';
+		                        html += '    <input class="form-check-input empRights" type="checkbox" ' +
+		                                'id="room' + roomNum + '" value="' + roomNum + '" name="room_number">';
+		                        html += '    <label class="form-check-label" for="room' + roomNum + '">Room ' + roomNum + '</label>';
+		                        html += '  </div>';
+		                        html += '</div>';
+		                    }
+
+		                    $("#room_box").html(html);
+		                } else {
+		                    $("#room_box").html("<p>No available rooms found.</p>");
+		                }
+		            },
+		            error: function () {
+		                alert("Error fetching room availability.");
+		            }
+		        });
+		    }
+		}
+
+
 
 			$("#clear_btn").click(function() {
 				$("#brandImage1").attr("src", "");

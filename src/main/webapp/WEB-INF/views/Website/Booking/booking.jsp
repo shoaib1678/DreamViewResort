@@ -147,6 +147,33 @@
     stroke-dasharray: 25;
     stroke-dashoffset: 25;
   }
+  .drpbtn{
+  	width: 100%;
+    padding: 20px;
+    background: white !important;
+    border: 1px solid lightgray;
+  }
+  .dropdown-menu {
+      min-width: 250px;
+      padding: 15px;
+    }
+    .counter {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .counter span {
+      width: 30px;
+      text-align: center;
+      display: inline-block;
+    }
+    .form-group{
+        border: 1px solid lightgray;
+	    padding: 6px;
+	    border-radius: 3px;
+    }
+    
 </style>
 
 
@@ -231,22 +258,52 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 										</div>
 										<%} %>
 										<div class="col-md-6 mb-3 c2">
-											<div class="input1_wrapper">
-												<label>No of Adult</label>
-												<div class="">
-													<input type="number" class="form-control" id="no_of_adult" onchange="calr()" name="no_of_adult"
-														placeholder="No of Adult" style="padding: 20px;"  min="1" value="1">
-												</div>
-											</div>
+										<div class="dropdown">
+											    <button class="btn btn-white dropdown-toggle drpbtn" type="button" id="guestDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											      <span id="adlt">0</span> Adults <span id="cld">0</span> children
+											    </button>
+											    <div class="dropdown-menu" aria-labelledby="guestDropdown" style="width: 100%;">
+											      <div class="counter">
+											        <label style="display: block;">Adults</label>
+											        <div>
+											          <a class="btn btn-sm btn-outline-secondary" onclick="forAdult('minus', event)">−</a>
+											          <span id="adults-count">0</span>
+											          <a class="btn btn-sm btn-outline-secondary" onclick="forAdult('Plus', event)">+</a>
+											        </div>
+											      </div>
+											      <div class="counter">
+											        <label style="display: block;">Children</label>
+											        <div>
+											          <a class="btn btn-sm btn-outline-secondary" onclick="forChild('minus', event)">−</a>
+											          <span id="children-count">0</span>
+											          <a class="btn btn-sm btn-outline-secondary" onclick="forChild('Plus', event)">+</a>
+											        </div>
+											      </div>
+											      <a class="btn btn-primary btn-block" onclick="applyGuests()">Apply</a>
+											    </div>
+											  </div>
 										</div>
 										<div class="col-md-6 mb-3 c2">
-											<div class="input1_wrapper">
+										<button class="btn btn-white dropdown-toggle drpbtn" type="button" id="roomdata" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											      Select Room
+											    </button>
+										<div class="dropdown-menu" aria-labelledby="roomdata" style="width: 90%;">
+											   <div class="show-box" id="room-box">
+													<ul id="posib" style="list-style-type: none; padding-left: 0;">
+													</ul>
+												</div>   
+										</div>
+											<!-- <div class="form-group">
+												<h6 class="show-btn" id="room-btn" style="color: #92a5a5;margin-top: 18px;">Select Room<i class="fa fa-angle-down"></i><p style="font-size: 15px;color: black;" id="roomdata"></p></h6>
+												
+											</div> -->
+											<!-- <div class="input1_wrapper">
 												<label>No of Child</label>
 												<div class="">
 													<input type="number" class="form-control" onchange="calr()" id="no_of_child" name="no_of_child"
 														placeholder="No of child (Blew 10 years)" style="padding: 20px;"  min="0" value="0">
 												</div>
-											</div>
+											</div> -->
 										</div>
 										<!-- <div class="col-md-6 mb-3 c2">
 											<div class="input1_wrapper">
@@ -261,8 +318,8 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 											<div class="input1_wrapper">
 												<label>Full Name</label>
 												<div class="">
-													<input type="text" class="form-control" id="name" onchange="calr()"
-														name="name" placeholder="Full Name" style="padding: 20px;">
+													<input type="text" class="form-control" id="bname" onchange="calr()"
+														name="bname" placeholder="Full Name" style="padding: 20px;">
 												</div>
 											</div>
 										</div>
@@ -270,8 +327,8 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 											<div class="input1_wrapper">
 												<label>Mobile Number</label>
 												<div class="">
-													<input type="text" class="form-control" id="phone"
-														name="phone" placeholder="Mobile Number"
+													<input type="text" class="form-control" id="bphone"
+														name="bphone" placeholder="Mobile Number"
 														style="padding: 20px;">
 												</div>
 											</div>
@@ -280,8 +337,8 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 											<div class="input1_wrapper">
 												<label>Email</label>
 												<div class="">
-													<input type="email" class="form-control" id="email"
-														name="email" placeholder="Email" style="padding: 20px;">
+													<input type="email" class="form-control" id="bemail"
+														name="bemail" placeholder="Email" style="padding: 20px;">
 												</div>
 											</div>
 										</div>
@@ -370,6 +427,15 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 												<p style="font-weight: bold;">No of Room:</p>
 												<p style="float: right;">
 													<span id="no_of_room"></span>
+												</p>
+											</div>
+										</div>
+										<div class="col-md-12 mb-3"
+											style="border-bottom: 1px solid lightgray;">
+											<div style="display: flex; justify-content: space-between;">
+												<p style="font-weight: bold;">Extra Bed Charge:</p>
+												<p style="float: right;">
+													<span id="extra_charge"></span>
 												</p>
 											</div>
 										</div>
@@ -520,6 +586,12 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 		</div>
 		<input type="hidden" id="room_id" name="room_id"
 			value="<%=room.get(0).getSno()%>">
+		<input type="hidden" id="room_num" name="room_num"
+			value="<%=room.get(0).getRoom_number()%>">
+		<input type="hidden" id="book_rooms" name="book_rooms">
+		<input type="hidden" id="noofroom" name="noofroom">
+		<input type="hidden" id="no_of_extrabed" name="no_of_extrabed">
+		<input type="hidden" id="extra_bed" name="extra_bed" value="<%=room.get(0).getExtra_bed_charge()%>">
 
 		<!--  <div id="loader" class="loader-holder">
         <div class="block"><img src="images/hearts.svg" width="100" alt="loader"></div>
@@ -530,6 +602,42 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 	<jsp:include page="../../AdminPanel/calenderjs.jsp" />
 	
 	<script type="text/javascript">
+	function forAdult(d, event) {
+		event.preventDefault();
+		event.stopPropagation();
+
+		var cc = $("#adults-count").html();
+		var c = parseInt(cc);
+
+		if (d == "Plus") {
+			c++;
+		} else {
+			c = Math.max(0, c - 1);
+		}
+
+		$("#adults-count").html(c);
+		$("#adlt").html(c);
+	}
+
+	function forChild(d, event) {
+		event.preventDefault();
+		event.stopPropagation();
+
+		var cc = $("#children-count").html();
+		var c = parseInt(cc);
+
+		if (d == "Plus") {
+			c++;
+		} else {
+			c = Math.max(0, c - 1);
+		}
+
+		$("#children-count").html(c);
+		$("#cld").html(c);
+	}
+
+	
+
  const radioButtons = document.querySelectorAll('input[name="payment"]');
  const pmDivs = document.querySelectorAll('.pm');
 
@@ -693,7 +801,8 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 	                            				processData : false,
 	                            				success : function(data) {
 	                            					if (data['status'] == 'success') {
-	                            						$("#nroom").html(data['data'][0].available_rooms); // Show available rooms
+	                            						$("#book_rooms").val(data['data'][0].room_number);
+;	                            						$("#nroom").html(data['data'][0].available_rooms); // Show available rooms
 	                            						
 	                            					} else {
 	                            						Swal.fire({
@@ -710,11 +819,78 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 	                                    $('#myModal').modal('toggle');
 	                                });
 	                            } else {
-	                                targetElement.css({
-	                                    background: 'red',
-	                                    color: 'white'
-	                                }).removeClass('available_date')
-	                                  .off('mouseenter mouseleave click');
+	                            	  if (type === "checkout") {
+	                            		  targetElement.css({
+	  	                                    background: 'green',
+	  	                                    color: 'white'
+	  	                                }).addClass('available_date');
+	  	                                targetElement.attr('data-available', data.data[i].available_rooms);
+	  	                                targetElement.attr('title', data.data[i].available_rooms + ' rooms available');
+	  	                                targetElement.hover(
+	  	                                    function () {
+	  	                                        $(this).css({
+	  	                                            cursor: "pointer",
+	  	                                            color: "#ffee10",
+	  	                                            boxShadow: "0 0 15px #ffee10",
+	  	                                            textShadow: "0 0 15px #ffee10"
+	  	                                        });
+	  	                                    },
+	  	                                    function () {
+	  	                                        $(this).css({
+	  	                                            cursor: "auto",
+	  	                                            color: "white",
+	  	                                            boxShadow: "none",
+	  	                                            textShadow: "none"
+	  	                                        });
+	  	                                    }
+	  	                                );
+	  	                              targetElement.off('click').on('click', function () {
+		                                    var dd = $(this).data('date');
+		                                    var mm = $(this).data('month');
+		                                    var yy = $(this).data('year');
+		                                    var available = $(this).data('available'); // Get available rooms
+
+		                                    var date = yy + "-" + mm.toString().padStart(2, '0') + "-" + dd.toString().padStart(2, '0');
+		                                    	 $("#abroom").css("display","block");
+		                                        $("#check_out").val(date);
+		                            	    	var cin = $("#check_in").val();
+		                            			var fd = new FormData();
+		                            			fd.append("room_id", room_id);
+		                            			fd.append("check_in", cin);
+		                            			fd.append("check_out", date);
+		                            			$.ajax({
+		                            				url : 'check_room',
+		                            				type : 'post',
+		                            				data : fd,
+		                            				contentType : false,
+		                            				processData : false,
+		                            				success : function(data) {
+		                            					if (data['status'] == 'success') {
+		                            						$("#nroom").html(data['data'][0].available_rooms); // Show available rooms
+		                            						
+		                            					} else {
+		                            						Swal.fire({
+		                            							icon : 'Opps',
+		                            							title : 'Warning!',
+		                            							text : 'Invalid Details'
+		                            						})
+		                            					}
+		                            				}
+		                            			});
+		                                        calculateNights();
+		                                    
+
+		                                    $('#myModal').modal('toggle');
+		                                });
+	                            		  break;
+	                            	  }else{
+	                            		  targetElement.css({
+	  	                                    background: 'red',
+	  	                                    color: 'white'
+	  	                                }).removeClass('available_date')
+	  	                                  .off('mouseenter mouseleave click');
+	                            	  }
+	                               
 	                            }
 	                        }
 	                    }
@@ -760,14 +936,14 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 		      check_out: { required: true },
 		      no_of_room: { required: true, digits: true },
 		      no_of_adult: { required: true, digits: true }, // Added
-		      name: { required: true },
-		      phone: {
+		      bname: { required: true },
+		      bphone: {
 		        required: true,
 		        digits: true,
 		        minlength: 10,
 		        maxlength: 10
 		      },
-		      email: {
+		      bemail: {
 		        required: true,
 		        email: true
 		      },
@@ -807,15 +983,40 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 	    	    return this.value;
 	    	}).get();
 	    	var packPlanIds = checkedValues.join(",");
+	    	
+	    	var no_of_room = $('#no_of_room').html();  
+	    	var allRooms = $("#room_num").val();           
+	    	var noofroom = $("#noofroom").val();         
+	    	var availableRooms = $("#book_rooms").val();   
+
+
+	    	var availableRoomsArray = availableRooms.split(",").map(r => r.trim());
+
+
+	    	var room_num = "";
+
+	    	if (availableRoomsArray.length >= parseInt(noofroom)) {
+	    	    var selectedRooms = availableRoomsArray.slice(0, parseInt(noofroom));
+	    	    room_num = selectedRooms.join(",");
+	    	    console.log("Selected Rooms =", room_num);
+	    	} else {
+	    	    alert("Not enough rooms available");
+	    	}
+	    	console.log("Selected room numbers: " + room_num);
+
 	    	var room_id = $('#room_id').val();
 	    	var check_in = $('#check_in').val();
 	    	var check_out = $('#check_out').val();
-	    	var no_of_room = $('#no_of_room').html();
-	    	var no_of_adult = $('#no_of_adult').val();
-	    	var no_of_child = $('#no_of_child').val();
-	    	var name = $('#name').val();
-	    	var phone = $('#phone').val();
-	    	var email = $('#email').val();
+	    	var no_of_adult = $('#adlt').html();
+	    	if(parseInt(no_of_adult) == 0){
+	    		alert("Please select guest!!!");
+	    		return;
+	    	}
+	    	var no_of_child = $('#cld').html();
+	    	var name = $('#bname').val();
+	    	var phone = $('#bphone').val();
+	    	var email = $('#bemail').val();
+	    	var extra_charge = $('#extra_charge').html();
 	    	var city = $('#city').val();
 	    	var pkgamt = $('#pkgamt').html();
 	    	var country = $('#country').val();
@@ -833,236 +1034,243 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 	    	var payment_mode = $('#payment_mode').val();
 	    	
 	    	var terms_accepted = $('#termsCheckbox').is(':checked');
-	    	
-			if(payment_mode === "Online"){
-				var due_amount = 0;
-				var payment_option = $('input[name="payment"]:checked').val() || null;
+	    	if(payable_amount != ""){
+	    		if(payment_mode === "Online"){
+					var due_amount = 0;
+					var payment_option = $('input[name="payment"]:checked').val() || null;
 
-				if (!payment_option) {
-				    alert("Please select a payment option");
-				    return false;
-				} else {
-					if(payment_option === "20%"){
-						final_amount = Math.round(parseFloat($("#tp").text().trim()));
-						due_amount = parseFloat($('#final_amount').text().trim()) - parseFloat($("#tp").text().trim());
-					}else{
-						final_amount = $('#final_amount').text().trim();
+					if (!payment_option) {
+					    alert("Please select a payment option");
+					    return false;
+					} else {
+						if(payment_option === "20%"){
+							final_amount = Math.round(parseFloat($("#tp").text().trim()));
+							due_amount = parseFloat($('#final_amount').text().trim()) - parseFloat($("#tp").text().trim());
+						}else{
+							final_amount = $('#final_amount').text().trim();
+						}
 					}
-				}
-				$("#sbmt").prop("disabled", true); 
+					$("#sbmt").prop("disabled", true); 
+			    	$("#sbmt .btn-text").text("Please Wait..");
+			    	$("#sbmt .spinner").show();
+		        $.ajax({
+		            url: 'create_order',
+		            data: JSON.stringify({"amount": parseFloat(final_amount)}),
+		            contentType: 'application/json',
+		            type: 'POST',
+		            dataType: 'json',
+		            success: function (data) {
+		                console.log(data);
+		                var response = JSON.parse(data['razorOrder']);
+		                var id = response.id;
+
+		                if (response.status === "created") {
+		                    var options = {
+		                        "key": "rzp_live_Mm1lrSuypodIP2",
+		                        "amount": response.amount,
+		                        "currency": "INR",
+		                        "name": "Dream View Resort Madhai",
+		                        "description": "Transaction",
+		                        "image": "https://dreamviewresortmadhai.com/assets/images/bllogo.jpg",
+		                        "order_id": id,
+		                        "handler": function (response) {
+		                            var obj = {
+		                            		"room_id": room_id,
+		                            		"plan_ids": packPlanIds,
+		                            		"check_in": check_in,
+		                            	    "check_out": check_out,
+		                            	    "room_number": room_num,
+		                            	    "no_of_rooms": no_of_room,
+		                            	    "extra_bed_charge": extra_charge,
+		                            	    "adult": no_of_adult,
+		                            	    "child": no_of_child,
+		                            	    "name": name,
+		                            	    "mobile_number": phone,
+		                            	    "gst_number": gst_number,
+		                            	    "email": email,
+		                            	    "city": city,
+		                            	    "country": country,
+		                            	    "coupon_code": coupon_code,
+		                            	    "base_price": base_price,
+		                            	    "night": no_of_nights,
+		                            	    "sub_total": sub_total,
+		                            	    "discount": discount,
+		                            	    "total_amount": payable_amount,
+		                            	    "paid_amount": final_amount,
+		                            	    "due_amount": due_amount,
+		                            	    "gst_amount": gst,
+		                            	    "package_amount": pkgamt,
+		                            	    "payment_mode": payment_mode,
+		                            	    "payment_type": payment_option,
+		                                "razorpay_payment_id": response.razorpay_payment_id,
+		                                "razorpay_order_id": response.razorpay_order_id,
+		                                "razorpay_signature": response.razorpay_signature,
+		                                "placedBy": "Customer",
+		                                "order_id": id,
+		                            };
+		                            $.ajax({
+		                                url: 'reserve_room',
+		                                type: 'post',
+		                                dataType: 'json',
+		                                data: JSON.stringify(obj),
+		                                contentType: 'application/json',
+		                                success: function (data) {
+		                                    if (data['status'] === 'Success') {
+		                                        $(".text-success").css("display", "block");
+		                                        var booking_id = data['bid'];
+		                                        $("#sbmt .btn-text").text("Booking Confirmed");
+	                                        	$("#sbmt .spinner").hide();
+		                                        setTimeout(function () {
+		                                            var mapForm = document.createElement("form");
+			                                        mapForm.method = "POST";
+			                                        mapForm.action = "thank_you";
+			                                        var output = document.createElement("input");
+			                                        output.type = "hidden";
+			                                        output.name = "booking_id";
+			                                        output.value = booking_id;
+			                                        mapForm.appendChild(output);
+			                                        document.body.appendChild(mapForm);
+			                                        mapForm.submit();
+		                                        }, 1000);
+
+		                                    } else {
+		                                        swal({
+		                                            title: "Oops!",
+		                                            text: "Something went wrong!",
+		                                            icon: "error",
+		                                            type: 'error',
+		                                            button: "oh no!",
+		                                            allowOutsideClick: false,
+		                                            allowEscapeKey: false
+		                                        });
+		                                    }
+		                                }
+		                            });
+
+		                            console.log(response);
+		                        },
+		                        "prefill": {
+		                            "name": name,
+		                            "email": email,
+		                            "contact": phone
+		                        },
+		                        "notes": {
+		                            "address": ""
+		                        },
+		                        "theme": {
+		                            "color": "#3399cc"
+		                        }
+		                    };
+
+		                    var rzp1 = new Razorpay(options);
+		                    rzp1.open(); // This line opens the Razorpay payment modal
+
+		                } else {
+		                    alert(response.status);
+		                }
+		            }
+
+		        });
+		    }else{
+		    	$("#sbmt").prop("disabled", true); 
 		    	$("#sbmt .btn-text").text("Please Wait..");
 		    	$("#sbmt .spinner").show();
-	        $.ajax({
-	            url: 'create_order',
-	            data: JSON.stringify({"amount": parseFloat(final_amount)}),
-	            contentType: 'application/json',
-	            type: 'POST',
-	            dataType: 'json',
-	            success: function (data) {
-	                console.log(data);
-	                var response = JSON.parse(data['razorOrder']);
-	                var id = response.id;
+		    	var obj = {
+	            		"room_id": room_id,
+	            		"plan_ids": packPlanIds,
+	            		"check_in": check_in,
+	            	    "check_out": check_out,
+	            	    "no_of_rooms": no_of_room,
+	            	    "extra_bed_charge": extra_charge,
+	            	    "room_number": room_num,
+	            	    "adult": no_of_adult,
+	            	    "child": no_of_child,
+	            	    "name": name,
+	            	    "mobile_number": phone,
+	            	    "email": email,
+	            	    "city": city,
+	            	    "country": country,
+	            	    "package_amount": pkgamt,
+	            	    "coupon_code": coupon_code,
+	            	    "base_price": base_price,
+	            	    "night": no_of_nights,
+	            	    "sub_total": sub_total,
+	            	    "discount": discount,
+	            	    "total_amount": payable_amount,
+	            	    "paid_amount": 0,
+	            	    "due_amount": final_amount,
+	            	    "gst_amount": gst,
+	            	    "payment_mode": payment_mode,
+	            	    "payment_type": payment_option,
+	            };
+	            $.ajax({
+	                url: 'reserve_room',
+	                type: 'post',
+	                dataType: 'json',
+	                data: JSON.stringify(obj),
+	                contentType: 'application/json',
+	                success: function (data) {
+	                    if (data['status'] === 'Success') {
+	                        $(".text-success").css("display", "block");
+	                        var booking_id = data['bid'];
+	                        $("#sbmt .btn-text").text("Booking Confirmed");
+	                    	$("#sbmt .spinner").hide();
+	                        setTimeout(function () {
+	                            var mapForm = document.createElement("form");
+	                            mapForm.method = "POST";
+	                            mapForm.action = "thank_you";
+	                            var output = document.createElement("input");
+	                            output.type = "hidden";
+	                            output.name = "booking_id";
+	                            output.value = booking_id;
+	                            mapForm.appendChild(output);
+	                            document.body.appendChild(mapForm);
+	                            mapForm.submit();
+	                        }, 1000);
 
-	                if (response.status === "created") {
-	                    var options = {
-	                        "key": "rzp_test_TAsu9r4XMXPVIJ",
-	                        "amount": response.amount,
-	                        "currency": "INR",
-	                        "name": "Dream View Resort Heritage",
-	                        "description": "Transaction",
-	                        "image": "assets/image/logo_white.png",
-	                        "order_id": id,
-	                        "handler": function (response) {
-	                            var obj = {
-	                            		"room_id": room_id,
-	                            		"plan_ids": packPlanIds,
-	                            		"check_in": check_in,
-	                            	    "check_out": check_out,
-	                            	    "no_of_rooms": no_of_room,
-	                            	    "adult": no_of_adult,
-	                            	    "child": no_of_child,
-	                            	    "name": name,
-	                            	    "mobile_number": phone,
-	                            	    "gst_number": gst_number,
-	                            	    "email": email,
-	                            	    "city": city,
-	                            	    "country": country,
-	                            	    "coupon_code": coupon_code,
-	                            	    "base_price": base_price,
-	                            	    "night": no_of_nights,
-	                            	    "sub_total": sub_total,
-	                            	    "discount": discount,
-	                            	    "total_amount": payable_amount,
-	                            	    "paid_amount": final_amount,
-	                            	    "due_amount": due_amount,
-	                            	    "gst_amount": gst,
-	                            	    "package_amount": pkgamt,
-	                            	    "payment_mode": payment_mode,
-	                            	    "payment_type": payment_option,
-	                                "razorpay_payment_id": response.razorpay_payment_id,
-	                                "razorpay_order_id": response.razorpay_order_id,
-	                                "razorpay_signature": response.razorpay_signature,
-	                                "placedBy": "Customer",
-	                                "order_id": id,
-	                            };
-	                            $.ajax({
-	                                url: 'reserve_room',
-	                                type: 'post',
-	                                dataType: 'json',
-	                                data: JSON.stringify(obj),
-	                                contentType: 'application/json',
-	                                success: function (data) {
-	                                    if (data['status'] === 'Success') {
-	                                        $(".text-success").css("display", "block");
-	                                        var booking_id = data['bid'];
-	                                        $("#sbmt .btn-text").text("Booking Confirmed");
-                                        	$("#sbmt .spinner").hide();
-	                                        setTimeout(function () {
-	                                            var mapForm = document.createElement("form");
-		                                        mapForm.method = "POST";
-		                                        mapForm.action = "thank_you";
-		                                        var output = document.createElement("input");
-		                                        output.type = "hidden";
-		                                        output.name = "booking_id";
-		                                        output.value = booking_id;
-		                                        mapForm.appendChild(output);
-		                                        document.body.appendChild(mapForm);
-		                                        mapForm.submit();
-	                                        }, 1000);
-
-	                                    } else {
-	                                        swal({
-	                                            title: "Oops!",
-	                                            text: "Something went wrong!",
-	                                            icon: "error",
-	                                            type: 'error',
-	                                            button: "oh no!",
-	                                            allowOutsideClick: false,
-	                                            allowEscapeKey: false
-	                                        });
-	                                    }
-	                                }
-	                            });
-
-	                            console.log(response);
-	                        },
-	                        "prefill": {
-	                            "name": name,
-	                            "email": email,
-	                            "contact": phone
-	                        },
-	                        "notes": {
-	                            "address": ""
-	                        },
-	                        "theme": {
-	                            "color": "#3399cc"
-	                        }
-	                    };
-
-	                    var rzp1 = new Razorpay(options);
-	                    rzp1.open(); // This line opens the Razorpay payment modal
-
-	                } else {
-	                    alert(response.status);
+	                    } else {
+	                        swal({
+	                            title: "Oops!",
+	                            text: "Something went wrong!",
+	                            icon: "error",
+	                            type: 'error',
+	                            button: "oh no!",
+	                            allowOutsideClick: false,
+	                            allowEscapeKey: false
+	                        });
+	                    }
 	                }
-	            }
-
-	        });
-	    }else{
-	    	$("#sbmt").prop("disabled", true); 
-	    	$("#sbmt .btn-text").text("Please Wait..");
-	    	$("#sbmt .spinner").show();
-	    	var obj = {
-            		"room_id": room_id,
-            		"plan_ids": packPlanIds,
-            		"check_in": check_in,
-            	    "check_out": check_out,
-            	    "no_of_rooms": no_of_room,
-            	    "adult": no_of_adult,
-            	    "child": no_of_child,
-            	    "name": name,
-            	    "mobile_number": phone,
-            	    "email": email,
-            	    "city": city,
-            	    "country": country,
-            	    "package_amount": pkgamt,
-            	    "coupon_code": coupon_code,
-            	    "base_price": base_price,
-            	    "night": no_of_nights,
-            	    "sub_total": sub_total,
-            	    "discount": discount,
-            	    "total_amount": payable_amount,
-            	    "paid_amount": final_amount,
-            	    "due_amount": due_amount,
-            	    "gst_amount": gst,
-            	    "payment_mode": payment_mode,
-            	    "payment_type": payment_option,
-            };
-            $.ajax({
-                url: 'reserve_room',
-                type: 'post',
-                dataType: 'json',
-                data: JSON.stringify(obj),
-                contentType: 'application/json',
-                success: function (data) {
-                    if (data['status'] === 'Success') {
-                        $(".text-success").css("display", "block");
-                        var booking_id = data['bid'];
-                        $("#sbmt .btn-text").text("Booking Confirmed");
-                    	$("#sbmt .spinner").hide();
-                        setTimeout(function () {
-                            var mapForm = document.createElement("form");
-                            mapForm.method = "POST";
-                            mapForm.action = "thank_you";
-                            var output = document.createElement("input");
-                            output.type = "hidden";
-                            output.name = "booking_id";
-                            output.value = booking_id;
-                            mapForm.appendChild(output);
-                            document.body.appendChild(mapForm);
-                            mapForm.submit();
-                        }, 1000);
-
-                    } else {
-                        swal({
-                            title: "Oops!",
-                            text: "Something went wrong!",
-                            icon: "error",
-                            type: 'error',
-                            button: "oh no!",
-                            allowOutsideClick: false,
-                            allowEscapeKey: false
-                        });
-                    }
-                }
-            });
-	    }
+	            });
+		    }
+	    	}else{
+	    		alert("Please fill the form step by step");
+	    	}
+			
 	    } else {
 	        return;
 	    }
 	}
 	
 	function calr() {
-	    var adult = parseInt($("#no_of_adult").val()) || 0;
-	    var maxAdultsPerRoom = 2;
-
-	    if (adult < 1) {
-	        alert("Minimum 1 adult is required");
-	        $(this).val(1);
-	        adult = 1;
+	    var no_of_extrabed = $("#no_of_extrabed").val();
+	    var bed_charge = 0;
+	    if(no_of_extrabed != 0){
+	    	 bed_charge = $("#extra_bed").val();
+	    	 $("#extra_charge").html(bed_charge);
 	    }
-	    var room = Math.ceil(adult / maxAdultsPerRoom);
+	    
+	    var room = $("#noofroom").val();
 	    var r = $("#nroom").html();
-	    if(parseFloat(room) > parseFloat(r)){
+	    if(parseInt(room) > parseInt(r)){
 	    	alert("Only "+r+ "room available and only 2 adult allow in 1 room");
 	    	$("#no_of_room").html("");
-	    	$("#no_of_adult").val("1");
-	    	$("#no_of_child").val("0");
+	    	$("#adlt").html("0");
+	    	$("#cld").html("0");
 	    }else{
-	    	 $("#no_of_room").html(room);
+	    	// $("#no_of_room").html(room);
 	    	 
 	            var nt = $("#no_of_nights").html();
-	            var b = parseFloat($("#base_price").html()) * parseFloat(room);
+	            var b = parseFloat($("#base_price").html()) * parseFloat(room) + parseFloat(bed_charge);
 	            var d = $("#discount").html();
 	            var subt = parseFloat(nt) * parseFloat(b);
 	            var t = parseFloat(subt) - parseFloat(d);
@@ -1135,6 +1343,132 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 	      }
 	    });
 	});
+	
+
+	function applyGuests() {
+	  $("#posib").html(" ");
+	  var adlt = $("#adlt").html();
+	  var cld = $("#cld").html();
+	  var count = "";
+	  var r_extra = "";
+
+	  if (adlt > 0 && cld > 0) {
+	    count = parseInt(adlt) + parseInt(cld);
+	    handleRoomLogic(count);
+	  } else {
+	    count = parseInt(adlt);
+	    handleRoomLogic(count);
+	  }
+	}
+
+	function handleRoomLogic(count) {
+	  let q = "";
+	  let r = "";
+	  let fc = count;
+
+	  if (count > 3) {
+	    if (count % 2 === 0) {
+	      for (var i = 0; i <= count / 2; i++) {
+	        if (i == 0) {
+	          fc = count;
+	          q = fc / 2;
+	          r = fc % 2;
+	          if (r === 0) {
+	            r_extra = q + " Rooms";
+	            getposibleroom(r_extra);
+	          } else if (r === 1) {
+	            r_extra = q + " Room + 1 Extra Bed";
+	            getposibleroom(r_extra);
+	          }
+	        } else {
+	          fc = fc - 2;
+	          if (fc >= count / 2) {
+	            q = fc / 2;
+	            r = count - fc;
+	            if (r === 1) {
+	              r_extra = q + " Room + 1 Extra Bed";
+	              getposibleroom(r_extra);
+	            } else if (r === 0) {
+	              r_extra = q + " Rooms";
+	              getposibleroom(r_extra);
+	            }
+	          }
+	        }
+	      }
+	    } else {
+	      for (var i = 0; i <= (count - 1) / 2; i++) {
+	        if (i == 0) {
+	          fc = count + 1;
+	          q = fc / 2;
+	          r_extra = q + " Rooms";
+	          getposibleroom(r_extra);
+	        } else {
+	          fc = fc - 2;
+	          if (fc >= count / 2) {
+	            q = fc / 2;
+	            r = count - fc;
+	            if (r === 1) {
+	              r_extra = q + " Room + 1 Extra Bed";
+	              getposibleroom(r_extra);
+	            } else if (r === 0) {
+	              r_extra = q + " Rooms";
+	              getposibleroom(r_extra);
+	            }
+	          }
+	        }
+	      }
+	    }
+	  } else {
+	    q = parseInt(count / 2);
+	    r = count % 2;
+	    var room = q + r + " Room";
+	    $("#posib").append('<li><div onclick="getroomsData(\'' + room + '\')" class="room-clg" style="margin-bottom: 5px; background: lightgrey;padding: 4px;border-radius: 4px; cursor: pointer;">' + room + '</div></li>');
+
+	    if (r === 1) {
+	      var r_extra = q + " Room + 1 Extra Bed";
+	      $("#posib").append('<li><div onclick="getroomsData(\'' + r_extra + '\')" class="room-clg" style="margin-bottom: 5px; background: lightgrey;padding: 4px;border-radius: 4px; cursor: pointer;">' + r_extra + '</div></li>');
+	    }
+	  }
+	}
+
+	function getposibleroom(data) {
+	  $("#posib").append('<li><div class="room-clg" onclick="getroomsData(\'' + data + '\')" style="margin-bottom: 5px; background: lightgrey;padding: 4px;border-radius: 4px; cursor: pointer;">' + data + '</div></li>');
+	}
+
+	function getroomsData(data) {
+		var r = $("#nroom").html();
+		 $("#no_of_extrabed").val("");
+		if(r != ""){
+			$("#roomdata").html(data);
+			  $("#no_of_room").html(data);
+			  let roomCount = 0;
+			  let extraBeds = 0;
+
+			  const roomMatch = data.match(/(\d+)\s*Room/);
+			  if (roomMatch) {
+			    roomCount = parseInt(roomMatch[1]);
+			  }
+			  const bedMatch = data.match(/(\d+)\s*Extra Bed/);
+			  if (bedMatch) {
+			    extraBeds = parseInt(bedMatch[1]);
+			  }
+			  if(parseInt(roomCount) > parseInt(r)){
+				  alert("Only "+r+ "room available and only 2 adult allow in 1 room");
+				  $("#no_of_room").html("");
+			      $("#adlt").html("0");
+			      $("#cld").html("0");
+			  }else{
+				  $("#noofroom").val(roomCount);
+				  $("#no_of_extrabed").val(extraBeds);
+				  calr(); 
+			  }
+			  
+		}else{
+			alert("Please select Check-in and Check-out date");
+		}
+	  
+	}
+ 
  </script>
 
 </body>

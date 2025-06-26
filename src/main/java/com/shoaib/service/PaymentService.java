@@ -114,10 +114,11 @@ public class PaymentService {
 			Random rand = new Random();
 			String randomId = Integer.toString(rand.nextInt()) + (System.currentTimeMillis() / 1000L);
 			String txnId = "order_" + hashCal("SHA-256", randomId).substring(0, 12);
-			int amt = Integer.parseInt(data.get("amount").toString());
-			RazorpayClient client =	new RazorpayClient("rzp_test_TAsu9r4XMXPVIJ", "TpYasSaRnKsnRve9ca3I1aO5");
+			double amt = Double.parseDouble(data.get("amount").toString());
+			int finalAmount = (int)(amt * 100);
+			RazorpayClient client =	new RazorpayClient("rzp_live_Mm1lrSuypodIP2", "WqUOwvcSnpa6cvEW09CjzGZt");
 			JSONObject  ob = new JSONObject();
-			ob.put("amount", amt*100);
+			ob.put("amount", finalAmount);
 			ob.put("currency", "INR");
 			ob.put("receipt", txnId);
 			Order order  = client.orders.create(ob);

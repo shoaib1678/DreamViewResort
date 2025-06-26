@@ -51,6 +51,98 @@
 }
 	
 </style>
+<style>
+    .calendar-wrapper {
+      margin: auto;
+    }
+
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+    }
+
+    .tab-btn {
+      padding: 10px 20px;
+      cursor: pointer;
+      background: #eee;
+      margin-right: 5px;
+      border: 1px solid #ccc;
+      border-bottom: none;
+    }
+
+    .tab-btn.active {
+      background: #fff;
+      font-weight: bold;
+      border-bottom: 1px solid #fff;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+        display: grid;
+	    grid-template-columns: repeat(7, 1fr);
+	    gap: 0.5px;
+    }
+
+    .room-calendar-header {
+      padding: 6px;
+      background: #f3f3f3;
+      font-weight: bold;
+      text-align: center;
+      border: 1px solid #ddd;
+    }
+
+    .room-calendar-day {
+      background: #fff;
+      min-height: 100px;
+      border: 1px solid #ddd;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 6px;
+      font-size: 12px;
+      width: 160px;
+    }
+
+    .price {
+      font-weight: bold;
+      color: #333;
+      font-size: 14px;
+      text-align: left;
+    }
+
+    .rooms {
+      font-size: 11px;
+      max-height: 60px;
+      overflow-y: auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2px;
+      justify-content: center;
+    }
+
+    .room-green, .room-red {
+      color: #fff;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-size: 10px;
+      min-width: 32px;
+      text-align: center;
+      display: inline-block;
+    }
+
+    .room-green {
+    	background-color: #dc3545;
+     
+    }
+
+    .room-red {
+      background-color: #28a745;
+    }
+  </style>
 </head>
 <%
 List<Rooms> rooms = (List<Rooms>)request.getAttribute("rooms");
@@ -75,98 +167,76 @@ List<Rooms> rooms = (List<Rooms>)request.getAttribute("rooms");
 
 					<div class="container-xxl flex-grow-1 container-p-y">
 						<div class="row">
-							
+							<% if (rooms.size() > 0) {
+							     for (int i = 0; i < rooms.size(); i++) {
+							         Rooms r = rooms.get(i);
+							%>
+							<div class="col-lg-4 col-md-4 col-12 mb-4">
+							    <div class="card">
+							        <div class="card-body d-flex align-items-center justify-content-between">
+							            <div class="form-check form-switch mb-2">
+							                <input class="form-check-input amenity"
+							                       type="checkbox"
+							                       id="room_id<%=r.getSno()%>"
+							                       value="<%=r.getSno()%>"
+							                       name="room_select"
+							                       <%= (i == 0 ? "checked" : "") %> >
+							                <label class="form-check-label" for="room_id<%=r.getSno()%>"><%=r.getTitle()%></label>
+							            </div>
+							        </div>
+							    </div>
+							</div>
+							<% } } %>
+
 							<div class="col-lg-12 col-md-12 ">
 								<div class="row">
-									<div class="col-lg-3 col-md-3 col-6 mb-4">
-										<a href="enquiry">
+									<div class="col-lg-12 col-md-12 col-12 mb-4">
 											<div class="card">
 												<div class="card-body  d-flex align-items-center justify-content-between">
-													<div>
-														<span class=" fw-semibold mb-1">All Enquiry</span>
-														<h3 class="card-title mt-3 mb-0">sadfgsd</h3>
+													<div class="calendar-wrapper">
+													  <h2>Room Calendar - Last 60 Days</h2>
+													
+													  <!-- Tabs -->
+													  <div class="tabs">
+													    <div class="tab-btn active" onclick="switchTab(0)">First 30 Days</div>
+													    <div class="tab-btn" onclick="switchTab(1)">Next 31-60 Days</div>
+													  </div>
+													
+													  <!-- Tab Contents -->
+													  <div class="tab-content active" id="tab0">
+													    <!-- Header Row -->
+													    <div class="room-calendar-header">Sun</div>
+													    <div class="room-calendar-header">Mon</div>
+													    <div class="room-calendar-header">Tue</div>
+													    <div class="room-calendar-header">Wed</div>
+													    <div class="room-calendar-header">Thu</div>
+													    <div class="room-calendar-header">Fri</div>
+													    <div class="room-calendar-header">Sat</div>
+													  </div>
+													
+													  <div class="tab-content" id="tab1">
+													    <!-- Header Row -->
+													    <div class="room-calendar-header">Sun</div>
+													    <div class="room-calendar-header">Mon</div>
+													    <div class="room-calendar-header">Tue</div>
+													    <div class="room-calendar-header">Wed</div>
+													    <div class="room-calendar-header">Thu</div>
+													    <div class="room-calendar-header">Fri</div>
+													    <div class="room-calendar-header">Sat</div>
+													  </div>
 													</div>
-													<div class="avatar flex-shrink-0 bg-info rounded ">
-															<i class="fas fa-question-circle text-info fs-3"></i>
-														</div>
 												</div>
 	
 											</div>
-										</a>
-										
 									</div>
-									<div class="col-lg-3 col-md-3 col-6 mb-4">
-									<a href="enquiry">
-										<div class="card">
-											<div class="card-body  d-flex align-items-center justify-content-between">
-												<div>
-													<span class=" fw-semibold mb-1">All Booking</span>
-													<h3 class="card-title mt-3 mb-0">dgfh</h3>
-												</div>
-												<div class="avatar flex-shrink-0 rounded " style="background: #f5454545;">
-														<i class="fas fa-question-circle text-danger fs-3"></i>
-													</div>
-											</div>
-
-										</div>
-									</a>
-										
-									</div>
-									<div class="col-lg-3 col-md-3 col-6 mb-4">
-										<a href="enquiry">
-											<div class="card">
-											<div class="card-body  d-flex align-items-center justify-content-between">
-												<div>
-													<span class=" fw-semibold mb-1">Pending Payment</span>
-													<h3 class="card-title mt-3 mb-0">43</h3>
-												</div>
-												<div class="avatar flex-shrink-0 bg-warning rounded ">
-														<i class='fas fa-question-circle text-success fs-3'></i>
-													</div>
-											</div>
-
-										</div>
-										</a>
-										
-									</div>
-									<div class="col-lg-3 col-md-3 col-6 mb-4">
-										<a href="customer">
-											<div class="card">
-											<div class="card-body  d-flex align-items-center justify-content-between">
-												<div>
-													<span class=" fw-semibold mb-1">Customers</span>
-													<h3 class="card-title mt-3 mb-0">45</h3>
-												</div>
-												<div class="avatar flex-shrink-0 ">
-														<div class="avatar flex-shrink-0 bg-success rounded ">
-														<i class='bx bxs-user text-success fs-3'></i>
-													</div>
-													</div>
-											</div>
-
-										</div>
-										</a>
-										
-									</div>
-									
 								</div>
 							</div>
 
-							<div class="col-md-12  ">
+							<!-- <div class="col-md-12  ">
 								<div class="row">
 									<div class="col-md-12 ">
 										<div class="card">
 											<div class="card-body" id="yourchartDiv">
-													<div class="mb-3" style="padding: 0px 30px;">
-														<!-- <label>Rooms</label> -->
-														<select class="form-control" id="room_id" name="room_id" onchange="getavailability()">
-														<option selected disabled>--Select Room--</option>
-														<%if(rooms != null){
-															for(Rooms r: rooms){%>
-															<option value="<%=r.getSno()%>"><%=r.getTitle()%></option>
-														<%}} %>
-														</select>
-													</div>
 													<div class="container-calendar">
 															<h3 id="monthAndYear" style="transform: translateY(40px);"></h3>
 								
@@ -199,21 +269,11 @@ List<Rooms> rooms = (List<Rooms>)request.getAttribute("rooms");
 															</div>
 								
 														</div>
-												<!-- <div class="row">
-													<div class="col-md-4">
-													
-													</div>
-													<div class="col-md-6">
-														
-													</div>
-													
-												</div> -->
-												
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
+							</div> -->
 						</div>
 					</div>
 
@@ -240,7 +300,12 @@ List<Rooms> rooms = (List<Rooms>)request.getAttribute("rooms");
 	<jsp:include page="calenderjs.jsp"></jsp:include>
 	
 	<script>
-	function next() {
+	$(document).ready(function() {
+	    $('input[name="room_select"]').on('change', function() {
+	        $('input[name="room_select"]').not(this).prop('checked', false);
+	    });
+	});
+	/* function next() {
 	    currentYear = (currentMonth === 11) ? currentYear + 1 : currentYear;
 	    currentMonth = (currentMonth + 1) % 12;
 	    var mm = parseInt(currentMonth) +1;
@@ -266,6 +331,7 @@ List<Rooms> rooms = (List<Rooms>)request.getAttribute("rooms");
 	getavailability();
 	function getavailability() {
 		var room_id = $("#room_id").val();
+		getavailabilitydata(room_id);
 	    var fd = new FormData();
 	    fd.append("room_id", room_id);
 	    $.ajax({
@@ -297,8 +363,6 @@ List<Rooms> rooms = (List<Rooms>)request.getAttribute("rooms");
 	            	                    .css({ background: 'green', color: 'white', cursor: 'pointer' })
 	            	                    .addClass('available-date') // 👈 Add CSS class for zoom effect
 	            	                    .attr('data-available', 'Available Rooms: ' + data.data[i].available_rooms);
-
-	            	                // Tooltip logic (optional)
 	            	                targetElement.hover(function (e) {
 	            	                    const tooltip = $('<div class="custom-tooltip"></div>').text($(this).attr('data-available'));
 	            	                    $('body').append(tooltip);
@@ -340,7 +404,104 @@ List<Rooms> rooms = (List<Rooms>)request.getAttribute("rooms");
 	            console.error('Error occurred during the AJAX request:', error);
 	        }
 	    });
-	}
+	} */
 </script>
+<script>
+$(document).ready(function() {
+    $('input[name="room_select"]').on('change', function() {
+        $('input[name="room_select"]').not(this).prop('checked', false);
+        if ($(this).is(':checked')) {
+            let roomId = $(this).val();
+            getavailabilitydata(roomId);
+        }
+    });
+
+    // Trigger the function initially for the default selected checkbox
+    let defaultRoomId = $('input[name="room_select"]:checked').val();
+    if (defaultRoomId) {
+    	getavailabilitydata(defaultRoomId);
+    }
+});
+function generateRoomDivsForDate(availableRooms, allRooms) {
+    return allRooms.map(function(room) {
+        const isBooked = !availableRooms.includes(room);
+        return '<div class="' + (isBooked ? 'room-red' : 'room-green') + '">' + room + '</div>';
+    }).join('');
+}
+
+function getavailabilitydata(room_id) {
+    var tab0 = document.getElementById("tab0");
+    var tab1 = document.getElementById("tab1");
+    tab0.innerHTML = '';
+    tab1.innerHTML = '';
+
+    var fd = new FormData();
+    fd.append("room_id", room_id);
+
+    $.ajax({
+        url: 'check_availability',
+        type: 'post',
+        data: fd,
+        contentType: false,
+        processData: false,
+        success: function(data) {
+            if (data.status === "success") {
+                const availabilityData = data.data;
+                const allRooms = data.total_room ? data.total_room.split(',').map(s => s.trim()) : [];
+
+                availabilityData.forEach(function(dayInfo, i) {
+                    const date = new Date(dayInfo.available_date);
+                    const day = date.getDate();
+                    const month = date.toLocaleString('default', { month: 'short' });
+
+                    let bookedRooms = [];
+                    if (dayInfo.room_number) {
+                        bookedRooms = dayInfo.room_number.split(',').map(s => s.trim());
+                    }
+
+                    const availableRooms = allRooms.filter(r => !bookedRooms.includes(r));
+                    const div = document.createElement('div');
+                    div.className = 'room-calendar-day';
+                    div.innerHTML =
+                        '<div class="price">' + day + ' ' + month + '</div>' +
+                        '<div class="rooms">' + generateRoomDivsForDate(availableRooms, allRooms) + '</div>';
+
+                    if (i < 30) {
+                        tab0.appendChild(div);
+                    } else {
+                        tab1.appendChild(div);
+                    }
+                });
+            } else {
+                alert("Error: " + data.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("AJAX error:", status, error);
+            alert("Failed to load room availability.");
+        }
+    });
+}
+
+// Call default on page load with room_id = 3
+$(document).ready(function() {
+    $("#room_id").val("3"); // optional default set
+    getavailability();
+});
+
+function switchTab(index) {
+    document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i === index);
+    });
+    document.querySelectorAll('.tab-content').forEach((tab, i) => {
+        tab.classList.toggle('active', i === index);
+    });
+}
+</script>
+
+
+
+
+
 </body>
 </html>
