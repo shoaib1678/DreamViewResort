@@ -8,6 +8,9 @@
 <head>
 <jsp:include page="../css.jsp" />
 <jsp:include page="../../AdminPanel/calendercss.jsp" />
+
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
 <style type="text/css">
 .input1_inner, .select1_wrapper {
 	border: 1px solid lightgray;
@@ -540,8 +543,7 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 					<div class="modal-header">
 						<h3 class="modal-title fs-5" id="exampleModalLabel">Check-In
 							Date</h3>
-						<button type="button" class="btn-close" data-bs-dismiss="modal"
-							aria-label="Close"></button>
+						   <button type="button" class="close" data-dismiss="modal">&times;</button>
 					</div>
 					<div class="modal-body">
 						<div class="wrapper">
@@ -600,12 +602,10 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 
 	<jsp:include page="../js.jsp" />
 	<jsp:include page="../../AdminPanel/calenderjs.jsp" />
-	
 	<script type="text/javascript">
 	function forAdult(d, event) {
 		event.preventDefault();
 		event.stopPropagation();
-
 		var cc = $("#adults-count").html();
 		var c = parseInt(cc);
 
@@ -616,7 +616,6 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 		}
 
 		$("#adults-count").html(c);
-		$("#adlt").html(c);
 	}
 
 	function forChild(d, event) {
@@ -633,7 +632,6 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 		}
 
 		$("#children-count").html(c);
-		$("#cld").html(c);
 	}
 
 	
@@ -672,33 +670,39 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 	    currentYear = (currentMonth === 11) ? currentYear + 1 : currentYear;
 	    currentMonth = (currentMonth + 1) % 12;
 	    var mm = parseInt(currentMonth) +1;
-	    checkAvailability(); 
+	    abvldate(); 
 	    showCalendar(currentMonth, currentYear);
 	}
 
 	function previous() {
+		if (event) event.preventDefault(); 
 	    currentYear = (currentMonth === 0) ? currentYear - 1 : currentYear;
 	    currentMonth = (currentMonth === 0) ? 11 : currentMonth - 1;
 	    var mm = parseInt(currentMonth) +1;
-	    checkAvailability(); 
+	    abvldate(); 
 	    showCalendar(currentMonth, currentYear);
 	}
 
 	function jump() {
+		if (event) event.preventDefault(); 
 	    currentYear = parseInt(selectYear.value);
 	    currentMonth = parseInt(selectMonth.value);
 	    var mm = parseInt(currentMonth) +1;
-	    checkAvailability();
+	    abvldate();
 	    showCalendar(currentMonth, currentYear);
 	}
-	function checkAvailability(type) {
-		
-	    // Prevent selecting checkout before checkin
-	    if (type === "checkout" && !$("#check_in").val()) {
+	function checkAvailability(type){
+		if (type === "checkout" && !$("#check_in").val()) {
 	        alert("Please select a check-in date first.");
 	        return;
 	    }
 	    $('#myModal').modal('toggle');
+	    abvldate(type);
+	}
+	function abvldate(type) {
+		
+	    // Prevent selecting checkout before checkin
+	    
 
 	    // Get the date input ID and value
 	    var dateInputId = type === "checkin" ? "#check_in" : "#check_out";
@@ -949,7 +953,6 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 		      },
 		      city: { required: true },
 		      country: { required: true },
-		      termsCheckbox: { required: true },
 		      payment_mode: {
 		        required: true
 		      }
@@ -977,279 +980,301 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 		  });
 		});
 	function readytopayment() {
-		
-	    if ($("#booking_form").valid() && $('#termsCheckbox').is(':checked')) {
-	    	var checkedValues = $("input[name='pack_plan']:checked").map(function() {
-	    	    return this.value;
-	    	}).get();
-	    	var packPlanIds = checkedValues.join(",");
-	    	
-	    	var no_of_room = $('#no_of_room').html();  
-	    	var allRooms = $("#room_num").val();           
-	    	var noofroom = $("#noofroom").val();         
-	    	var availableRooms = $("#book_rooms").val();   
-
-
-	    	var availableRoomsArray = availableRooms.split(",").map(r => r.trim());
-
-
-	    	var room_num = "";
-
-	    	if (availableRoomsArray.length >= parseInt(noofroom)) {
-	    	    var selectedRooms = availableRoomsArray.slice(0, parseInt(noofroom));
-	    	    room_num = selectedRooms.join(",");
-	    	    console.log("Selected Rooms =", room_num);
-	    	} else {
-	    	    alert("Not enough rooms available");
-	    	}
-	    	console.log("Selected room numbers: " + room_num);
-
-	    	var room_id = $('#room_id').val();
-	    	var check_in = $('#check_in').val();
-	    	var check_out = $('#check_out').val();
-	    	var no_of_adult = $('#adlt').html();
-	    	if(parseInt(no_of_adult) == 0){
-	    		alert("Please select guest!!!");
-	    		return;
-	    	}
-	    	var no_of_child = $('#cld').html();
-	    	var name = $('#bname').val();
-	    	var phone = $('#bphone').val();
-	    	var email = $('#bemail').val();
-	    	var extra_charge = $('#extra_charge').html();
-	    	var city = $('#city').val();
-	    	var pkgamt = $('#pkgamt').html();
-	    	var country = $('#country').val();
-	    	var coupon_code = $('#coupon_code').val();
-	    	var gst_number = $('#gst_number').val();
-	    	var gst = $('#gst').html();
-
-	    	var base_price = $('#base_price').text().trim();
-	    	var no_of_nights = $('#no_of_nights').text().trim();
-	    	var sub_total = $('#sub_total').text().trim();
-	    	var discount = $('#discount').text().trim();
-	    	var final_amount = $('#final_amount').text().trim();
-	    	var payable_amount = $('#final_amount').text().trim();
-
-	    	var payment_mode = $('#payment_mode').val();
-	    	
-	    	var terms_accepted = $('#termsCheckbox').is(':checked');
-	    	if(payable_amount != ""){
-	    		if(payment_mode === "Online"){
-					var due_amount = 0;
-					var payment_option = $('input[name="payment"]:checked').val() || null;
-
-					if (!payment_option) {
-					    alert("Please select a payment option");
-					    return false;
-					} else {
-						if(payment_option === "20%"){
-							final_amount = Math.round(parseFloat($("#tp").text().trim()));
-							due_amount = parseFloat($('#final_amount').text().trim()) - parseFloat($("#tp").text().trim());
-						}else{
-							final_amount = $('#final_amount').text().trim();
-						}
-					}
-					$("#sbmt").prop("disabled", true); 
-			    	$("#sbmt .btn-text").text("Please Wait..");
-			    	$("#sbmt .spinner").show();
-		        $.ajax({
-		            url: 'create_order',
-		            data: JSON.stringify({"amount": parseFloat(final_amount)}),
-		            contentType: 'application/json',
-		            type: 'POST',
-		            dataType: 'json',
-		            success: function (data) {
-		                console.log(data);
-		                var response = JSON.parse(data['razorOrder']);
-		                var id = response.id;
-
-		                if (response.status === "created") {
-		                    var options = {
-		                        "key": "rzp_live_Mm1lrSuypodIP2",
-		                        "amount": response.amount,
-		                        "currency": "INR",
-		                        "name": "Dream View Resort Madhai",
-		                        "description": "Transaction",
-		                        "image": "https://dreamviewresortmadhai.com/assets/images/bllogo.jpg",
-		                        "order_id": id,
-		                        "handler": function (response) {
-		                            var obj = {
-		                            		"room_id": room_id,
-		                            		"plan_ids": packPlanIds,
-		                            		"check_in": check_in,
-		                            	    "check_out": check_out,
-		                            	    "room_number": room_num,
-		                            	    "no_of_rooms": no_of_room,
-		                            	    "extra_bed_charge": extra_charge,
-		                            	    "adult": no_of_adult,
-		                            	    "child": no_of_child,
-		                            	    "name": name,
-		                            	    "mobile_number": phone,
-		                            	    "gst_number": gst_number,
-		                            	    "email": email,
-		                            	    "city": city,
-		                            	    "country": country,
-		                            	    "coupon_code": coupon_code,
-		                            	    "base_price": base_price,
-		                            	    "night": no_of_nights,
-		                            	    "sub_total": sub_total,
-		                            	    "discount": discount,
-		                            	    "total_amount": payable_amount,
-		                            	    "paid_amount": final_amount,
-		                            	    "due_amount": due_amount,
-		                            	    "gst_amount": gst,
-		                            	    "package_amount": pkgamt,
-		                            	    "payment_mode": payment_mode,
-		                            	    "payment_type": payment_option,
-		                                "razorpay_payment_id": response.razorpay_payment_id,
-		                                "razorpay_order_id": response.razorpay_order_id,
-		                                "razorpay_signature": response.razorpay_signature,
-		                                "placedBy": "Customer",
-		                                "order_id": id,
-		                            };
-		                            $.ajax({
-		                                url: 'reserve_room',
-		                                type: 'post',
-		                                dataType: 'json',
-		                                data: JSON.stringify(obj),
-		                                contentType: 'application/json',
-		                                success: function (data) {
-		                                    if (data['status'] === 'Success') {
-		                                        $(".text-success").css("display", "block");
-		                                        var booking_id = data['bid'];
-		                                        $("#sbmt .btn-text").text("Booking Confirmed");
-	                                        	$("#sbmt .spinner").hide();
-		                                        setTimeout(function () {
-		                                            var mapForm = document.createElement("form");
-			                                        mapForm.method = "POST";
-			                                        mapForm.action = "thank_you";
-			                                        var output = document.createElement("input");
-			                                        output.type = "hidden";
-			                                        output.name = "booking_id";
-			                                        output.value = booking_id;
-			                                        mapForm.appendChild(output);
-			                                        document.body.appendChild(mapForm);
-			                                        mapForm.submit();
-		                                        }, 1000);
-
-		                                    } else {
-		                                        swal({
-		                                            title: "Oops!",
-		                                            text: "Something went wrong!",
-		                                            icon: "error",
-		                                            type: 'error',
-		                                            button: "oh no!",
-		                                            allowOutsideClick: false,
-		                                            allowEscapeKey: false
-		                                        });
-		                                    }
-		                                }
-		                            });
-
-		                            console.log(response);
-		                        },
-		                        "prefill": {
-		                            "name": name,
-		                            "email": email,
-		                            "contact": phone
-		                        },
-		                        "notes": {
-		                            "address": ""
-		                        },
-		                        "theme": {
-		                            "color": "#3399cc"
-		                        }
-		                    };
-
-		                    var rzp1 = new Razorpay(options);
-		                    rzp1.open(); // This line opens the Razorpay payment modal
-
-		                } else {
-		                    alert(response.status);
-		                }
-		            }
-
-		        });
-		    }else{
-		    	$("#sbmt").prop("disabled", true); 
-		    	$("#sbmt .btn-text").text("Please Wait..");
-		    	$("#sbmt .spinner").show();
-		    	var obj = {
-	            		"room_id": room_id,
-	            		"plan_ids": packPlanIds,
-	            		"check_in": check_in,
-	            	    "check_out": check_out,
-	            	    "no_of_rooms": no_of_room,
-	            	    "extra_bed_charge": extra_charge,
-	            	    "room_number": room_num,
-	            	    "adult": no_of_adult,
-	            	    "child": no_of_child,
-	            	    "name": name,
-	            	    "mobile_number": phone,
-	            	    "email": email,
-	            	    "city": city,
-	            	    "country": country,
-	            	    "package_amount": pkgamt,
-	            	    "coupon_code": coupon_code,
-	            	    "base_price": base_price,
-	            	    "night": no_of_nights,
-	            	    "sub_total": sub_total,
-	            	    "discount": discount,
-	            	    "total_amount": payable_amount,
-	            	    "paid_amount": 0,
-	            	    "due_amount": final_amount,
-	            	    "gst_amount": gst,
-	            	    "payment_mode": payment_mode,
-	            	    "payment_type": payment_option,
-	            };
-	            $.ajax({
-	                url: 'reserve_room',
-	                type: 'post',
-	                dataType: 'json',
-	                data: JSON.stringify(obj),
-	                contentType: 'application/json',
-	                success: function (data) {
-	                    if (data['status'] === 'Success') {
-	                        $(".text-success").css("display", "block");
-	                        var booking_id = data['bid'];
-	                        $("#sbmt .btn-text").text("Booking Confirmed");
-	                    	$("#sbmt .spinner").hide();
-	                        setTimeout(function () {
-	                            var mapForm = document.createElement("form");
-	                            mapForm.method = "POST";
-	                            mapForm.action = "thank_you";
-	                            var output = document.createElement("input");
-	                            output.type = "hidden";
-	                            output.name = "booking_id";
-	                            output.value = booking_id;
-	                            mapForm.appendChild(output);
-	                            document.body.appendChild(mapForm);
-	                            mapForm.submit();
-	                        }, 1000);
-
-	                    } else {
-	                        swal({
-	                            title: "Oops!",
-	                            text: "Something went wrong!",
-	                            icon: "error",
-	                            type: 'error',
-	                            button: "oh no!",
-	                            allowOutsideClick: false,
-	                            allowEscapeKey: false
-	                        });
-	                    }
-	                }
-	            });
-		    }
-	    	}else{
-	    		alert("Please fill the form step by step");
-	    	}
-			
-	    } else {
+	    if (!$('#termsCheckbox').is(':checked')) {
+	        Swal.fire({
+	            title: "Terms & Conditions Required",
+	            text: "Please accept the Terms & Conditions to proceed with the booking.",
+	            icon: "warning",
+	            confirmButtonText: "OK"
+	        });
 	        return;
 	    }
+
+	    Swal.fire({
+	        title: "Are you sure?",
+	        text: "Do you want to confirm this booking?",
+	        icon: "warning",
+	        showCancelButton: true,
+	        confirmButtonText: "Yes, Book Now!",
+	        cancelButtonText: "No"
+	    }).then((result) => {
+	        if (result.isConfirmed) {
+	            if (!$('#termsCheckbox').is(':checked')) {
+	                Swal.fire({
+	                    title: "Terms & Conditions Required",
+	                    text: "Please accept the Terms & Conditions to proceed with the booking.",
+	                    icon: "warning",
+	                    confirmButtonText: "OK"
+	                });
+	                return;
+	            }
+
+	            if ($("#booking_form").valid()) {
+	                var checkedValues = $("input[name='pack_plan']:checked").map(function() {
+	                    return this.value;
+	                }).get();
+	                var packPlanIds = checkedValues.join(",");
+
+	                var no_of_room = $('#no_of_room').html();  
+	                var roomdata = $('#roomdata').html(); 
+	                if(roomdata == "Select Room"){
+	                	alert("Please Select Room !!");
+	                	return;
+	                }
+	                var allRooms = $("#room_num").val();           
+	                var noofroom = $("#noofroom").val();         
+	                var availableRooms = $("#book_rooms").val();
+	                var availableRoomsArray = availableRooms.split(",").map(r => r.trim());
+	                var room_num = "";
+
+	                if (availableRoomsArray.length >= parseInt(noofroom)) {
+	                    var selectedRooms = availableRoomsArray.slice(0, parseInt(noofroom));
+	                    room_num = selectedRooms.join(",");
+	                    console.log("Selected Rooms =", room_num);
+	                } else {
+	                    alert("Not enough rooms available");
+	                    return;
+	                }
+
+	                var room_id = $('#room_id').val();
+	                var check_in = $('#check_in').val();
+	                var check_out = $('#check_out').val();
+	                var no_of_adult = $('#adlt').html();
+	                if (parseInt(no_of_adult) == 0) {
+	                    alert("Please select guest!!!");
+	                    return;
+	                }
+	                var no_of_child = $('#cld').html();
+	                var guest = no_of_adult + " Adult, " + no_of_child + " Children";
+
+	                var name = $('#bname').val();
+	                var phone = $('#bphone').val();
+	                var email = $('#bemail').val();
+	                var extra_charge = $('#extra_charge').html();
+	                var city = $('#city').val();
+	                var pkgamt = $('#pkgamt').html();
+	                var country = $('#country').val();
+	                var coupon_code = $('#coupon_code').val();
+	                var gst_number = $('#gst_number').val();
+	                var gst = $('#gst').html();
+
+	                var base_price = $('#base_price').text().trim();
+	                var no_of_nights = $('#no_of_nights').text().trim();
+	                var sub_total = $('#sub_total').text().trim();
+	                var discount = $('#discount').text().trim();
+	                var final_amount = $('#final_amount').text().trim();
+	                var payable_amount = $('#final_amount').text().trim();
+	                var payment_mode = $('#payment_mode').val();
+
+	                if (payable_amount != "") {
+	                    if (payment_mode === "Online") {
+	                        var due_amount = 0;
+	                        var payment_option = $('input[name="payment"]:checked').val() || null;
+
+	                        if (!payment_option) {
+	                            alert("Please select a payment option");
+	                            return false;
+	                        } else {
+	                            if (payment_option === "20%") {
+	                                final_amount = Math.round(parseFloat($("#tp").text().trim()));
+	                                due_amount = parseFloat($('#final_amount').text().trim()) - parseFloat($("#tp").text().trim());
+	                            } else {
+	                                final_amount = $('#final_amount').text().trim();
+	                            }
+	                        }
+
+	                        $("#sbmt").prop("disabled", true); 
+	                        $("#sbmt .btn-text").text("Please Wait..");
+	                        $("#sbmt .spinner").show();
+
+	                        $.ajax({
+	                            url: 'create_order',
+	                            data: JSON.stringify({"amount": parseFloat(final_amount)}),
+	                            contentType: 'application/json',
+	                            type: 'POST',
+	                            dataType: 'json',
+	                            success: function (data) {
+	                                var response = JSON.parse(data['razorOrder']);
+	                                var id = response.id;
+
+	                                if (response.status === "created") {
+	                                    var options = {
+	                                        "key": "rzp_live_Mm1lrSuypodIP2",
+	                                        "amount": response.amount,
+	                                        "currency": "INR",
+	                                        "name": "Dream View Resort Madhai",
+	                                        "description": "Transaction",
+	                                        "image": "https://dreamviewresortmadhai.com/assets/images/bllogo.jpg",
+	                                        "order_id": id,
+	                                        "handler": function (response) {
+	                                            var obj = {
+	                                                "room_id": room_id,
+	                                                "plan_ids": packPlanIds,
+	                                                "check_in": check_in,
+	                                                "check_out": check_out,
+	                                                "room_number": room_num,
+	                                                "no_of_rooms": no_of_room,
+	                                                "extra_bed_charge": extra_charge,
+	                                                "adult": no_of_adult,
+	                                                "child": no_of_child,
+	                                                "name": name,
+	                                                "mobile_number": phone,
+	                                                "gst_number": gst_number,
+	                                                "email": email,
+	                                                "city": city,
+	                                                "country": country,
+	                                                "coupon_code": coupon_code,
+	                                                "base_price": base_price,
+	                                                "night": no_of_nights,
+	                                                "sub_total": sub_total,
+	                                                "discount": discount,
+	                                                "total_amount": payable_amount,
+	                                                "paid_amount": final_amount,
+	                                                "due_amount": due_amount,
+	                                                "gst_amount": gst,
+	                                                "package_amount": pkgamt,
+	                                                "payment_mode": payment_mode,
+	                                                "payment_type": payment_option,
+	                                                "razorpay_payment_id": response.razorpay_payment_id,
+	                                                "razorpay_order_id": response.razorpay_order_id,
+	                                                "razorpay_signature": response.razorpay_signature,
+	                                                "placedBy": "Customer",
+	                                                "order_id": id
+	                                            };
+	                                            $.ajax({
+	                                                url: 'reserve_room',
+	                                                type: 'post',
+	                                                dataType: 'json',
+	                                                data: JSON.stringify(obj),
+	                                                contentType: 'application/json',
+	                                                success: function (data) {
+	                                                    if (data['status'] === 'Success') {
+	                                                        $(".text-success").css("display", "block");
+	                                                        var booking_id = data['bid'];
+	                                                        var p_status = data['p_status'];
+	                                                        var rmm = data['room'];
+	                                                        $("#sbmt .btn-text").text("Booking Confirmed");
+	                                                        $("#sbmt .spinner").hide();
+	                                                        sendWhatsapp(booking_id,name,email,phone,rmm,room_num,check_in,check_out,payment_mode,final_amount,due_amount,p_status,guest,noofroom);
+	                                                        setTimeout(function () {
+	                                                            var mapForm = document.createElement("form");
+	                                                            mapForm.method = "POST";
+	                                                            mapForm.action = "thank_you";
+	                                                            var output = document.createElement("input");
+	                                                            output.type = "hidden";
+	                                                            output.name = "booking_id";
+	                                                            output.value = booking_id;
+	                                                            mapForm.appendChild(output);
+	                                                            document.body.appendChild(mapForm);
+	                                                            mapForm.submit();
+	                                                        }, 1000);
+	                                                    } else {
+	                                                        swal({
+	                                                            title: "Oops!",
+	                                                            text: "Something went wrong!",
+	                                                            icon: "error",
+	                                                            type: 'error',
+	                                                            button: "Oh no!",
+	                                                            allowOutsideClick: false,
+	                                                            allowEscapeKey: false
+	                                                        });
+	                                                    }
+	                                                }
+	                                            });
+	                                        },
+	                                        "prefill": { "name": name, "email": email, "contact": phone },
+	                                        "theme": { "color": "#3399cc" }
+	                                    };
+	                                    var rzp1 = new Razorpay(options);
+	                                    rzp1.open();
+	                                } else {
+	                                    alert(response.status);
+	                                }
+	                            }
+	                        });
+	                    } else {
+	                        // offline logic
+	                        $("#sbmt").prop("disabled", true); 
+	                        $("#sbmt .btn-text").text("Please Wait..");
+	                        $("#sbmt .spinner").show();
+	                        var obj = {
+	                            "room_id": room_id,
+	                            "plan_ids": packPlanIds,
+	                            "check_in": check_in,
+	                            "check_out": check_out,
+	                            "room_number": room_num,
+	                            "no_of_rooms": no_of_room,
+	                            "extra_bed_charge": extra_charge,
+	                            "adult": no_of_adult,
+	                            "child": no_of_child,
+	                            "name": name,
+	                            "mobile_number": phone,
+	                            "gst_number": gst_number,
+	                            "email": email,
+	                            "city": city,
+	                            "country": country,
+	                            "package_amount": pkgamt,
+	                            "coupon_code": coupon_code,
+	                            "base_price": base_price,
+	                            "night": no_of_nights,
+	                            "sub_total": sub_total,
+	                            "discount": discount,
+	                            "total_amount": payable_amount,
+	                            "paid_amount": 0,
+	                            "due_amount": final_amount,
+	                            "gst_amount": gst,
+	                            "payment_mode": payment_mode,
+	                            "payment_type": payment_option
+	                        };
+	                        $.ajax({
+	                            url: 'reserve_room',
+	                            type: 'post',
+	                            dataType: 'json',
+	                            data: JSON.stringify(obj),
+	                            contentType: 'application/json',
+	                            success: function (data) {
+	                                if (data['status'] === 'Success') {
+	                                    $(".text-success").css("display", "block");
+	                                    var booking_id = data['bid'];
+	                                    var p_status = data['p_status'];
+	                                    var rmm = data['room'];
+	                                    $("#sbmt .btn-text").text("Booking Confirmed");
+	                                    $("#sbmt .spinner").hide();
+	                                    sendWhatsapp(booking_id,name,email,phone,rmm,room_num,check_in,check_out,payment_mode,0,final_amount,p_status,guest,noofroom);
+	                                    setTimeout(function () {
+	                                        var mapForm = document.createElement("form");
+	                                        mapForm.method = "POST";
+	                                        mapForm.action = "thank_you";
+	                                        var output = document.createElement("input");
+	                                        output.type = "hidden";
+	                                        output.name = "booking_id";
+	                                        output.value = booking_id;
+	                                        mapForm.appendChild(output);
+	                                        document.body.appendChild(mapForm);
+	                                        mapForm.submit();
+	                                    }, 1000);
+	                                } else {
+	                                    swal({
+	                                        title: "Oops!",
+	                                        text: "Something went wrong!",
+	                                        icon: "error",
+	                                        type: 'error',
+	                                        button: "Oh no!",
+	                                        allowOutsideClick: false,
+	                                        allowEscapeKey: false
+	                                    });
+	                                }
+	                            }
+	                        });
+	                    }
+	                } else {
+	                    alert("Please fill the form step by step");
+	                }
+	            }
+	        }
+	    });
 	}
+
 	
 	function calr() {
 	    var no_of_extrabed = $("#no_of_extrabed").val();
@@ -1347,8 +1372,12 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 
 	function applyGuests() {
 	  $("#posib").html(" ");
-	  var adlt = $("#adlt").html();
-	  var cld = $("#cld").html();
+	  $("#roomdata").html("Select Room");
+	  $("#no_of_room").html("");
+	  var adlt = $("#adults-count").html();
+	  var cld = $("#children-count").html();
+	  $("#adlt").html(adlt);
+      $("#cld").html(cld);
 	  var count = "";
 	  var r_extra = "";
 
@@ -1468,7 +1497,48 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 		}
 	  
 	}
- 
+	function sendWhatsapp(
+		    booking_id, name, email, phone,
+		    rmm, room_num, check_in, check_out,
+		    payment_mode, final_amount, due_amount, p_status,guest,nroom
+		  ) {
+		    // Format the message
+		    var message =
+		      "📢 *Booking Confirmation*\n\n" +
+		      "*Booking ID:* " + booking_id + "\n" +
+		      "*Name:* " + name + "\n" +
+		      "*Email:* " + email + "\n" +
+		      "*Contact Number:* " + phone + "\n" +
+		      "*Room:* " + rmm + "\n" +
+		      "*Room Number:* " + room_num + "\n" +
+		      "*No of Room:* " + nroom + "\n" +
+		      "*Guest:* " + guest + "\n" +
+		      "*Check-in Date:* " + check_in + "\n" +
+		      "*Check-out Date:* " + check_out + "\n" +
+		      "*Payment Mode:* " + payment_mode + "\n" +
+		      "*Paid Amount:* ₹" + final_amount + "\n" +
+		      "*Due Amount:* ₹" + due_amount + "\n" +
+		      "*Payment Status:* " + p_status + "\n\n" +
+		      "🏨 Thank you for choosing *Dream View Heritage Resort*.\n" +
+		      "📍 We look forward to hosting you!";
+
+		    var encodedMessage = encodeURIComponent(message);
+
+		    $.ajax({
+		      url: "http://wapi.nationalsms.in/wapp/v2/api/send",
+		      method: "GET",
+		      data: {
+		        apikey: "7d3de9f2a7534624a3f174cb49604f59",
+		        mobile: phone,
+		        msg: message
+		      },
+		      success: function (response) {
+		        console.log("WhatsApp message sent:", response);
+		        console.log("WhatsApp message sent successfully!");
+		      },
+		    });
+		  }
+
  </script>
 
 </body>

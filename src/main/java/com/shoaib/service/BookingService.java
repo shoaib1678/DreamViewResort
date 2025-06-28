@@ -32,6 +32,9 @@ public class BookingService {
     public Map<String, Object> reserve_room(Booking booking) {
         Map<String, Object> response = new HashMap<String, Object>();
         try {
+        	Map<String, Object> mpd = new HashMap<String, Object>();
+        	mpd.put("sno", booking.getRoom_id());
+        	List<Rooms> r = (List<Rooms>)commonDao.getDataByMap(mpd, new Rooms(), null, null, 0, -1);
             booking.setStatus("Active");
             booking.setCreatedAt(new Date());
             int i = commonDao.addDataToDb(booking);
@@ -109,7 +112,7 @@ public class BookingService {
                 	    "</div></body></html>";
 
 
-               emailService.sendEmailMessage(email, subject, message);
+            //   emailService.sendEmailMessage(email, subject, message);
 
                 String subject1 = "noreply";
                 String message1 = 
@@ -150,7 +153,7 @@ public class BookingService {
                 	    "</body>" +
                 	    "</html>";
 
-                emailService.sendEmailMessage(booking.getEmail(), subject1, message1);
+               // emailService.sendEmailMessage(booking.getEmail(), subject1, message1);
                 if(booking.getPayment_mode().equalsIgnoreCase("Online")) {
 
 	                paymentService.updateRazorPayOrder(booking.getOrder_id());
@@ -176,6 +179,8 @@ public class BookingService {
                 }
                 response.put("status", "Success");
                 response.put("bid", booking_id);
+                response.put("p_status", saf.get(0).getPayment_status());
+                response.put("room", r.get(0).getTitle());
                 response.put("message", "Booking Successfully");
 
             } else {
