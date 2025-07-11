@@ -328,10 +328,10 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 										</div>
 										<div class="col-md-6 mb-3 c2">
 											<div class="input1_wrapper">
-												<label>Mobile Number</label>
+												<label>WhatsApp Number</label>
 												<div class="">
 													<input type="text" class="form-control" id="bphone"
-														name="bphone" placeholder="Mobile Number"
+														name="bphone" placeholder="WhatsApp Number"
 														style="padding: 20px;">
 												</div>
 											</div>
@@ -995,7 +995,7 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 	        text: "Do you want to confirm this booking?",
 	        icon: "warning",
 	        showCancelButton: true,
-	        confirmButtonText: "Yes, Book Now!",
+	        confirmButtonText: "Yes",
 	        cancelButtonText: "No"
 	    }).then((result) => {
 	        if (result.isConfirmed) {
@@ -1155,7 +1155,6 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 	                                                        var rmm = data['room'];
 	                                                        $("#sbmt .btn-text").text("Booking Confirmed");
 	                                                        $("#sbmt .spinner").hide();
-	                                                        sendWhatsapp(booking_id,name,email,phone,rmm,room_num,check_in,check_out,payment_mode,final_amount,due_amount,p_status,guest,noofroom);
 	                                                        setTimeout(function () {
 	                                                            var mapForm = document.createElement("form");
 	                                                            mapForm.method = "POST";
@@ -1240,7 +1239,6 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 	                                    var rmm = data['room'];
 	                                    $("#sbmt .btn-text").text("Booking Confirmed");
 	                                    $("#sbmt .spinner").hide();
-	                                    sendWhatsapp(booking_id,name,email,phone,rmm,room_num,check_in,check_out,payment_mode,0,final_amount,p_status,guest,noofroom);
 	                                    setTimeout(function () {
 	                                        var mapForm = document.createElement("form");
 	                                        mapForm.method = "POST";
@@ -1497,47 +1495,6 @@ List<PackagePlan> pack = (List<PackagePlan>)request.getAttribute("pack");
 		}
 	  
 	}
-	function sendWhatsapp(
-		    booking_id, name, email, phone,
-		    rmm, room_num, check_in, check_out,
-		    payment_mode, final_amount, due_amount, p_status,guest,nroom
-		  ) {
-		    // Format the message
-		    var message =
-		      "📢 *Booking Confirmation*\n\n" +
-		      "*Booking ID:* " + booking_id + "\n" +
-		      "*Name:* " + name + "\n" +
-		      "*Email:* " + email + "\n" +
-		      "*Contact Number:* " + phone + "\n" +
-		      "*Room:* " + rmm + "\n" +
-		      "*Room Number:* " + room_num + "\n" +
-		      "*No of Room:* " + nroom + "\n" +
-		      "*Guest:* " + guest + "\n" +
-		      "*Check-in Date:* " + check_in + "\n" +
-		      "*Check-out Date:* " + check_out + "\n" +
-		      "*Payment Mode:* " + payment_mode + "\n" +
-		      "*Paid Amount:* ₹" + final_amount + "\n" +
-		      "*Due Amount:* ₹" + due_amount + "\n" +
-		      "*Payment Status:* " + p_status + "\n\n" +
-		      "🏨 Thank you for choosing *Dream View Heritage Resort*.\n" +
-		      "📍 We look forward to hosting you!";
-
-		    var encodedMessage = encodeURIComponent(message);
-
-		    $.ajax({
-		      url: "http://wapi.nationalsms.in/wapp/v2/api/send",
-		      method: "GET",
-		      data: {
-		        apikey: "7d3de9f2a7534624a3f174cb49604f59",
-		        mobile: phone,
-		        msg: message
-		      },
-		      success: function (response) {
-		        console.log("WhatsApp message sent:", response);
-		        console.log("WhatsApp message sent successfully!");
-		      },
-		    });
-		  }
 
  </script>
 

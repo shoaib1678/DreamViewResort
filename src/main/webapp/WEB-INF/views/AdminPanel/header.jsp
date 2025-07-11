@@ -100,6 +100,11 @@
                     <div data-i18n="Reserved Rooms">Reserved Rooms</div>
                   </a>
                 </li>
+                <li class="menu-item">
+                  <a href="cancelbooking" class="menu-link">
+                    <div data-i18n="Cancel Booking">Cancel Booking</div>
+                  </a>
+                </li>
               </ul>
             </li>
             <li class="menu-item">

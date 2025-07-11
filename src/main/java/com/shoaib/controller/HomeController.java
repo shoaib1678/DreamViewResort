@@ -46,7 +46,11 @@ public class HomeController {
 	CommonDao commonDao;
 	
 	/********************************* Website Urls ************************************************/
-
+	@RequestMapping(value="/newPdf")
+	public ModelAndView newPdf(HttpServletRequest request) throws IOException{
+		ModelAndView mv = new ModelAndView("Pdf/newpdf");
+		return mv;
+	}
 	@RequestMapping(value="/")
 	public ModelAndView home(HttpServletRequest request, HttpSession session) throws IOException{
 		String email = request.getParameter("email");
@@ -570,6 +574,17 @@ public class HomeController {
 			map.put("status", "Active");
 			List<Rooms> room = (List<Rooms>)commonDao.getDataByMap(map, new Rooms(), null, null, 0, -1);
 			mv.addObject("rooms", room);
+			return mv;
+		}else {
+			return new ModelAndView("redirect:./");
+		}
+		
+	}
+	@RequestMapping(value="/cancelbooking")
+	public ModelAndView cancelbooking(HttpServletRequest request,HttpSession session) throws IOException{
+		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
+		if(lg !=null) {
+			ModelAndView mv = new ModelAndView("AdminPanel/Booking/cancel_booking");
 			return mv;
 		}else {
 			return new ModelAndView("redirect:./");

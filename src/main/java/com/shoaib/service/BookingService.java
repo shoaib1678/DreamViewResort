@@ -1,5 +1,11 @@
 package com.shoaib.service;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -32,9 +38,11 @@ public class BookingService {
     public Map<String, Object> reserve_room(Booking booking) {
         Map<String, Object> response = new HashMap<String, Object>();
         try {
-        	Map<String, Object> mpd = new HashMap<String, Object>();
-        	mpd.put("sno", booking.getRoom_id());
-        	List<Rooms> r = (List<Rooms>)commonDao.getDataByMap(mpd, new Rooms(), null, null, 0, -1);
+        	 SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        	 Date cin = booking.getCheck_in();
+        	 Date cout = booking.getCheck_out();
+             String check_in = sdf.format(cin);
+             String check_out = sdf.format(cout);
             booking.setStatus("Active");
             booking.setCreatedAt(new Date());
             int i = commonDao.addDataToDb(booking);
@@ -76,6 +84,30 @@ public class BookingService {
                 Map<String, Object> map1 = new HashMap<String, Object>();
                 map1.put("sno", booking.getRoom_id());
                 List<Rooms> room = (List<Rooms>) commonDao.getDataByMap(map1, new Rooms(), null, null, 0, -1);
+                
+                if(booking.getPayment_mode().equalsIgnoreCase("Online")) {
+
+	                paymentService.updateRazorPayOrder(booking.getOrder_id());
+	                booking.setOrder_id(booking.getOrder_id());
+	                if(booking.getPayment_type().equalsIgnoreCase("20%")) {
+	                	 booking.setPayment_status("Partially Paid");
+	                }else {
+	                	 booking.setPayment_status("Paid");
+	                }
+	                booking.setBooking_id(booking_id);
+	                commonDao.updateDataToDb(booking);
+	
+	                paymentService.add_razorpay_payment(
+	                        booking.getOrder_id(),
+	                        booking.getRazorpay_order_id(),
+	                        booking.getRazorpay_payment_id(),
+	                        booking.getRazorpay_signature(),
+	                        booking.getType()
+	                );
+                }else {
+                	saf.get(0).setPayment_status("Pending");
+                	 commonDao.updateDataToDb(saf.get(0));
+                }
                 String email = "info.dreamviewheritage@gmail.com";
                 String subject = "New Resort Booked for " + room.get(0).getTitle() + "";
                 String message =
@@ -101,18 +133,19 @@ public class BookingService {
                 	    "  <tr><td class='label'>Email:</td><td>" + booking.getEmail() + "</td></tr>" +
                 	    "  <tr><td class='label'>Contact Number:</td><td>" + booking.getMobile_number() + "</td></tr>" +
                 	    "  <tr><td class='label'>Room:</td><td>" + room.get(0).getTitle() + "</td></tr>" +
+                	    "  <tr><td class='label'>Guest:</td><td>" + booking.getAdult() + " Adults, "+booking.getChild()+" Children</td></tr>" +
                 	    "  <tr><td class='label'>Room Number:</td><td>" + booking.getRoom_number() + "</td></tr>" +
-                	    "  <tr><td class='label'>Check-in Date:</td><td>" + booking.getCheck_in() + "</td></tr>" +
-                	    "  <tr><td class='label'>Check-out Date:</td><td>" + booking.getCheck_out() + "</td></tr>" +
+                	    "  <tr><td class='label'>Check-in Date:</td><td>" + check_in + "</td></tr>" +
+                	    "  <tr><td class='label'>Check-out Date:</td><td>" + check_out + "</td></tr>" +
                 	    "  <tr><td class='label'>Payment Mode:</td><td>" + booking.getPayment_mode() + "</td></tr>" +
                 	    "  <tr><td class='label'>Paid Amount:</td><td>" + booking.getPaid_amount() + "</td></tr>" +
                 	    "  <tr><td class='label'>Due Amount:</td><td>" + booking.getDue_amount() + "</td></tr>" +
-                	    "  <tr><td class='label'>Payment Status:</td><td>" + booking.getPayment_status() + "</td></tr>" +
+                	    "  <tr><td class='label'>Payment Status:</td><td>" + saf.get(0).getPayment_status() + "</td></tr>" +
                 	    "</table>" +
                 	    "</div></body></html>";
 
 
-            //   emailService.sendEmailMessage(email, subject, message);
+            emailService.sendEmailMessage(email, subject, message);
 
                 String subject1 = "noreply";
                 String message1 = 
@@ -140,47 +173,42 @@ public class BookingService {
                 	    "    <tr><td class='label'>Email:</td><td>" + booking.getEmail() + "</td></tr>" +
                 	    "    <tr><td class='label'>Contact Number:</td><td>" + booking.getMobile_number() + "</td></tr>" +
                 	    "    <tr><td class='label'>Room:</td><td>" + room.get(0).getTitle() + "</td></tr>" +
+                	    "  <tr><td class='label'>Guest:</td><td>" + booking.getAdult() + " Adults, "+booking.getChild()+" Children</td></tr>" +
                 	    "    <tr><td class='label'>Room Number:</td><td>" + booking.getRoom_number() + "</td></tr>" +
-                	    "    <tr><td class='label'>Check-in Date:</td><td>" + booking.getCheck_in() + "</td></tr>" +
-                	    "    <tr><td class='label'>Check-out Date:</td><td>" + booking.getCheck_out() + "</td></tr>" +
+                	    "    <tr><td class='label'>Check-in Date:</td><td>" + check_in + "</td></tr>" +
+                	    "    <tr><td class='label'>Check-out Date:</td><td>" + check_out + "</td></tr>" +
                 	    "    <tr><td class='label'>Payment Mode:</td><td>" + booking.getPayment_mode() + "</td></tr>" +
                 	    "  	 <tr><td class='label'>Paid Amount:</td><td>" + booking.getPaid_amount() + "</td></tr>" +
                 	    "  	 <tr><td class='label'>Due Amount:</td><td>" + booking.getDue_amount() + "</td></tr>" +
-                	    "    <tr><td class='label'>Payment Status:</td><td>" + booking.getPayment_status() + "</td></tr>" +
+                	    "    <tr><td class='label'>Payment Status:</td><td>" + saf.get(0).getPayment_status() + "</td></tr>" +
                 	    "  </table>" +
                 	    "  <div class='footer'>Thank you for choosing us. We look forward to welcoming you!</div>" +
                 	    "</div>" +
                 	    "</body>" +
                 	    "</html>";
 
-               // emailService.sendEmailMessage(booking.getEmail(), subject1, message1);
-                if(booking.getPayment_mode().equalsIgnoreCase("Online")) {
-
-	                paymentService.updateRazorPayOrder(booking.getOrder_id());
-	                booking.setOrder_id(booking.getOrder_id());
-	                if(booking.getPayment_type().equalsIgnoreCase("20%")) {
-	                	 booking.setPayment_status("Partially Paid");
-	                }else {
-	                	 booking.setPayment_status("Paid");
-	                }
-	                booking.setBooking_id(booking_id);
-	                commonDao.updateDataToDb(booking);
-	
-	                paymentService.add_razorpay_payment(
-	                        booking.getOrder_id(),
-	                        booking.getRazorpay_order_id(),
-	                        booking.getRazorpay_payment_id(),
-	                        booking.getRazorpay_signature(),
-	                        booking.getType()
-	                );
-                }else {
-                	saf.get(0).setPayment_status("Pending");
-                	 commonDao.updateDataToDb(saf.get(0));
-                }
+               emailService.sendEmailMessage(booking.getEmail(), subject1, message1);
+                String msg =
+                	    "📢 *Booking Confirmation*\n\n" +
+                	    "*Booking ID:* " + booking_id + "\n" +
+                	    "*Name:* " + booking.getName() + "\n" +
+                	    "*Email:* " + booking.getEmail() + "\n" +
+                	    "*Contact Number:* " + booking.getMobile_number() + "\n" +
+                	    "*Room:* " + room.get(0).getTitle() + "\n" +
+                	    "*Guest:* " + booking.getAdult() + " Adults, " + booking.getChild() + " Children\n" +
+                	    "*Room Number:* " + booking.getRoom_number() + "\n" +
+                	    "*Check-in Date:* " + check_in + "\n" +
+                	    "*Check-out Date:* " + check_out + "\n" +
+                	    "*Payment Mode:* " + booking.getPayment_mode() + "\n" +
+                	    "*Paid Amount:* ₹" + booking.getPaid_amount() + "\n" +
+                	    "*Due Amount:* ₹" + booking.getDue_amount() + "\n" +
+                	    "*Payment Status:* " + saf.get(0).getPayment_status() + "\n\n" +
+                	    "🏨 Thank you for choosing *Dream View Heritage Resort*.\n" +
+                	    "📍 We look forward to hosting you!";
+                sendWhatsAppMessage(booking.getMobile_number(),msg);
+                
                 response.put("status", "Success");
                 response.put("bid", booking_id);
-                response.put("p_status", saf.get(0).getPayment_status());
-                response.put("room", r.get(0).getTitle());
                 response.put("message", "Booking Successfully");
 
             } else {
@@ -250,4 +278,40 @@ public class BookingService {
 		}
 		return response;
 	}
+	
+	public Map<String, Object> sendWhatsAppMessage(String phone, String message) {
+	    Map<String, Object> response = new HashMap<>();
+	    try {
+	        String apiKey = "7d3de9f2a7534624a3f174cb49604f59";
+	        String encodedMsg = URLEncoder.encode(message, "UTF-8");
+
+	        String apiUrl = "https://wapi.nationalsms.in/wapp/v2/api/send"
+	                + "?apikey=" + apiKey
+	                + "&mobile=" + phone
+	                + "&msg=" + encodedMsg;
+
+	        URL url = new URL(apiUrl);
+	        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	        conn.setRequestMethod("GET");
+
+	        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+	        StringBuilder apiResponse = new StringBuilder();
+	        String line;
+
+	        while ((line = in.readLine()) != null) {
+	            apiResponse.append(line);
+	        }
+	        in.close();
+	        response.put("status", "Success");
+	        response.put("message", "WhatsApp message sent successfully");
+	        response.put("response", apiResponse.toString());
+	        System.out.println("w message="+apiResponse.toString());
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        response.put("status", "Error");
+	        response.put("message", "Failed to send WhatsApp message: " + e.getMessage());
+	    }
+	    return response;
+	}
+
 }

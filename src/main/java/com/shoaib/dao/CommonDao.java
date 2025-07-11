@@ -28,6 +28,9 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import com.shoaib.modal.BookingDate;
+
 import javassist.expr.Instanceof;
 
 @Repository
@@ -341,30 +344,25 @@ public class CommonDao {
 		}
 	}
 
-	public void deleteTourPackage(int package_id) {
-		Session session = null;
-		Transaction tx = null;
-		try {
-			session = sessionFactory.openSession();
-			tx = session.beginTransaction();
-			String hqlDelete = "DELETE FROM PackageDetails WHERE package_id = "+package_id+"";
-			Query deleteQuery = session.createQuery(hqlDelete);
-			int rowCount = deleteQuery.executeUpdate();
-			tx.commit();
-		} catch (Exception e) {
-			if (tx != null) {
-				tx.rollback();
-			}
-			e.printStackTrace();
-		} finally {
-			if (session != null) {
-				session.close();
-			}
-		}
+	public void deleteBookingDate(int sno) {
+	    Session session = null;
+	    Transaction tx = null;
+	    try {
+	        session = sessionFactory.openSession();
+	        tx = session.beginTransaction();
+	        String hqlDelete = "DELETE FROM BookingDate WHERE sno = "+sno+"";
+	        Query deleteQuery = session.createQuery(hqlDelete);
+	        int rowCount = deleteQuery.executeUpdate();
+	        tx.commit();
+	    } catch (Exception e) {
+	        if (tx != null) {
+	            tx.rollback();
+	        }
+	        e.printStackTrace();
+	    } finally {
+	        if (session != null) {
+	            session.close();
+	        }
+	    }
 	}
-
-
-
-
-
 }
