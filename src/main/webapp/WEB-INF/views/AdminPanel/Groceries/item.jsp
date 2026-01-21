@@ -1,6 +1,4 @@
 <!DOCTYPE html>
-<%@page import="com.shoaib.modal.Amenities"%>
-<%@page import="com.shoaib.modal.Category"%>
 <%@page import="java.util.List"%>
 <html lang="en"
 	class="light-style layout-navbar-fixed layout-menu-fixed" dir="ltr"
@@ -17,12 +15,11 @@
 .modal-xxl {
 	--bs-modal-width: 95vw !important;
 }
+
 </style>
 
 </head>
-<%
-List<Category> cat = (List<Category>)request.getAttribute("cat");
-%>
+
 <body>
 	<!-- Layout wrapper -->
 	<div class="layout-wrapper layout-content-navbar">
@@ -59,9 +56,7 @@ List<Category> cat = (List<Category>)request.getAttribute("cat");
 											<thead class="bg-primary">
 												<tr>
 													<th class="text-white">S.NO.</th>
-													<th class="text-white">Reviewer Name</th>
-													<th class="text-white">Reviewer Image</th>
-													<th class="text-white">Review</th>
+													<th class="text-white">Item Name</th>
 													<th class="text-white">Status</th>
 												 	<th class="text-white">Actions</th>
 												</tr>
@@ -94,7 +89,7 @@ List<Category> cat = (List<Category>)request.getAttribute("cat");
     <div class="modal-dialog modal-md modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header" style="border-bottom: 1px solid lightgray;">
-            <h6>Add New Testimonial</h6>
+            <h6>Add New Grocery Item</h6>
                 <button type="button"
                         class="btn-close"
                         data-bs-dismiss="modal"
@@ -102,31 +97,14 @@ List<Category> cat = (List<Category>)request.getAttribute("cat");
             </div>
              <form name="amenity_form" id="amenity_form">
 					<div class="modal-body">
-						<div class="nav-align-top">
-							<div class="row p-4">
-									<div class="col-12">
-										<div class="row">
-											  <div class="col-md-8 mb-3" id="cat">
-			                                  	<label class="form-label" for="name">Reviewer Name<span style="color: red;">*</span></label> <input
-												type="text" class="form-control" id="name" placeholder=" "
-												name="name" aria-label=" " />
-												
-												<div>
-												<label class="form-label mt-3" for="image">Reviewer Image<span class="mandatory">*</span></label>
-			                      					 <input type="file" accept="image/*" class="form-control" id="image" name="image" onchange='document.getElementById("viewImg").src = window.URL.createObjectURL(this.files[0])'>
-												</div>
-			                                  	 
-			                                </div>
-											<div class="col-md-4">	
-												<img id="viewImg" name="viewImg" height="115px" width="100px" style="margin-top: 30px;">	 
-			                                </div>
-			                                <div class=" col-lg-12">
-												<label class="form-label" for="meta_description">Review</label>
-												<textarea class="form-control" id="review" name="review"></textarea>
-											</div>
-										</div>
-									</div>
+						<div class="nav-align-top mb-4">
+							<div class="row">
+								<div class=" col-lg-12 mb-6 mt-1">
+									<label class="form-label" for="item_name">Item Name<span style="color: red;">*</span></label> <input
+										type="text" class="form-control" id="item_name" placeholder=" "
+										name="item_name" aria-label=" " />
 								</div>
+							</div>
 						</div>
 					</div>
 					<div class="modal-footer" style="border-top: 1px solid lightgray;">
@@ -139,13 +117,14 @@ List<Category> cat = (List<Category>)request.getAttribute("cat");
                 </div>
                  </form>
             </div>
-
+         <input type="hidden" id="sno" name="sno" value="0">
         </div>
     </div>
-     <input type="hidden" id="sno" name="sno" value="0">
+
+	<input type="hidden" id="sno" name="sno" value="0">
 	<jsp:include page="../js.jsp"></jsp:include>
 	<script type="text/javascript">
-	var sno = $("#sno").val();
+
 	function data() {
 		$("#amenities_table").DataTable({
 			dom : "Blfrtip",
@@ -180,7 +159,7 @@ List<Category> cat = (List<Category>)request.getAttribute("cat");
 			lengthChange : true,
 			ordering : false,
 			ajax : {
-				url : "get_testimonial",
+				url : "get_items",
 				type : "POST",
 			},
 			columnDefs : [ {
@@ -196,21 +175,7 @@ List<Category> cat = (List<Category>)request.getAttribute("cat");
 			          }
 			 },	
 			{
-				"data" : "name"
-			}, 
-			{
-				"data":function(data,type,dataToSet){
-		      		var imageName = data.image;
-		      		if(imageName != null  && imageName != ""){
-		      			return '<img src="displayimage?url='+imageName+'" width="50" height="50"/>';
-		      		}else{
-		      			return "NA"
-		      		}
-		        	
-		        }
-			},
-			{
-				"data" : "review"
+				"data" : "item_name"
 			}, 
 			{
 				"data": "status"
@@ -218,7 +183,7 @@ List<Category> cat = (List<Category>)request.getAttribute("cat");
 				"data" : function(data, type,
 						dataToSet) {
 						var sno = data.sno;
-						var string = "<button class='btn btn-sm btn-secondary add-new btn-danger btn-sm '  type='button'  onclick='deletedata("+sno+")'>Delete</button> ";
+						var string = "<button class='btn btn-sm btn-secondary add-new btn-primary btn-sm '  type='button'  onclick='edit("+sno+")'>Edit</button> ";
 					//	string +='<button type="button" class="btn btn-sm btn-danger btn-sm ml-1 "  onclick="deletedata('+sno+')" style="margin-left: 10px;">Delete</button>';
 						return string;
 						}
@@ -236,49 +201,33 @@ List<Category> cat = (List<Category>)request.getAttribute("cat");
 				.validate(
 						{
 							rules : {
-								name : {
-									required : true,
-								},
-								image : {
-									required : true,
-								},
-								review : {
+								item_name : {
 									required : true,
 								},
 							},
 
 							messages : {
 
-								name : {
-									required : "Please enter reviewer name",
-								},
-								image : {
-									required : "Please Upload Title Image",
-								},
-								review : {
-									required : "Please write review here",
+								item_name : {
+									required : "Please enter item name",
 								},
 							},
 
 							submitHandler : function(form) {
-								var name = $("#name").val();
-								var review = $("#review").val();
-								var image = $("#image")[0].files[0];
+								var item_name = $("#item_name").val();
+								var sno = $("#sno").val();
+
 								var obj = {
-										"name" : name,
-										"review": review,
-										"sno": sno
-								}
+									"item_name" : item_name,
+									"sno" : sno
+								};
 								
-								var fd = new FormData();
-								fd.append("image",image);
-								fd.append("testimonialdata",JSON.stringify(obj));
 								$.ajax({
-									url : 'add_testimonial',
+									url : 'add_item',
 									type : 'post',
-									data : fd,
-									processData : false,
-									contentType :  false,
+									data : JSON.stringify(obj),
+									dataType : 'json',
+									contentType :  'application/json',
 									success : function(data) {
 										if (data['status'] == 'Success') {
 											$('#amenities_table').DataTable().ajax.reload( null, false );
@@ -318,7 +267,7 @@ List<Category> cat = (List<Category>)request.getAttribute("cat");
 		var fd = new FormData();
 		fd.append("sno", i);
 		$.ajax({
-			url : 'edit_amenity',
+			url : 'edit_item',
 			type : 'post',
 			data : fd,
 			contentType : false,
@@ -326,7 +275,7 @@ List<Category> cat = (List<Category>)request.getAttribute("cat");
 			success : function(data) {
 				if (data['status'] == 'Success') {
 					$('#amenity_modal').modal('toggle');
-					$("#amenity_name").val(data['data'][0].amenity_name);
+					$("#item_name").val(data['data'][0].item_name);
 				} else {
 					Swal.fire({
 						icon : 'Opps',
@@ -343,7 +292,7 @@ List<Category> cat = (List<Category>)request.getAttribute("cat");
 		  function deletedata(sno)
 			{	 
 			 Swal.fire({
-				  title: 'Do you want to Delete Testimonial Details?',
+				  title: 'Do you want to Delete Employee Details?',
 				  showDenyButton: true,
 				  //showCancelButton: true,
 				  confirmButtonText: 'Yes',
@@ -357,17 +306,20 @@ List<Category> cat = (List<Category>)request.getAttribute("cat");
 				}).then((result) => {
 				  if (result.isConfirmed) {
 					 
-					  var fd = new FormData();
-						fd.append("sno", sno);
+					  	console.log(sno);
+					    console.log(status)
+						var fd = {
+					    	"category_id":sno,
+					    	};					
 						$.ajax({
-							url : 'delete_testimonials',
+							url : 'delete_category', //add  Course  controller name AdminController
 							type : 'post',
-							data : fd,
-							contentType : false,
-							processData : false,
+							data : JSON.stringify(fd),
+							contentType : 'application/json',
+							dataType : 'json',
 							success : function(data) {
-								if (data['status'] == 'Success') {
-									$('#amenities_table').DataTable().ajax.reload( null, false );
+								if (data['status'] == 'success') {
+									$('#tenderdata_table').DataTable().ajax.reload( null, false );
 								 Swal.fire({
 									  icon: 'success',
 									  title: 'Delete successfully',

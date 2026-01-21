@@ -90,21 +90,21 @@
                     <div data-i18n="Block Date">Block Date</div>
                   </a>
                 </li>
-               <li class="menu-item">
+               <!-- <li class="menu-item">
                   <a href="book_manually" class="menu-link">
                     <div data-i18n="Book Manually">Book Manually</div>
                   </a>
-                </li>
+                </li> -->
                 <li class="menu-item">
                   <a href="reserved_rooms" class="menu-link">
                     <div data-i18n="Reserved Rooms">Reserved Rooms</div>
                   </a>
                 </li>
-                <li class="menu-item">
+                <!-- <li class="menu-item">
                   <a href="cancelbooking" class="menu-link">
                     <div data-i18n="Cancel Booking">Cancel Booking</div>
                   </a>
-                </li>
+                </li> -->
               </ul>
             </li>
             <li class="menu-item">
@@ -191,6 +191,37 @@
                 <li class="menu-item">
                   <a href="payment_details" class="menu-link">
                     <div data-i18n="Manage Payment">Manage Payment</div>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="menu-item">
+              <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-food-menu"></i>
+                <div data-i18n="Manage Groceries">Manage Groceries</div>
+              </a>
+              <ul class="menu-sub">
+                <li class="menu-item">
+                  <a href="manage_item" class="menu-link">
+                    <div data-i18n="Grocery item">Grocery item</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a href="javascript:void(0)" class="menu-link">
+                    <div data-i18n="Groceries Details">Groceries Details</div>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li class="menu-item">
+              <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons bx bx-food-menu"></i>
+                <div data-i18n="Reports">Reports</div>
+              </a>
+              <ul class="menu-sub">
+                <li class="menu-item">
+                  <a href="manage_report" class="menu-link">
+                    <div data-i18n="Manage Reports">Manage Reports</div>
                   </a>
                 </li>
               </ul>

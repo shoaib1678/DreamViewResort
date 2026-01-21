@@ -43,4 +43,11 @@ public class TestimonialController {
 		response = testimonialService.get_testimonial(start,length,search);
 		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
 	}
+	@RequestMapping("/delete_testimonials")
+	public ResponseEntity<Map<String,Object>> delete_gallery(HttpServletRequest request){
+		Map<String,Object> response = new HashMap<String,Object>();
+		String sno = request.getParameter("sno");
+		response = testimonialService.delete_testimonials(sno);
+		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
+	}
 }

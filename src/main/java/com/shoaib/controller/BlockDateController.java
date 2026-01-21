@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.shoaib.modal.BlockDate;
 import com.shoaib.modal.BookingDate;
+import com.shoaib.modal.ManualBooking;
 import com.shoaib.service.BlockDateService;
 
 @Controller
@@ -47,7 +48,7 @@ public class BlockDateController {
 	}
 	
 	@RequestMapping("/add_bookdate")
-	public ResponseEntity<Map<String,Object>> add_bookdate(@RequestBody BookingDate bookingDate){
+	public ResponseEntity<Map<String,Object>> add_bookdate(@RequestBody ManualBooking bookingDate){
 		Map<String,Object> response = new HashMap<String,Object>();
 		response = blockDateService.add_bookdate(bookingDate);
 		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
@@ -67,6 +68,13 @@ public class BlockDateController {
 		Map<String,Object> response = new HashMap<String,Object>();
 		String sno =request.getParameter("sno");
 		response = blockDateService.edit_bookdate(sno);
+		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
+	}
+	@RequestMapping("/cancel_booking")
+	public ResponseEntity<Map<String,Object>> cancel_booking(HttpServletRequest request){
+		Map<String,Object> response = new HashMap<String,Object>();
+		String sno = request.getParameter("sno");
+		response = blockDateService.cancel_booking(sno);
 		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
 	}
 }

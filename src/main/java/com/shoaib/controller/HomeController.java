@@ -3,10 +3,14 @@ package com.shoaib.controller;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,6 +37,7 @@ import com.shoaib.modal.Booking;
 import com.shoaib.modal.Category;
 import com.shoaib.modal.Gallery;
 import com.shoaib.modal.LoginCredentials;
+import com.shoaib.modal.ManualBooking;
 import com.shoaib.modal.PackagePlan;
 import com.shoaib.modal.Rooms;
 import com.shoaib.modal.SliderImage;
@@ -613,4 +618,73 @@ public class HomeController {
 		}
 		
 	}
+	@RequestMapping(value="/manage_item")
+	public ModelAndView manage_item(HttpServletRequest request,HttpSession session) throws IOException{
+		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
+		if(lg !=null) {
+			ModelAndView mv = new ModelAndView("AdminPanel/Groceries/item");
+			return mv;
+		}else {
+			return new ModelAndView("redirect:./");
+		}
+		
+	}
+	@RequestMapping(value="/manage_report")
+	public ModelAndView manage_report(HttpServletRequest request,HttpSession session) throws IOException{
+		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
+		if(lg !=null) {
+			ModelAndView mv = new ModelAndView("AdminPanel/Report/report");
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("status", "Active");
+			List<Rooms> room = (List<Rooms>)commonDao.getDataByMap(map, new Rooms(), null, null, 0, -1);
+			List<PackagePlan> plan = (List<PackagePlan>)commonDao.getDataByMap(map, new PackagePlan(), null, null, 0, -1);
+			mv.addObject("rooms", room);
+			mv.addObject("plan", plan);
+			return mv;
+		}else {
+			return new ModelAndView("redirect:./");
+		}
+		
+	}
+	@RequestMapping(value="/booking_register")
+	public ModelAndView booking_register(HttpServletRequest request,HttpSession session) throws IOException{
+		
+			String from_date = request.getParameter("from_date");
+			String to_date = request.getParameter("to_date");
+			ModelAndView mv = new ModelAndView("AdminPanel/Report/bookingReport");
+			List<String> months = new ArrayList<>();
+			Map<String, Object> map = new HashMap<String, Object>();
+			//map.put("status", "Active");
+			List<ManualBooking> data = (List<ManualBooking>)commonDao.getDataByMap(map, new ManualBooking(), "booking_date", "desc", 0, -1);
+			if(data.size() > 0) {
+				for(ManualBooking m : data) {
+//					Map<String, Object> map1 = new HashMap<String, Object>();
+//					map1.put("sno", m.getRoom_id());
+//					List<Rooms> rm = (List<Rooms>)commonDao.getDataByMap(map1, new Rooms(), null, null, 0, -1);
+//					m.setRoom_title(rm.get(0).getTitle());
+					Map<String, Object> map11 = new HashMap<String, Object>();
+					map11.put("sno", m.getPlan_id());
+					List<PackagePlan> rm1 = (List<PackagePlan>)commonDao.getDataByMap(map11, new PackagePlan(), null, null, 0, -1);
+					m.setPlan_name(rm1.get(0).getPlan_name());
+				}
+				
+				 SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
+	        	 List<String> distinctInvoiceMonths = data.stream()
+	        	            .map(ManualBooking::getBooking_date)  
+	        	            .filter(Objects::nonNull)         
+	        	            .map(sdf::format)                
+	        	            .distinct()                     
+	        	            .sorted()                         
+	        	            .collect(Collectors.toList());
+
+	        	    months.addAll(distinctInvoiceMonths);
+			}
+			mv.addObject("months", months);
+			mv.addObject("data", data);
+			mv.addObject("from_date", from_date);
+			mv.addObject("to_date", to_date);
+			return mv;
+		
+	}
+	
 }

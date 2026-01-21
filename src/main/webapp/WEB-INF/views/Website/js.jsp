@@ -57,10 +57,8 @@
 }
   function getroom() {
 	  var rm_id = $("#rm_id").val()
-	  if(rm_id != null && rm_id != ""){
 		  var mapForm = document.createElement("form");
 	      mapForm.method = "POST";
-	      mapForm.target = "_blank";
 	      mapForm.action = "rooms";
 	      var output = document.createElement("input");
 	      output.type = "hidden";
@@ -69,9 +67,6 @@
 	      mapForm.appendChild(output);
 	      document.body.appendChild(mapForm);
 	      mapForm.submit();
-	  }else{
-		 alert("Please Enter Booking Id for generate receipt"); 
-	  }
      
 }
   function getData(){

@@ -13,136 +13,175 @@
 <jsp:include page="css.jsp"></jsp:include>
 <jsp:include page="calendercss.jsp"></jsp:include>
 
-<style type="text/css">
-	.avatar {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		    width: 3rem;
-    		height: 3rem;
-	}
-	.bg-info{
-		background: #d6f5fc !important;
-	}
-	.bg-warning{
-		background: #fef4e4 !important;
-	}
-	.bg-success{
-		background: #e4fdd8  !important;
-	}
-	.available-date {
-    transition: transform 0.2s ease, border 0.2s ease;
-    border: 2px solid transparent;
-    border-radius: 4px;
-}
-
-.available-date:hover {
-    transform: scale(1.1);
-    border: 1px solid yellow !important;
-    box-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
-    z-index: 10;
-    background: #00ae00 !important;
-}
-.table-calendar td, .table-calendar th {
-    padding: 30px 10px !important;
-    }
-    .container-calendar {
-    max-width: 100% !important;
-}
-	
-</style>
 <style>
-    .calendar-wrapper {
-      margin: auto;
-    }
+.calendar-wrapper {
+  margin: auto;
+  width: 100%;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  padding: 25px;
+  animation: fadeIn 0.6s ease;
+}
 
-    .tabs {
-      display: flex;
-      margin-bottom: 20px;
-    }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-    .tab-btn {
-      padding: 10px 20px;
-      cursor: pointer;
-      background: #eee;
-      margin-right: 5px;
-      border: 1px solid #ccc;
-      border-bottom: none;
-    }
+.calendar-wrapper h2 {
+  text-align: center;
+  font-size: 24px;
+  color: #222;
+  font-weight: 700;
+  margin-bottom: 25px;
+  letter-spacing: 0.6px;
+}
 
-    .tab-btn.active {
-      background: #fff;
-      font-weight: bold;
-      border-bottom: 1px solid #fff;
-    }
+/* Tabs */
+.tabs {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #eee;
+}
+.tab-btn {
+  padding: 10px 22px;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  font-weight: 600;
+  color: #666;
+  border-bottom: 3px solid transparent;
+  transition: all 0.3s ease;
+}
+.tab-btn:hover {
+  color: #007bff;
+}
+.tab-btn.active {
+  color: #007bff;
+  border-bottom: 3px solid #007bff;
+}
 
-    .tab-content {
-      display: none;
-    }
+/* Calendar Layout */
+.tab-content {
+  display: none;
+}
+.tab-content.active {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  margin-top: 15px;
+}
 
-    .tab-content.active {
-        display: grid;
-	    grid-template-columns: repeat(7, 1fr);
-	    gap: 0.5px;
-    }
+/* Weekday Header */
+.room-calendar-header {
+  text-align: center;
+  font-weight: 700;
+  padding: 12px 0;
+  color: #fff;
+  background: linear-gradient(135deg, #007bff, #00c3ff);
+  border-radius: 12px;
+  font-size: 15px;
+  box-shadow: 0 2px 6px rgba(0, 123, 255, 0.25);
+}
 
-    .room-calendar-header {
-      padding: 6px;
-      background: #f3f3f3;
-      font-weight: bold;
-      text-align: center;
-      border: 1px solid #ddd;
-    }
+/* Animated Border Effect */
+.room-calendar-day {
+  position: relative;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 10px;
+  min-height: 130px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  z-index: 1;
+}
 
-    .room-calendar-day {
-      background: #fff;
-      min-height: 100px;
-      border: 1px solid #ddd;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 6px;
-      font-size: 12px;
-      width: 160px;
-    }
+.room-calendar-day::before {
+     content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    padding: 3px;
+    background: linear-gradient(120deg, #c1302a, #0d3562, #46c96b);
+    background-size: 200% 200%;
+    animation: borderFlow 2s linear infinite;
+    -webkit-mask: linear-gradient(#41c364 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+}
 
-    .price {
-      font-weight: bold;
-      color: #333;
-      font-size: 14px;
-      text-align: left;
-    }
+@keyframes borderFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
 
-    .rooms {
-      font-size: 11px;
-      max-height: 60px;
-      overflow-y: auto;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2px;
-      justify-content: center;
-    }
+/* Date Label */
+.price {
+  font-weight: 700;
+  color: #0d3562;
+  font-size: 16px;
+  margin-bottom: 8px;
+}
 
-    .room-green, .room-red {
-      color: #fff;
-      padding: 2px 4px;
-      border-radius: 4px;
-      font-size: 10px;
-      min-width: 32px;
-      text-align: center;
-      display: inline-block;
-    }
+/* Room Status Section */
+.rooms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 6px;
+  max-height: 75px;
+  overflow: hidden;
+}
 
-    .room-green {
-    	background-color: #dc3545;
-     
-    }
+/* Booking Status Colors */
+.room-green, .room-red {
+  color: #fff;
+  padding: 5px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 45px;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  transition: 0.3s;
+}
 
-    .room-red {
-      background-color: #28a745;
-    }
-  </style>
+.room-green {
+  background: linear-gradient(135deg, #dc3545, #ff6b6b); /* RED for Booked */
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.25);
+}
+
+.room-red {
+  background: linear-gradient(135deg, #28a745, #4dd174); /* GREEN for Available */
+  box-shadow: 0 0 10px rgba(0, 255, 100, 0.25);
+}
+
+.room-green:hover, .room-red:hover {
+  transform: scale(1.1);
+}
+
+/* Responsive Layout */
+@media (max-width: 992px) {
+  .tab-content.active {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 576px) {
+  .tab-content.active {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+</style>
+
+
 </head>
 <%
 List<Rooms> rooms = (List<Rooms>)request.getAttribute("rooms");
@@ -194,8 +233,7 @@ List<Rooms> rooms = (List<Rooms>)request.getAttribute("rooms");
 											<div class="card">
 												<div class="card-body  d-flex align-items-center justify-content-between">
 													<div class="calendar-wrapper">
-													  <h2>Room Calendar - Last 60 Days</h2>
-													
+													 <h2><i class="bx bx-calendar text-primary"></i> Room Availability Calendar (Last 60 Days)</h2>
 													  <!-- Tabs -->
 													  <div class="tabs">
 													    <div class="tab-btn active" onclick="switchTab(0)">First 30 Days</div>
@@ -231,49 +269,6 @@ List<Rooms> rooms = (List<Rooms>)request.getAttribute("rooms");
 									</div>
 								</div>
 							</div>
-
-							<!-- <div class="col-md-12  ">
-								<div class="row">
-									<div class="col-md-12 ">
-										<div class="card">
-											<div class="card-body" id="yourchartDiv">
-													<div class="container-calendar">
-															<h3 id="monthAndYear" style="transform: translateY(40px);"></h3>
-								
-															<div class="button-container-calendar">
-																<button id="previous" onclick="previous()">&#8249;</button>
-																<button id="next" onclick="next()">&#8250;</button>
-															</div>
-								
-															<table class="table-calendar" id="calendar" data-lang="en">
-																<thead id="thead-month"></thead>
-																<tbody id="calendar-body"></tbody>
-															</table>
-								
-															<div class="footer-container-calendar">
-																<label for="month">Jump To: </label> <select id="month"
-																	onchange="jump()">
-																	<option value=0>Jan</option>
-																	<option value=1>Feb</option>
-																	<option value=2>Mar</option>
-																	<option value=3>Apr</option>
-																	<option value=4>May</option>
-																	<option value=5>Jun</option>
-																	<option value=6>Jul</option>
-																	<option value=7>Aug</option>
-																	<option value=8>Sep</option>
-																	<option value=9>Oct</option>
-																	<option value=10>Nov</option>
-																	<option value=11>Dec</option>
-																</select> <select id="year" onchange="jump()"></select>
-															</div>
-								
-														</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div> -->
 						</div>
 					</div>
 
@@ -305,106 +300,7 @@ List<Rooms> rooms = (List<Rooms>)request.getAttribute("rooms");
 	        $('input[name="room_select"]').not(this).prop('checked', false);
 	    });
 	});
-	/* function next() {
-	    currentYear = (currentMonth === 11) ? currentYear + 1 : currentYear;
-	    currentMonth = (currentMonth + 1) % 12;
-	    var mm = parseInt(currentMonth) +1;
-	    getavailability(); 
-	    showCalendar(currentMonth, currentYear);
-	}
-
-	function previous() {
-	    currentYear = (currentMonth === 0) ? currentYear - 1 : currentYear;
-	    currentMonth = (currentMonth === 0) ? 11 : currentMonth - 1;
-	    var mm = parseInt(currentMonth) +1;
-	    getavailability(); 
-	    showCalendar(currentMonth, currentYear);
-	}
-
-	function jump() {
-	    currentYear = parseInt(selectYear.value);
-	    currentMonth = parseInt(selectMonth.value);
-	    var mm = parseInt(currentMonth) +1;
-	    getavailability();
-	    showCalendar(currentMonth, currentYear);
-	}
-	getavailability();
-	function getavailability() {
-		var room_id = $("#room_id").val();
-		getavailabilitydata(room_id);
-	    var fd = new FormData();
-	    fd.append("room_id", room_id);
-	    $.ajax({
-	        url: 'check_availability',
-	        type: 'post',
-	        data: fd,
-	        contentType: false,
-	        processData: false,
-	        success: function(data) {
-	            if (data.status === 'success') {
-	            	if (data.data && data.data.length) {
-	            	    for (var i = 0; i < data.data.length; i++) {
-	            	        var d = data.data[i].available_date.split("-");
-	            	        var sd = d[2].split("");
-	            	        if (sd[0] === "0") {
-	            	            d[2] = sd[1];
-	            	        }
-	            	        var md = d[1].split("");
-	            	        if (md[0] === "0") {
-	            	            d[1] = md[1];
-	            	        }
-
-	            	        var selector = '[data-date="' + d[2] + '"][data-month="' + d[1] + '"][data-year="' + d[0] + '"]';
-	            	        const targetElement = $(selector);
-
-	            	        if (targetElement.length) {
-	            	            if (data.data[i].available_rooms != "0") {
-	            	                targetElement
-	            	                    .css({ background: 'green', color: 'white', cursor: 'pointer' })
-	            	                    .addClass('available-date') // 👈 Add CSS class for zoom effect
-	            	                    .attr('data-available', 'Available Rooms: ' + data.data[i].available_rooms);
-	            	                targetElement.hover(function (e) {
-	            	                    const tooltip = $('<div class="custom-tooltip"></div>').text($(this).attr('data-available'));
-	            	                    $('body').append(tooltip);
-	            	                    tooltip.css({
-	            	                        position: 'absolute',
-	            	                        top: e.pageY + 10 + 'px',
-	            	                        left: e.pageX + 10 + 'px',
-	            	                        background: '#333',
-	            	                        color: '#fff',
-	            	                        padding: '5px 10px',
-	            	                        borderRadius: '5px',
-	            	                        fontSize: '12px',
-	            	                        zIndex: 9999,
-	            	                        whiteSpace: 'nowrap'
-	            	                    }).fadeIn('fast');
-
-	            	                    $(this).on('mousemove.tooltip', function (e) {
-	            	                        tooltip.css({ top: e.pageY + 10 + 'px', left: e.pageX + 10 + 'px' });
-	            	                    });
-	            	                }, function () {
-	            	                    $('.custom-tooltip').remove();
-	            	                    $(this).off('mousemove.tooltip');
-	            	                });
-	            	            } else {
-	            	                targetElement.css({ background: 'red', color: 'white' });
-	            	            }
-	            	        }
-	            	    }
-	            	}
-
- else {
-	                    console.warn('No attendance data found.');
-	                }
-	            } else {
-	                console.error('Failed to retrieve attendance data. Status:', data.status);
-	            }
-	        },
-	        error: function(xhr, status, error) {
-	            console.error('Error occurred during the AJAX request:', error);
-	        }
-	    });
-	} */
+	
 </script>
 <script>
 $(document).ready(function() {

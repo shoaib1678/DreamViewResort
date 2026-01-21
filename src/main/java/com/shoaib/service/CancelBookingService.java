@@ -60,7 +60,7 @@ public class CancelBookingService {
 				    );
 
 				    for (BookingDate bd : bookingDates) {
-				        commonDao.deleteDataFromDb(bd);  // or batch delete later
+				       // commonDao.deleteDataFromDb(bd);  // or batch delete later
 				    }
 				}
 				String subject = "Booking Cancellation Confirmation – Booking ID: " + cancelBooking.getBooking_id();

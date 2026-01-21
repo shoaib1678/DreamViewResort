@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.shoaib.dao.CommonDao;
+import com.shoaib.modal.Gallery;
 import com.shoaib.modal.Testimonial;
 import com.shoaib.utils.Utils;
 
@@ -90,6 +91,25 @@ public class TestimonialService {
 			response.put("message", "Internal server Error"+e);
 			e.printStackTrace();
 			return response;
+		}
+		return response;
+	}
+
+	public Map<String, Object> delete_testimonials(String sno) {
+		Map<String, Object> response = new HashMap<String,Object>();
+		try {
+			Utils utils = new Utils();
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("sno", Integer.parseInt(sno));
+			List<Testimonial> data = (List<Testimonial>)commonDao.getDataByMap(map, new Testimonial(), null, null, 0, -1);
+			utils.deleteImage(data.get(0).getImage());
+			commonDao.delete(new Testimonial(), sno);
+			response.put("status", "Success");
+			response.put("message", "Deleted Successfully");
+		} catch (Exception e) {
+			e.printStackTrace();
+			response.put("status","Failed");
+			response.put("message", "Something Went Wrong " +e);
 		}
 		return response;
 	}

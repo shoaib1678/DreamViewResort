@@ -58,20 +58,26 @@
         </div>
       </div>
     <div class="bot3-wrapper">
-        <div class="container">
-            <div class="bot3 clearfix">
-                <div class="copyrights">Copyright @2025  Dream View Resort Madhai. <i class="fa fa-heart" aria-hidden="true"></i> All Rights Reserve
-                </div>
-
-            </div>
-        </div>
-    </div>
+	  <div class="container">
+	    <div class="bot3 clearfix">
+	      <div class="copyrights">
+	        © <span id="yearrrr"></span> Dream View Resort, Madhai. 
+	        <i class="fa fa-heart" aria-hidden="true"></i> 
+	        All Rights Reserved || Developed and Maintained by 
+	        <a href="https://halicontechsoft.com" target="_blank">HaliconSoft Technologies</a>
+	      </div>
+	    </div>
+	  </div>
+	</div>
    </div>
 <!-- Sticky Call Button (Mobile Only) -->
 <a href="javascript:void(0);" class="pstapp d-lg-none d-block" id="call-toggle" title="Call Us">
   <i class="fa-solid fa-phone"></i>
 </a>
-
+<script>
+  // Dynamically set the current year
+  document.getElementById("yearrrr").textContent = new Date().getFullYear();
+</script>
 <!-- Hidden Call Numbers Box -->
 <div id="call-popup" class="call-popup d-lg-none">
   <a href="tel:+919329197477"><i class="fa-solid fa-phone"></i> +91-9329197477</a>

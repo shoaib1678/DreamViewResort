@@ -329,7 +329,31 @@ List<Rooms> room = (List<Rooms>)request.getAttribute("room");
 		});
 
 	}
-
+$("#booking_id").click(function(){
+	var booking_id = $("#booking_id").val();
+	var fd = new FormData();
+	fd.append("booking_id", booking_id);
+	$.ajax({
+		url : 'get',
+		type : 'post',
+		data : fd,
+		contentType : false,
+		processData : false,
+		success : function(data) {
+			if (data['status'] == 'Success') {
+				$('#category_modal').modal('toggle');
+				$("#category_name").val(data['data'][0].category_name);
+			} else {
+				Swal.fire({
+					icon : 'Opps',
+					title : 'Warning!',
+					text : 'Invalid Details'
+				})
+			}
+		}
+	});
+})
+	 
 			$("#clear_btn").click(function() {
 				$("#brandImage1").attr("src", "");
 		        $("input[type='text'], input[type='date'],input[type='hidden'],input[type='number'],input[type='file']").val("");
