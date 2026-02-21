@@ -207,16 +207,29 @@ List<PackagePlan> plan = (List<PackagePlan>)request.getAttribute("plan");
 										<%}} %>
 									</select>
 								</div> --%>
+								<div class="col-lg-12 col-md-12 col-12 mb-4">
+								    <div class="form-check form-switch mb-2">
+								          <input class="form-check-input" type="checkbox" id="person_wise" name="person_select" >
+								          <label class="form-check-label" for="person_wise" style="font-weight: 700">Person Wise</label>
+								    </div>
+								</div>
 							<div class="col-md-4 mb-3">
 			                	<label class="form-label" for="troom">Total room<span style="color: red;">*</span></label>
-			                    <input type="text" class="form-control decimalOnly" id="troom" name="troom" disabled/>
+			                    <input type="text" class="form-control decimalOnly" id="troom" name="troom"/>
 			                </div>
 							
-							<div class="col-md-4 mb-3">
+							<div class="col-md-4 mb-3" id="gue">
 			                	<label class="form-label" for="rent">No of Guest<span style="color: red;">*</span></label>
 			                	<div style="display: flex;">
 			                	<input type="text" class="form-control number" id="adult" name="adult" placeholder="Adult"/>
 			                    <input type="text" class="form-control number" id="child" name="child" placeholder="Child"/>
+			                	</div>
+			                </div>
+							<div class="col-md-4 mb-3" id="per" style="display: none;">
+			                	<label class="form-label" for="rent">Person Details<span style="color: red;">*</span></label>
+			                	<div style="display: flex;">
+			                	<input type="text" class="form-control number" onkeyup="calp()" id="person" name="person" placeholder="No of Person"/>
+			                    <input type="text" class="form-control decimalOnly" id="pprice" onkeyup="calp()" name="pprice" placeholder="Charge/Person"/>
 			                	</div>
 			                </div>
 							<div class="col-md-4 mb-3">
@@ -450,7 +463,7 @@ $(document).ready(function () {
     });
 
  // 🧮 Trigger recalculation when any of these fields change
-    $("#extra_bed, #room_gst, #final_price, #advance_amount, #night, input[name='room_number']").on("input change", function () {
+    $("#extra_bed, #room_gst, #final_price, #advance_amount, #night, input[name='room_number']").on("input keyup", function () {
         calculateTotals();
     });
 
@@ -469,8 +482,13 @@ $(document).ready(function () {
 
         // ✅ Count selected rooms
         let roomCount = $("input[name='room_number']:checked").length || 0;
-        let nights = parseFloat($("#night").val()) || 0;
+        const checkbox = document.getElementById('person_wise');
         $("#troom").val(roomCount);
+        if (checkbox.checked) {
+        	roomCount = 1;
+        } 
+        let nights = parseFloat($("#night").val()) || 0;
+        
         // ✅ Base Calculations
         let totalRent = rent * nights * roomCount;
         let totalBedCharge = bedCharge * extraBed * nights;
@@ -542,6 +560,19 @@ $(document).ready(function () {
             let allRoomIds = [];
             let allRoomNumbers = [];
 
+            const checkbox = document.getElementById('person_wise');
+
+            if (checkbox.checked) {
+                var adult = 0;
+                var child = 0;
+                var person = $("#person").val();
+                var pprice = $("#pprice").val();
+            } else {
+            	var adult = $("#adult").val();
+                var child = $("#child").val();
+                var person = 0;
+                var pprice = 0;
+            }
             $("input[name='room_select']:checked").each(function () {
                 let roomId = $(this).val();
                 // ✅ Get room title text from label
@@ -577,8 +608,10 @@ $(document).ready(function () {
                 room_number: room_number,         // ✅ all selected room numbers
                 noroom: $("input[name='room_number']:checked").length,
                 night: $("#night").val(),
-                adult: $("#adult").val(),
-                child: $("#child").val(),
+                adult: adult,
+                child: child,
+                person: person,
+                person_charge: pprice,
                 room_charge: $("#rent").val(),
                 bed_charge: $("#bed_charge").val(),
                 extrabed: $("#extra_bed").val(),
@@ -796,6 +829,33 @@ function generateReport(){
 	      document.body.appendChild(mapForm);
 	      mapForm.submit();     
  }
+$(document).ready(function () {
+
+	  function toggleGue() {
+	    if ($('#person_wise').is(':checked')) {
+	      $('#gue').hide();
+	      $('#per').show();
+	    } else {
+	      $('#gue').show();
+	      $('#per').hide();
+	    }
+	  }
+	  // On page load
+	  toggleGue();
+
+	  // On checkbox change
+	  $('#person_wise').on('change', function () {
+	    toggleGue();
+	  });
+
+	});
+	function calp(){
+		var per = $("#person").val();
+		var price = $("#pprice").val();
+		var tot = parseFloat(per) * parseFloat(price);
+		$("#rent").val(tot.toFixed(2));
+		$("#bed_charge").val(0);
+	}
 </script>
 
 </body>

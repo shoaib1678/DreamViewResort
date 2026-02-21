@@ -202,12 +202,17 @@
               </a>
               <ul class="menu-sub">
                 <li class="menu-item">
+                  <a href="manage_vendor" class="menu-link">
+                    <div data-i18n="Manage Vendor">Manage Vendor</div>
+                  </a>
+                </li>
+                <li class="menu-item">
                   <a href="manage_item" class="menu-link">
                     <div data-i18n="Grocery item">Grocery item</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="javascript:void(0)" class="menu-link">
+                  <a href="manage_groceries_details" class="menu-link">
                     <div data-i18n="Groceries Details">Groceries Details</div>
                   </a>
                 </li>

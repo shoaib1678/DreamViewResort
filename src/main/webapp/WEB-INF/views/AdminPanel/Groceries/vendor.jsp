@@ -56,8 +56,11 @@
 											<thead class="bg-primary">
 												<tr>
 													<th class="text-white">S.NO.</th>
-													<th class="text-white">Item Name</th>
-													<th class="text-white">Unit</th>
+													<th class="text-white">Vendor Name</th>
+													<th class="text-white">Mobile Number</th>
+													<th class="text-white">GSTIN</th>
+													<th class="text-white">State code</th>
+													<th class="text-white">Address</th>
 													<th class="text-white">Status</th>
 												 	<th class="text-white">Actions</th>
 												</tr>
@@ -87,10 +90,10 @@
 	<!-- / Layout wrapper -->
 	
 	<div class="modal fade" id="amenity_modal" data-bs-backdrop="static" tabindex="-1">
-    <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header" style="border-bottom: 1px solid lightgray;">
-            <h6>Add New Grocery Item</h6>
+            <h6>Add New Vendor</h6>
                 <button type="button"
                         class="btn-close"
                         data-bs-dismiss="modal"
@@ -100,20 +103,25 @@
 					<div class="modal-body">
 						<div class="nav-align-top mb-4">
 							<div class="row">
-								<div class=" col-lg-12 mb-6 mt-1">
-									<label class="form-label" for="item_name">Item Name<span style="color: red;">*</span></label> <input
-										type="text" class="form-control" id="item_name" placeholder=" "
-										name="item_name" aria-label=" " />
+								<div class=" col-lg-6 mb-6 mt-1">
+									<label class="form-label" for="item_name">Vendor Name<span style="color: red;">*</span></label> 
+									<input type="text" class="form-control" id="vendor_name" placeholder=" " name="vendor_name" aria-label=" " />
+								</div>
+								<div class=" col-lg-6 mb-6 mt-1">
+									<label class="form-label" for="mobile_number">Mobile Number<span style="color: red;">*</span></label> 
+									<input type="text" class="form-control" id="mobile_number" placeholder=" " name="mobile_number" aria-label=" " />
+								</div>
+								<div class=" col-lg-6 mb-6 mt-1">
+									<label class="form-label" for="gstin">GSTIN<span style="color: red;">*</span></label> 
+									<input type="text" class="form-control" id="gstin" placeholder=" " name="gstin" aria-label=" " />
+								</div>
+								<div class=" col-lg-6 mb-6 mt-1">
+									<label class="form-label" for="state_code">State Code<span style="color: red;">*</span></label> 
+									<input type="text" class="form-control" id="state_code" placeholder=" " name="state_code" aria-label=" " />
 								</div>
 								<div class=" col-lg-12 mb-6 mt-1">
-									<label class="form-label" for="unit">Unit<span style="color: red;">*</span></label> 
-									<select class="form-control" id="unit" name="unit">
-										<option selected disabled>Select Unit</option>
-										<option value="PICS">PICS</option>
-										<option value="No">No</option>
-										<option value="Kg">Kg</option>
-										<option value="Ltr">Ltr</option>
-									</select>
+									<label class="form-label" for="address">Address<span style="color: red;">*</span></label> 
+									<textarea class="form-control" id="address" name="address"></textarea>
 								</div>
 							</div>
 						</div>
@@ -170,7 +178,7 @@
 			lengthChange : true,
 			ordering : false,
 			ajax : {
-				url : "get_items",
+				url : "get_vendor",
 				type : "POST",
 			},
 			columnDefs : [ {
@@ -186,10 +194,19 @@
 			          }
 			 },	
 			{
-				"data" : "item_name"
+				"data" : "vendor_name"
 			}, 
 			{
-				"data" : "unit"
+				"data" : "mobile_number"
+			}, 
+			{
+				"data" : "gstin"
+			}, 
+			{
+				"data" : "state_code"
+			}, 
+			{
+				"data" : "address"
 			}, 
 			{
 				"data": "status"
@@ -215,31 +232,37 @@
 				.validate(
 						{
 							rules : {
-								item_name : {
+								vendor_name : {
 									required : true,
 								},
 							},
 
 							messages : {
 
-								item_name : {
-									required : "Please enter item name",
+								vendor_name : {
+									required : "Please enter vendor name",
 								},
 							},
 
 							submitHandler : function(form) {
-								var item_name = $("#item_name").val();
-								var unit = $("#unit").val();
+								var vendor_name = $("#vendor_name").val();
+								var mobile_number = $("#mobile_number").val();
+								var gstin = $("#gstin").val();
+								var state_code = $("#state_code").val();
+								var address = $("#address").val();
 								var sno = $("#sno").val();
 
 								var obj = {
-									"unit" : unit,
-									"item_name" : item_name,
+									"vendor_name" : vendor_name,
+									"mobile_number" : mobile_number,
+									"gstin" : gstin,
+									"state_code" : state_code,
+									"address" : address,
 									"sno" : sno
 								};
 								
 								$.ajax({
-									url : 'add_item',
+									url : 'add_vendor',
 									type : 'post',
 									data : JSON.stringify(obj),
 									dataType : 'json',
@@ -283,7 +306,7 @@
 		var fd = new FormData();
 		fd.append("sno", i);
 		$.ajax({
-			url : 'edit_item',
+			url : 'get_vendorById',
 			type : 'post',
 			data : fd,
 			contentType : false,
@@ -291,12 +314,12 @@
 			success : function(data) {
 				if (data['status'] == 'Success') {
 					$('#amenity_modal').modal('toggle');
-					$("#item_name").val(data['data'][0].item_name);
-					 $("#unit > option").each(function() {
-						    if (this.value ==  data['data'][0].unit) {
-						    	$(this).prop("selected", "selected");
-						    }
-						});
+					$("#vendor_name").val(data['data'][0].vendor_name);
+					$("#mobile_number").val(data['data'][0].mobile_number);
+					$("#gstin").val(data['data'][0].gstin);
+					$("#state_code").val(data['data'][0].state_code);
+					$("#address").val(data['data'][0].address);
+					 
 				} else {
 					Swal.fire({
 						icon : 'Opps',

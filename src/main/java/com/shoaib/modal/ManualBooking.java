@@ -27,9 +27,11 @@ public class ManualBooking {
 	private String mobile_number;
 	private int noroom;
 	private int extrabed;
+	private int person;
 	private int night;
 	private int adult;
 	private int child;
+	private float person_charge;
 	private float room_charge;
 	private float bed_charge;
 	private float room_gst;
@@ -250,5 +252,17 @@ public class ManualBooking {
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+	public int getPerson() {
+		return person;
+	}
+	public void setPerson(int person) {
+		this.person = person;
+	}
+	public float getPerson_charge() {
+		return person_charge;
+	}
+	public void setPerson_charge(float person_charge) {
+		this.person_charge = person_charge;
 	}
 }

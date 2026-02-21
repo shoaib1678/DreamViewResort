@@ -36,6 +36,7 @@ import com.shoaib.modal.Blogs;
 import com.shoaib.modal.Booking;
 import com.shoaib.modal.Category;
 import com.shoaib.modal.Gallery;
+import com.shoaib.modal.Items;
 import com.shoaib.modal.LoginCredentials;
 import com.shoaib.modal.ManualBooking;
 import com.shoaib.modal.PackagePlan;
@@ -618,11 +619,37 @@ public class HomeController {
 		}
 		
 	}
+	@RequestMapping(value="/manage_vendor")
+	public ModelAndView manage_vendor(HttpServletRequest request,HttpSession session) throws IOException{
+		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
+		if(lg !=null) {
+			ModelAndView mv = new ModelAndView("AdminPanel/Groceries/vendor");
+			return mv;
+		}else {
+			return new ModelAndView("redirect:./");
+		}
+		
+	}
 	@RequestMapping(value="/manage_item")
 	public ModelAndView manage_item(HttpServletRequest request,HttpSession session) throws IOException{
 		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
 		if(lg !=null) {
 			ModelAndView mv = new ModelAndView("AdminPanel/Groceries/item");
+			return mv;
+		}else {
+			return new ModelAndView("redirect:./");
+		}
+		
+	}
+	@RequestMapping(value="/manage_groceries_details")
+	public ModelAndView groceries_details(HttpServletRequest request,HttpSession session) throws IOException{
+		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
+		if(lg !=null) {
+			ModelAndView mv = new ModelAndView("AdminPanel/Groceries/items_details");
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("status", "Active");
+			List<Items> data = (List<Items>)commonDao.getDataByMap(map, new Items(), null, null, 0, -1);
+			mv.addObject("data", data);
 			return mv;
 		}else {
 			return new ModelAndView("redirect:./");
