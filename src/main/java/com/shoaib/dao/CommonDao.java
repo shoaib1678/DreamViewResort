@@ -1,6 +1,9 @@
 package com.shoaib.dao;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.shoaib.modal.BookingDate;
+import com.shoaib.modal.GroceryDetails;
 
 import javassist.expr.Instanceof;
 
@@ -364,5 +368,82 @@ public class CommonDao {
 	            session.close();
 	        }
 	    }
+	}
+
+	public Object getDataByMapWithDateRange(
+	        Map<String, Object> anddata,
+	        Map<String, Object> mapdata,
+	        Object objectdata,
+	        String orderbycolumn,
+	        String orderby,
+	        int start,
+	        int length,
+	        String fromDateStr,
+	        String toDateStr) {
+
+	    Criteria criteria = sessionFactory.getCurrentSession().createCriteria(objectdata.getClass());
+
+	    // 🔹 AND conditions
+	    for (Entry<String, Object> entry : anddata.entrySet()) {
+	        criteria.add(Restrictions.eq(entry.getKey(), entry.getValue()));
+	    }
+
+	    // 🔹 OR search (Disjunction)
+	    if (mapdata != null && !mapdata.isEmpty()) {
+	        Disjunction disjunction = Restrictions.disjunction();
+	        for (Entry<String, Object> entry : mapdata.entrySet()) {
+	            if (entry.getValue() instanceof Integer) {
+	                disjunction.add(Restrictions.eq(entry.getKey(), entry.getValue()));
+	            } else {
+	                disjunction.add(Restrictions.ilike(entry.getKey(), entry.getValue().toString(), MatchMode.ANYWHERE));
+	            }
+	        }
+	        criteria.add(disjunction);
+	    }
+
+	    // 🔹 Filter by invoice_date using from and to date
+	    try {
+	        if (fromDateStr != null && toDateStr != null &&
+	            !fromDateStr.isEmpty() && !toDateStr.isEmpty()) {
+
+	            // Detect date format
+	            DateTimeFormatter formatter;
+	            if (fromDateStr.indexOf("-") == 4) {
+	                formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	            } else {
+	                formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+	            }
+
+	            LocalDate fromDate = LocalDate.parse(fromDateStr, formatter);
+	            LocalDate toDate = LocalDate.parse(toDateStr, formatter);
+
+	            // Convert to java.sql.Date (works with Hibernate Date field)
+	            Date sqlFromDate = java.sql.Date.valueOf(fromDate);
+	            Date sqlToDate = java.sql.Date.valueOf(toDate);
+
+	            criteria.add(Restrictions.between("po_date", sqlFromDate, sqlToDate));
+	        }
+	    } catch (DateTimeParseException e) {
+	        System.err.println("❌ Invalid date format: " + e.getMessage());
+	    } catch (Exception e) {
+	        e.printStackTrace(); // Use logger in production
+	    }
+
+	    // 🔹 Ordering
+	    if (orderby != null && !orderby.isEmpty() && orderbycolumn != null) {
+	        if ("asc".equalsIgnoreCase(orderby)) {
+	            criteria.addOrder(Order.asc(orderbycolumn));
+	        } else {
+	            criteria.addOrder(Order.desc(orderbycolumn));
+	        }
+	    }
+
+	    // 🔹 Pagination
+	    criteria.setFirstResult(start);
+	    if (length != -1) {
+	        criteria.setMaxResults(length);
+	    }
+
+	    return criteria.list();
 	}
 }

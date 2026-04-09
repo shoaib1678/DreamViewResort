@@ -198,7 +198,7 @@
             <li class="menu-item">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons bx bx-food-menu"></i>
-                <div data-i18n="Manage Groceries">Manage Groceries</div>
+                <div data-i18n="Manage Purchase">Manage Purchase</div>
               </a>
               <ul class="menu-sub">
                 <li class="menu-item">
@@ -208,12 +208,12 @@
                 </li>
                 <li class="menu-item">
                   <a href="manage_item" class="menu-link">
-                    <div data-i18n="Grocery item">Grocery item</div>
+                    <div data-i18n="Grocery item">Manage item</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="manage_groceries_details" class="menu-link">
-                    <div data-i18n="Groceries Details">Groceries Details</div>
+                  <a href="manage_purchase_entry" class="menu-link">
+                    <div data-i18n="Purchase Entry">Purchase Entry</div>
                   </a>
                 </li>
               </ul>

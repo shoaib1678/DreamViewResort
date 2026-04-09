@@ -17,6 +17,8 @@ public class StockEntry {
 	private String item_name;
 	@Transient
 	private String unit;
+	private String purchase_for;
+	private float qty;
 	private float rem_qty;
 	private float las_qty;
 	public int getSno() {
@@ -42,6 +44,18 @@ public class StockEntry {
 	}
 	public void setUnit(String unit) {
 		this.unit = unit;
+	}
+	public String getPurchase_for() {
+		return purchase_for;
+	}
+	public void setPurchase_for(String purchase_for) {
+		this.purchase_for = purchase_for;
+	}
+	public float getQty() {
+		return qty;
+	}
+	public void setQty(float qty) {
+		this.qty = qty;
 	}
 	public float getRem_qty() {
 		return rem_qty;

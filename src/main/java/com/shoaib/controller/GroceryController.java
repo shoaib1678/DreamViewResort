@@ -70,5 +70,14 @@ public class GroceryController {
 		response = groceryService.get_grocery_items(start,length,search,sno);
 		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
 	}
+	@RequestMapping("/get_stock")
+	public ResponseEntity<Map<String,Object>> get_stock(HttpServletRequest request){
+		Map<String,Object> response = new HashMap<String,Object>();
+		int start = Integer.parseInt(request.getParameter("start"));
+		int length = Integer.parseInt(request.getParameter("length"));
+		String search = request.getParameter("search[value]");
+		response = groceryService.get_stock(start,length,search);
+		return new ResponseEntity<Map<String,Object>>(response,HttpStatus.OK);
+	}
 }
 

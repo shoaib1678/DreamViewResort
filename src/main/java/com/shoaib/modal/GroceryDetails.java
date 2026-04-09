@@ -17,16 +17,28 @@ public class GroceryDetails {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int sno;
+	private int vid;
+	@Transient
+	private String vendor_name;
+	@Transient
+	private String address;
+	@Transient
+	private String gstin;
+	@Transient
+	private String hsn_code;
+	@Transient
+	private String vendor_code;
 	private String po_number;
+	private String category_name;
+	private String purchase_for;
 	@Temporal(TemporalType.DATE)
 	private Date po_date;
 	@Transient
-	private List<groceryItems> gi;
+	private List<GroceryItems> gi;
 	private float total_qty;
-	private float total_price;
+	private float taxable_amount;
 	private float total_gst;
-	private float sub_total;
-	private float discount;
+	private float total_tax;
 	private float grand_total;
 	@Temporal(TemporalType.DATE)
 	private Date createdAt;
@@ -42,6 +54,18 @@ public class GroceryDetails {
 	public void setPo_number(String po_number) {
 		this.po_number = po_number;
 	}
+	public String getCategory_name() {
+		return category_name;
+	}
+	public void setCategory_name(String category_name) {
+		this.category_name = category_name;
+	}
+	public String getPurchase_for() {
+		return purchase_for;
+	}
+	public void setPurchase_for(String purchase_for) {
+		this.purchase_for = purchase_for;
+	}
 	public Date getPo_date() {
 		return po_date;
 	}
@@ -54,16 +78,58 @@ public class GroceryDetails {
 	public void setTotal_qty(float total_qty) {
 		this.total_qty = total_qty;
 	}
-	public float getTotal_price() {
-		return total_price;
+	public int getVid() {
+		return vid;
 	}
-	public void setTotal_price(float total_price) {
-		this.total_price = total_price;
+	public void setVid(int vid) {
+		this.vid = vid;
 	}
-	public List<groceryItems> getGi() {
+	public String getVendor_name() {
+		return vendor_name;
+	}
+	public void setVendor_name(String vendor_name) {
+		this.vendor_name = vendor_name;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public String getGstin() {
+		return gstin;
+	}
+	public void setGstin(String gstin) {
+		this.gstin = gstin;
+	}
+	public String getHsn_code() {
+		return hsn_code;
+	}
+	public void setHsn_code(String hsn_code) {
+		this.hsn_code = hsn_code;
+	}
+	public String getVendor_code() {
+		return vendor_code;
+	}
+	public void setVendor_code(String vendor_code) {
+		this.vendor_code = vendor_code;
+	}
+	public float getTaxable_amount() {
+		return taxable_amount;
+	}
+	public void setTaxable_amount(float taxable_amount) {
+		this.taxable_amount = taxable_amount;
+	}
+	public float getTotal_tax() {
+		return total_tax;
+	}
+	public void setTotal_tax(float total_tax) {
+		this.total_tax = total_tax;
+	}
+	public List<GroceryItems> getGi() {
 		return gi;
 	}
-	public void setGi(List<groceryItems> gi) {
+	public void setGi(List<GroceryItems> gi) {
 		this.gi = gi;
 	}
 	public float getTotal_gst() {
@@ -71,18 +137,6 @@ public class GroceryDetails {
 	}
 	public void setTotal_gst(float total_gst) {
 		this.total_gst = total_gst;
-	}
-	public float getSub_total() {
-		return sub_total;
-	}
-	public void setSub_total(float sub_total) {
-		this.sub_total = sub_total;
-	}
-	public float getDiscount() {
-		return discount;
-	}
-	public void setDiscount(float discount) {
-		this.discount = discount;
 	}
 	public float getGrand_total() {
 		return grand_total;

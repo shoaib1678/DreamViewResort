@@ -56,8 +56,10 @@
 											<thead class="bg-primary">
 												<tr>
 													<th class="text-white">S.NO.</th>
+													<th class="text-white">Category</th>
 													<th class="text-white">Item Name</th>
 													<th class="text-white">Unit</th>
+													<th class="text-white">HSN Code</th>
 													<th class="text-white">Status</th>
 												 	<th class="text-white">Actions</th>
 												</tr>
@@ -90,7 +92,7 @@
     <div class="modal-dialog modal-md modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header" style="border-bottom: 1px solid lightgray;">
-            <h6>Add New Grocery Item</h6>
+            <h6>Add New Item</h6>
                 <button type="button"
                         class="btn-close"
                         data-bs-dismiss="modal"
@@ -100,6 +102,14 @@
 					<div class="modal-body">
 						<div class="nav-align-top mb-4">
 							<div class="row">
+								<div class=" col-lg-12 mb-6 mt-1">
+									<label class="form-label" for="category_name">Category<span style="color: red;">*</span></label> 
+									<select class="form-control" id="category_name" name="category_name">
+										<option selected disabled>--Select Category--</option>
+										<option value="Accessory">Accessory</option>
+										<option value="Grocery">Grocery</option>
+									</select>
+								</div>
 								<div class=" col-lg-12 mb-6 mt-1">
 									<label class="form-label" for="item_name">Item Name<span style="color: red;">*</span></label> <input
 										type="text" class="form-control" id="item_name" placeholder=" "
@@ -114,6 +124,11 @@
 										<option value="Kg">Kg</option>
 										<option value="Ltr">Ltr</option>
 									</select>
+								</div>
+								<div class=" col-lg-12 mb-6 mt-1">
+									<label class="form-label" for="hsn_code">HSN Code<span style="color: red;">*</span></label> <input
+										type="text" class="form-control" id="hsn_code" placeholder=" "
+										name="hsn_code" aria-label=" " />
 								</div>
 							</div>
 						</div>
@@ -186,10 +201,16 @@
 			          }
 			 },	
 			{
+				"data" : "category_name"
+			}, 
+			{
 				"data" : "item_name"
 			}, 
 			{
 				"data" : "unit"
+			}, 
+			{
+				"data" : "hsn_code"
 			}, 
 			{
 				"data": "status"
@@ -215,6 +236,9 @@
 				.validate(
 						{
 							rules : {
+								category_name : {
+									required : true,
+								},
 								item_name : {
 									required : true,
 								},
@@ -222,19 +246,26 @@
 
 							messages : {
 
+								category_name : {
+									required : "Please select Category",
+								},
 								item_name : {
 									required : "Please enter item name",
 								},
 							},
 
 							submitHandler : function(form) {
+								var category_name = $("#category_name").val();
 								var item_name = $("#item_name").val();
 								var unit = $("#unit").val();
+								var hsn_code = $("#hsn_code").val();
 								var sno = $("#sno").val();
 
 								var obj = {
+									"category_name" : category_name,
 									"unit" : unit,
 									"item_name" : item_name,
+									"hsn_code" : hsn_code,
 									"sno" : sno
 								};
 								
@@ -291,7 +322,9 @@
 			success : function(data) {
 				if (data['status'] == 'Success') {
 					$('#amenity_modal').modal('toggle');
+					$("#category_name").val(data['data'][0].category_name);
 					$("#item_name").val(data['data'][0].item_name);
+					$("#hsn_code").val(data['data'][0].hsn_code);
 					 $("#unit > option").each(function() {
 						    if (this.value ==  data['data'][0].unit) {
 						    	$(this).prop("selected", "selected");

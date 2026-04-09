@@ -36,6 +36,8 @@ import com.shoaib.modal.Blogs;
 import com.shoaib.modal.Booking;
 import com.shoaib.modal.Category;
 import com.shoaib.modal.Gallery;
+import com.shoaib.modal.GroceryDetails;
+import com.shoaib.modal.GroceryItems;
 import com.shoaib.modal.Items;
 import com.shoaib.modal.LoginCredentials;
 import com.shoaib.modal.ManualBooking;
@@ -43,6 +45,7 @@ import com.shoaib.modal.PackagePlan;
 import com.shoaib.modal.Rooms;
 import com.shoaib.modal.SliderImage;
 import com.shoaib.modal.Testimonial;
+import com.shoaib.modal.Vendor;
 import com.shoaib.utils.Utils;
 
 @Controller
@@ -623,7 +626,7 @@ public class HomeController {
 	public ModelAndView manage_vendor(HttpServletRequest request,HttpSession session) throws IOException{
 		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
 		if(lg !=null) {
-			ModelAndView mv = new ModelAndView("AdminPanel/Groceries/vendor");
+			ModelAndView mv = new ModelAndView("AdminPanel/Purchase/vendor");
 			return mv;
 		}else {
 			return new ModelAndView("redirect:./");
@@ -634,22 +637,24 @@ public class HomeController {
 	public ModelAndView manage_item(HttpServletRequest request,HttpSession session) throws IOException{
 		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
 		if(lg !=null) {
-			ModelAndView mv = new ModelAndView("AdminPanel/Groceries/item");
+			ModelAndView mv = new ModelAndView("AdminPanel/Purchase/item");
 			return mv;
 		}else {
 			return new ModelAndView("redirect:./");
 		}
 		
 	}
-	@RequestMapping(value="/manage_groceries_details")
+	@RequestMapping(value="/manage_purchase_entry")
 	public ModelAndView groceries_details(HttpServletRequest request,HttpSession session) throws IOException{
 		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
 		if(lg !=null) {
-			ModelAndView mv = new ModelAndView("AdminPanel/Groceries/items_details");
+			ModelAndView mv = new ModelAndView("AdminPanel/Purchase/purchase_entry");
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("status", "Active");
 			List<Items> data = (List<Items>)commonDao.getDataByMap(map, new Items(), null, null, 0, -1);
+			List<Vendor> data1 = (List<Vendor>)commonDao.getDataByMap(map, new Vendor(), null, null, 0, -1);
 			mv.addObject("data", data);
+			mv.addObject("data1", data1);
 			return mv;
 		}else {
 			return new ModelAndView("redirect:./");
@@ -712,6 +717,51 @@ public class HomeController {
 			mv.addObject("to_date", to_date);
 			return mv;
 		
+	}
+	
+	@RequestMapping(value="/gst_output_report")
+	public ModelAndView gst_output_report(HttpServletRequest request,HttpSession session) throws IOException{
+		LoginCredentials lg = (LoginCredentials)session.getAttribute("loginData");
+		if(lg !=null) {
+		ModelAndView mv = new ModelAndView("AdminPanel/Purchase/gst_report");
+		String vendor_id = request.getParameter("vendor_id");
+		String from_date = request.getParameter("from_date");
+		String to_date = request.getParameter("to_date");
+ 		 Map<String, Object> map = new HashMap<String, Object>();
+ 		 if(vendor_id != null && !vendor_id.isEmpty()) {
+ 			 map.put("vid", Integer.parseInt(vendor_id));
+ 		 }
+ 		 List<GroceryDetails> data = (List<GroceryDetails>) commonDao.getDataByMapWithDateRange(map, new HashMap<String, Object>(), new GroceryDetails(), "po_date", "asc", 0, -1, from_date, to_date);
+	       System.out.println(data.size()+"=shijshdfkjfkjf");
+	        if(data.size() > 0) {
+	        	for(GroceryDetails p : data) {
+	        		Map<String, Object> map1 = new HashMap<String,Object>();
+	        		map1.put("gid", p.getSno());
+	        		List<GroceryItems> pi = (List<GroceryItems>)commonDao.getDataByMap(map1, new GroceryItems(), null, null, 0, -1);
+	        		for(GroceryItems it : pi) {
+	        			Map<String, Object> mpp = new HashMap<String, Object>();
+	        			mpp.put("sno", it.getItem_id());
+	        			List<Items> i = (List<Items>)commonDao.getDataByMap(mpp, new Items(), null, null, 0, -1);
+	        			it.setHsn_code(i.get(0).getHsn_code());
+	        		}
+	        		p.setGi(pi);
+	        		Map<String, Object> mp = new HashMap<String, Object>();
+	        		
+		        	mp.put("sno", p.getVid());
+		        	List<Vendor> v = (List<Vendor>)commonDao.getDataByMap(mp, new Vendor(), null, null, 0, -1);
+		        	p.setVendor_code(v.get(0).getVendor_code());
+		        	p.setVendor_name(v.get(0).getVendor_name());
+		        	p.setGstin(v.get(0).getGstin());
+		        	p.setAddress(v.get(0).getAddress());
+	        	}
+	        }
+	        mv.addObject("data", data);
+	        mv.addObject("from_date", from_date);
+	        mv.addObject("to_date", to_date);
+		return mv;
+		}else {
+			return new ModelAndView("redirect:./");
+		}
 	}
 	
 }

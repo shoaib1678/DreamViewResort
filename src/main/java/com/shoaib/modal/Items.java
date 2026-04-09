@@ -13,8 +13,10 @@ public class Items {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int sno;
+	private String category_name;
 	private String item_name;
 	private String unit;
+	private String hsn_code;
 	private String status;
 	private Date createdAt;
 	public int getSno() {
@@ -22,6 +24,12 @@ public class Items {
 	}
 	public void setSno(int sno) {
 		this.sno = sno;
+	}
+	public String getCategory_name() {
+		return category_name;
+	}
+	public void setCategory_name(String category_name) {
+		this.category_name = category_name;
 	}
 	public String getItem_name() {
 		return item_name;
@@ -34,6 +42,12 @@ public class Items {
 	}
 	public void setUnit(String unit) {
 		this.unit = unit;
+	}
+	public String getHsn_code() {
+		return hsn_code;
+	}
+	public void setHsn_code(String hsn_code) {
+		this.hsn_code = hsn_code;
 	}
 	public String getStatus() {
 		return status;
